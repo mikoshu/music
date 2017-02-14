@@ -162,7 +162,7 @@
         s = parseInt(time%60);
         m = m > 9 ? m : '0'+m;
         s = s > 9 ? s : '0'+s;
-        return m+':'+s
+        return m+':'+s;
     }
 
     $(document).ready(function(){
@@ -193,16 +193,24 @@
             clearInterval(Timmer)
         }
 
-        var dir = fs.readdirSync(musicURL);
-        dir.forEach(function(val){ // 遍历musics文件夹里的文件，默认只有一级目录，子目录没做处理
-            var obj = {};
-            obj.fileURL = path.join(musicURL, val);
-            obj.fileName = val.split(".")[0];
-            file.push(obj); // 将遍历结果放入file数组
-        });
+        /**localstorage 用于排序，记录当前顺序每次文件增删改查后更新，如有该属性，不遍历musics文件夹**/
+        if(localStorage.file){
+            file = JSON.parse(localStorage.file);
+        }else{
+            var dir = fs.readdirSync(musicURL);
+            dir.forEach(function(val){ // 遍历musics文件夹里的文件，默认只有一级目录，子目录没做处理
+                var obj = {};
+                obj.fileURL = path.join(musicURL, val);
+                obj.fileName = val.split(".")[0];
+                file.push(obj); // 将遍历结果放入file数组
+            });
+            localStorage.file = JSON.stringify(file);
+        }
+        /**localstorage 用于排序**/
+        
 
         file.map(function(val,index){ // 遍历file数组生成html模板
-            html += '<li><a href="javascript:;" data-url='+val.fileURL+' >'+val.fileName+'<span>x</span></a></li>'; 
+            html += '<li><a href="javascript:;" data-url='+val.fileURL+' >'+val.fileName+'<span></span></a></li>'; 
         })
         $("#musicList").html(html); // 渲染音效列表
 
@@ -227,7 +235,7 @@
             }
             
         })
-        $("#last").click(function(){
+        $("#last").click(function(){ // 上一首
             index -= 1;
             if(index == -1){
                 alert('已经是第一首');
@@ -237,7 +245,7 @@
                 $("#name").html(file[index].fileName)
             } 
         })
-        $("#next").click(function(){
+        $("#next").click(function(){ // 下一首
             index += 1;
             if(index == file.length){
                 alert('已经是最后一首');
@@ -272,7 +280,7 @@
             }
         })
 
-        function getPer(e){
+        function getPer(e){ // 音量获取
             var left = (e.clientX - $("#volume")[0].getBoundingClientRect().left);
             if(left < 0){
                 left = 0;
@@ -309,14 +317,25 @@
                 $(".list_shengxiao").addClass('sort');
                 var bar = document.getElementById('musicList');
                 s = Sortable.create(bar, {  // 用sortable实现可拖拽排序
-                    group: "omega",
                     animation: 150,
-                    onEnd: function(){
-                        console.log('done')
+                    onEnd: function(){ // 排序结束后更改localstorage.file文件
+                        getList();
                     }
                 });
             }
         })
+
+        function getList(){ // 获取当前列表
+            var arr = [];
+                $("#musicList").find('li').each(function(index,val){
+                    var obj = {};
+                    obj.fileName = $(val).find('a').text();
+                    obj.fileURL = $(val).find('a').attr('data-url');
+                    arr.push(obj);
+                })
+                file = arr;
+                localStorage.file = JSON.stringify(arr);
+        }
 
     })
 

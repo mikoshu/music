@@ -112,6 +112,9 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
 .list_shengxiao.sort li a span{
     display:block;
 }
+.list_shengxiao.sort li a span:after{
+    content:'x';
+}
 
 .list_shengxiao li a:hover { 
     color:#E95D4B; 
