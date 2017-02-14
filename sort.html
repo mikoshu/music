@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/bofang_lay.css">
+    <style>
+        #musicList{
+            height:auto;
+            overflow:auto;
+        }
+        .list_shengxiao.sort li{
+            float:none;
+        }
+    </style>
+</head>
+
+<body>
+   <div class="list_shengxiao sort">
+        <ul class="clearfix" id="musicList">
+            <!--遍历文件夹音效内容-->
+            <li>list1</li>
+            <li>list2</li>
+            <li>list3</li>
+            <li>list4</li>
+            <li>list5</li>
+            <li>list6</li>
+        </ul>
+    </div>
+    <script type="text/javascript" src="js/jquery-2.1.1.min.js" ></script>
+    <script type="text/javascript" src="js/Sortable.js" ></script>
+    <script>
+        $(document).ready(function(){
+            var bar = document.getElementById('musicList');
+            var s = Sortable.create(bar, {  // 用sortable实现可拖拽排序
+                //group: "omega",
+                animation: 150
+            });
+        })
+    </script>
+</body>
+</html>
