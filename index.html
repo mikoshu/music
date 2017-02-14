@@ -145,27 +145,20 @@
 
 <script type="text/javascript" src="js/jquery-2.1.1.min.js" ></script>
 <script type="text/javascript" src="js/Sortable.js" ></script>
+<script type="text/javascript" src="js/util.js" ></script>
 <script>
     var fs = require('fs');
     var path = require('path');
     var musicURL = path.join(process.cwd(),'player/musics/');
-    var html = '';
     var index = 0; // 默认选中第一个音效
     var file = [];
     var isPlaying = false;
     var audio = document.getElementById('audio');
     var Timmer;
 
-    function getTime(time){ // 修改时间格式
-        var time = parseInt(time),m,s;
-        m = parseInt(time/60);
-        s = parseInt(time%60);
-        m = m > 9 ? m : '0'+m;
-        s = s > 9 ? s : '0'+s;
-        return m+':'+s;
-    }
-
     $(document).ready(function(){
+        util.init(); // 初始化
+        util.refreshList(); // 渲染列表
 
         $("#reload").click(function(){ // 刷新图标刷新页面
             window.location.reload();
@@ -173,13 +166,12 @@
 
         audio.onplaying = function(){ // 音频播放
             isPlaying = true;
-            $("#allTime").html(getTime(audio.duration))
+            $("#allTime").html(util.getTime(audio.duration))
             Timmer = setInterval(function(){ //控制时间与进度条
-                $("#nowTime").html(getTime(audio.currentTime))
+                $("#nowTime").html(util.getTime(audio.currentTime))
                 var per = parseInt((audio.currentTime/audio.duration)*100);
                 $(".process").css('width',per+'%');
-                //console.log(audio.currentTime)
-            },200)
+            },500)
         }
 
         audio.onpause = function (){// 音频暂停
@@ -188,38 +180,24 @@
         }
 
         audio.onended = function(){ // 音频结束
-            $("#nowTime").html(getTime(audio.duration))
+            $("#nowTime").html(util.getTime(audio.duration))
             $(".process").css('width','100%');
             clearInterval(Timmer)
         }
 
-        /**localstorage 用于排序，记录当前顺序每次文件增删改查后更新，如有该属性，不遍历musics文件夹**/
-        if(localStorage.file){
-            file = JSON.parse(localStorage.file);
-        }else{
-            var dir = fs.readdirSync(musicURL);
-            dir.forEach(function(val){ // 遍历musics文件夹里的文件，默认只有一级目录，子目录没做处理
-                var obj = {};
-                obj.fileURL = path.join(musicURL, val);
-                obj.fileName = val.split(".")[0];
-                file.push(obj); // 将遍历结果放入file数组
-            });
-            localStorage.file = JSON.stringify(file);
+        audio.onerror = function(err){
+            console.log(audio.src)
+            if(audio.src != 'chrome-extension://ppchnfigajpiiponlijgmmhaknifgjhj/player/index.html'){
+                alert('该音效文件不存在或路径发生变化!')
+            }
         }
-        /**localstorage 用于排序**/
-        
 
-        file.map(function(val,index){ // 遍历file数组生成html模板
-            html += '<li><a href="javascript:;" data-url='+val.fileURL+' >'+val.fileName+'<span></span></a></li>'; 
-        })
-        $("#musicList").html(html); // 渲染音效列表
 
         $("#musicList").delegate('li','click',function(){ // 点击音效列表播放音效
             var url = $(this).find('a').attr('data-url');
             $("#audio").attr('src',url);
             $("#name").html($(this).text());
             index = $(this).index()
-            console.log($(this).index())
         })
 
         $("#play").click(function(){ // 点击播放按钮事件（此处按钮样式需要改变）
@@ -231,7 +209,6 @@
                 audio.pause()
             }else{
                 play()
-                $("#name").html(file[index].fileName)
             }
             
         })
@@ -242,7 +219,6 @@
             }else{
               $("#audio").attr('src',file[index].fileURL);
                 play();  
-                $("#name").html(file[index].fileName)
             } 
         })
         $("#next").click(function(){ // 下一首
@@ -252,13 +228,14 @@
             }else{
               $("#audio").attr('src',file[index].fileURL);
                 play(); 
-                $("#name").html(file[index].fileName) 
             } 
         })
 
         function play(){
             audio.play()
-            console.log(audio.volume)
+            $("#name").html(file[index].fileName) 
+            
+            //console.log(audio.volume)
         }
 
         /** 声音控制器模拟 **/
@@ -319,23 +296,20 @@
                 s = Sortable.create(bar, {  // 用sortable实现可拖拽排序
                     animation: 150,
                     onEnd: function(){ // 排序结束后更改localstorage.file文件
-                        getList();
+                        util.getRightList();
                     }
                 });
             }
         })
 
-        function getList(){ // 获取当前列表
-            var arr = [];
-                $("#musicList").find('li').each(function(index,val){
-                    var obj = {};
-                    obj.fileName = $(val).find('a').text();
-                    obj.fileURL = $(val).find('a').attr('data-url');
-                    arr.push(obj);
-                })
-                file = arr;
-                localStorage.file = JSON.stringify(arr);
-        }
+        
+        /**列表删除**/
+        $("#musicList").delegate('span','click',function(e){
+            e.stopPropagation();
+            var fileURL = $(this).parent().attr('data-url');
+            var fileName = $(this).parent().text();
+            util.deleteFile(fileURL,fileName);
+        });
 
     })
 
