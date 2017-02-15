@@ -63,7 +63,7 @@
                     </ul>
                 </div>
                 <div class="favorite-con" style="display:none;">
-                    <ul id="favoriteList" class="gai_list_2">
+                    <ul id="favoriteList" class="gai_list_2" style="display:block;height:188px;">
 
                     </ul>
                 </div>
@@ -163,7 +163,7 @@
             var win = nw.Window.get();
             win.maximize()
         })
-         $("#reload").click(function(){ // 刷新图标刷新页面
+         $("#reload").click(function(){ // 刷新页面
             window.location.reload();
         })
         /***topbar功能***/
@@ -174,7 +174,7 @@
             $("#allTime").html(util.getTime(audio.duration));
             $("#play").addClass('playing');// 改变播放按钮样式
             Timmer = setInterval(function(){ //控制时间与进度条
-                $("#nowTime").html(util.getTime(audio.currentTime))
+                $("#nowTime").html(util.getTime(audio.currentTime));
                 var per = parseInt((audio.currentTime/audio.duration)*100);
                 $(".process").css('width',per+'%');
             },500)
@@ -357,12 +357,20 @@
             var url = $(this).parent().attr('data-url');
             util.deleteFile(url,name);
         });
+        
 
         $("#recentList").delegate('li','click',function(){ //最近播放列表点击事件
             nowType = 'recent';
             $(this).addClass('on').siblings('li').removeClass('on');
             index = $(this).index();
             play(recentFile);
+        });
+
+        $('#recentList,#defaultList').delegate('.favorite','click',function(e){ //添加音效到喜欢列表
+            e.stopPropagation();
+            var name = $(this).parent().find('p').text();
+            var url = $(this).parent().attr('data-url');
+            util.addToFavorite(url,name);
         });
 
         /**左侧列表**/

@@ -51,7 +51,7 @@ var util = {
         })
         $("#defaultList").html(sideListHtml); 
     },
-    renderRecentList: function(){
+    renderRecentList: function(){// 单独渲染左侧最近播放列表
         var html = '';
         recentFile.map(function(val,index){
             html  +=   '<li data-url='+val.fileURL+'>'+
@@ -62,7 +62,7 @@ var util = {
         })
         $("#recentList").html(html); 
     },
-    renderFavoriteList: function(){
+    renderFavoriteList: function(){// 单独渲染左侧喜欢列表
         var html = '';
         favoriteFile.map(function(val,index){
             html  +=   '<li data-url='+val.fileURL+'>'+
@@ -72,6 +72,7 @@ var util = {
                                 '</li>'; // 喜欢列表
         })
         $("#favoriteList").html(html);
+        console.log(favoriteFile)
     },
 	getTime: function (time){ // 修改时间格式
         var time = parseInt(time),m,s;
@@ -81,7 +82,7 @@ var util = {
         s = s > 9 ? s : '0'+s;
         return m+':'+s;
     },
-    getMainList: function (){ // 获取当前列表
+    getMainList: function (){ // 获取当前列表(用于排序后更新localstorage)
         var arr = [];
             $("#musicList").find('li').each(function(index,val){
                 var obj = {};
@@ -118,5 +119,30 @@ var util = {
         }else if(nowType == 'recent'){
             $("#recentList").find('li').eq(index).addClass('on').siblings('li').removeClass('on');
         }
+    },
+    isFavorited: function(fileURL){ // 检测该音效是否已在favorite列表
+    	var flag = false;
+    	if(favoriteFile.length){
+    		favoriteFile.map(function(val,i){
+    			if(val.fileURL == fileURL){
+    				flag = true
+    			}
+    		});
+    	}
+    	return flag;
+    },
+    addToFavorite: function(fileURL,fileName){ // 添加音效到喜欢列表
+    	var flag = this.isFavorited(fileURL);
+    	if(!flag){
+    		var obj = {};
+    		obj.fileURL = fileURL;
+    		obj.fileName = fileName;
+    		favoriteFile.unshift(obj);
+    		localStorage.favoriteFile = JSON.stringify(favoriteFile);
+    		this.renderFavoriteList();
+    		alert('添加成功');
+    	}else{
+    		alert('该音效已存在喜欢列表');
+    	}
     }
 }
