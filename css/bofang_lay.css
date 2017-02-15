@@ -44,7 +44,8 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
 .left_bbanner { height:33px; border-bottom:1px solid #E2E2E2; background:#007BDD;}
 .left_bbanner a {width:38px; float:left; border-right:1px solid #269DDB; height:25px; display:block; text-align:center; padding-top:8px}
 .left_bbanner a:hover { background:#509AD5;}
-.liebiao_list { height:218px;overflow-x:auto; }
+.left_bbanner .on{background:#509AD5;}
+.liebiao_list { height:218px;overflow:hidden; }
 .ce_back { height:18px; padding:6px;}
 .ce_ad_bk { height:87px; white-space:195px; overflow:hidden;}
 .nr_banner { height:33px; border-bottom:1px solid #E2E2E2; color:#4C4C4C;}
@@ -126,25 +127,72 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
 .shiting_bk { height:30px; border-bottom:1px solid #CCC;}
 .shiting_left { float:left; padding:6px 0 0 12px;}
 .shiting_right { float:right; padding:7px 12px 0 0;}
-.moren_list { height:30px; line-height:30px; border-bottom:1px solid #CCC; font-size:15px; color:#213547}
+.moren_list { height:30px; line-height:30px; border-bottom:1px solid #CCC; font-size:15px; color:#213547; cursor: pointer;-webkit-user-select: none;}
 .moren_list p { float:left; }
-.moren_list span { float:right; display:block; padding:7px}
+.moren_list span { 
+    float:right; 
+    display:block; 
+    width:17px;
+    height:16px;
+    padding:7px;
+    background:url(../images/lb_ico_shou.png) no-repeat center;
+}
+.moren_list.on span{
+    background:url(../images/lb_ico_xiala.png) no-repeat center;
+}
 .mrlink_lb {background: url(../images/liebiao_shou.png) no-repeat 3px center; padding-left: 26px; }
-.mrhover_lb {background: url(../images/liebiao_xiala.png) no-repeat 3px center;padding-left: 26px; color:#5CC3FE; }
-.gai_list_2 { line-height:30px; font-size:14px; color:#213547;}
-.gai_list_2 li { height:30px; border-bottom:1px solid #CCC;}
-.gai_list_2 li p { float:left; padding-left:36px; }
-.gai_list_2 li .weixuan { background: url(../images/yinyue_tubiao.png) no-repeat 10px center;}
-.gai_list_2 li span { float:right; padding:6px 6px 0 0;}
-.gai_list_2 li a {display:block; width:100%; height:30px;}
-.gai_list_2 li a:hover { background:#E1E1E1; }
-.xuanzhong_lb { background:#4BBDFF;}
-.gai_list_2 li .xuanz {background: url(../images/bofang_tubiao.png) no-repeat 10px center; color:#FFFE42;}
+.moren_list.on .mrlink_lb {background: url(../images/liebiao_xiala.png) no-repeat 3px center;padding-left: 26px; color:#5CC3FE; }
+
+.moren_list.on~ul{
+    display:block;
+}
+
+.gai_list_2 {display:none; height:124px; overflow-y: auto; line-height:30px; font-size:14px; color:#213547;}
+.gai_list_2 li { height:30px; border-bottom:1px solid #CCC;  }
+.gai_list_2 li p { float:left; padding-left:36px; background: url(../images/yinyue_tubiao.png) no-repeat 10px center; cursor:default;}
+
+.gai_list_2 li span { display:block; float:right; width:18px; height:17px; margin:8px 6px 0 0; cursor: pointer;}
+.gai_list_2 .favorite{
+    background:url(../images/like_ico.png) no-repeat center;
+}
+.gai_list_2 .delete{
+    background:url(../images/del_ico.png) no-repeat center;
+}
+.gai_list_2 li {display:block; width:100%; height:30px;}
+.gai_list_2 li:hover { background:#E1E1E1; }
+.gai_list_2 .on:hover{
+    background: #4BBDFF;
+}
+.gai_list_2 .on{
+   background:#4BBDFF;
+}
+.gai_list_2 .on p{
+    background: url(../images/bofang_tubiao.png) no-repeat 10px center; color:#FFFE42;
+}
+.gai_list_2 .on .favorite{
+    background-image: url(../images/like_ico_2.png);
+}
+.gai_list_2 .on .delete{
+    background-image: url(../images/del_ico_2.png);
+}
+
+
 
 .bofang_bk { height:40px; background:#007BDD;}
 .bofang_1 { float:left; padding:11px 0 0 35px;}
-.bofang_2 { float:left; padding:9px 0 0 20px;}
-.bofang_3 { float:left; padding:11px 0 0 20px;}
+.bofang_2 { 
+    display:block; 
+    float:left; 
+    margin:9px 0 0 20px;
+    width:20px;
+    height:24px;
+    background:url(../images/play.png) center no-repeat;
+    cursor: default;
+}
+.bofang_2.playing{
+    background:url(../images/bofang_ico_2.png) bottom left no-repeat;
+} 
+.bofang_3 { float:left; padding:11px 0 0 16px;}
 .jindu_bk { padding:6px 0 0 20px; float:left; width:250px;}
 .jindu_shang { height:18px;}
 .jindu_shang span { float:left; display:block;}

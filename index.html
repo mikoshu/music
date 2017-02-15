@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>无标题文档</title>
+<title>蓝蚁音效播放器</title>
 <link href="css/bofang_lay.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -37,52 +37,37 @@
     	<div class="mid_left">
         	<div class="left_bbanner">
             	<a href="#"><img src="images/left_ico_1.png" width="14" height="16" /></a>
-                <a href="#"><img src="images/left_ico_2.png" width="14" height="16" /></a>
+                <a href="#" id="tab-local" class="on tabs"><img src="images/left_ico_2.png" width="14" height="16" /></a>
                 <a href="#"><img src="images/left_ico_3.png" width="14" height="16" /></a>
                 <a href="#"><img src="images/left_ico_4.png" width="14" height="16" /></a>
-                <a href="#"><img src="images/left_ico_5.png" width="14" height="16" /></a>
+                <a href="#" class="tabs" id="tab-favorite" ><img src="images/left_ico_5.png" width="14" height="16" /></a>
             </div>
 			<div class="liebiao_list">
             	<div class="shiting_bk">
                 	<!--<div class="shiting_left"><img src="images/shiting_ico.png" width="21" height="17" /></div>-->
                     <div class="shiting_right"><img src="images/xiazai_ico.png" width="17" height="16" /></div>
                 </div>
-				<div class="moren_list">
-					<p class="mrlink_lb">默认分类</p>
-					<span><img src="images/lb_ico_shou.png" width="17" height="16" /></span>
+                <div class="local-con">
+                    <div class="moren_list on">
+                        <p class="mrlink_lb">默认列表</p>
+                        <span></span>
+                    </div>
+                    <ul id="defaultList" class="gai_list_2">
+                        
+                    </ul>
+                    <div class="moren_list">
+                        <p class="mrlink_lb">最近播放</p>
+                        <span></span>
+                    </div>
+                    <ul id="recentList" class="gai_list_2">
+                    </ul>
                 </div>
-				<div class="moren_list">
-					<p class="mrhover_lb">最近播放</p>
-					<span><img src="images/lb_ico_xiala.png" width="17" height="16" /></span>
+                <div class="favorite-con" style="display:none;">
+                    <ul id="favoriteList" class="gai_list_2">
+
+                    </ul>
                 </div>
-				<ul class="gai_list_2">
-					<li>
-                    	<a>
-						<p class="weixuan">群众笑声</p>
-                        <span><img src="images/del_ico.png" width="18" height="17" /></span>
-						<span><img src="images/like_ico.png" width="18" height="17" /></span>
-                        </a>
-					</li>
-                    <li class="xuanzhong_lb">
-						<p class="xuanz">群众笑声</p>
-                        <span><img src="images/del_ico_2.png" width="18" height="17" /></span>
-						<span><img src="images/like_ico_2.png" width="18" height="17" /></span>
-					</li>
-                    <li>
-                    	<a>
-						<p>群众笑声</p>
-                        <span><img src="images/del_ico.png" width="18" height="17" /></span>
-						<span><img src="images/like_ico.png" width="18" height="17" /></span>
-                        </a>
-					</li>
-                    <li>
-                    	<a>
-						<p>群众笑声</p>
-                        <span><img src="images/del_ico.png" width="18" height="17" /></span>
-						<span><img src="images/like_ico.png" width="18" height="17" /></span>
-                        </a>
-					</li>
-				</ul>
+				
             </div>
 			<div class="ce_back"><img src="images/back_tu.jpg" width="128" height="18" /></div>
             <div class="ce_ad_bk"><img src="images/ce_ad.jpg" width="195" height="87" /></div>
@@ -116,7 +101,7 @@
     </div>
     <div class="bofang_bk">
     	<div class="bofang_1" id="last" ><img src="images/bofang_ico_1.png" width="23" height="20" /></div>
-        <div class="bofang_2" id="play" ><img src="images/bofang_ico_2.png" width="18" height="24" /></div>
+        <div class="bofang_2" id="play" ></div>
         <div class="bofang_3" id="next" ><img src="images/bofang_ico_3.png" width="23" height="20" /></div>
         <div class="jindu_bk">
         	<div class="jindu_shang">
@@ -151,8 +136,13 @@
     var path = require('path');
     var musicURL = path.join(process.cwd(),'player/musics/');
     var index = 0; // 默认选中第一个音效
-    var file = [];
+    var allFile = []; // 全部音效文件
+    var favoriteFile = []; // 喜欢的音效文件
+    var recentFile = []; // 最近播放的音效文件
+    var file = []; // 执行遍历的临时文件数组
     var isPlaying = false;
+    var playMode = 'one';
+    var nowType = 'default'; // 记录当前播放列表类型，不同类型对应不同行为
     var audio = document.getElementById('audio');
     var Timmer;
 
@@ -160,13 +150,29 @@
         util.init(); // 初始化
         util.refreshList(); // 渲染列表
 
-        $("#reload").click(function(){ // 刷新图标刷新页面
+        /***topbar功能***/
+        $(".ico_close").click(function(){
+            var win = nw.Window.get();
+            win.close()
+        })
+        $(".ico_xiao").click(function(){
+            var win = nw.Window.get();
+            win.minimize()
+        })
+        $(".ico_suoxiao").click(function(){
+            var win = nw.Window.get();
+            win.maximize()
+        })
+         $("#reload").click(function(){ // 刷新图标刷新页面
             window.location.reload();
         })
-
+        /***topbar功能***/
+       
+        /**音频事件绑定**/
         audio.onplaying = function(){ // 音频播放
             isPlaying = true;
-            $("#allTime").html(util.getTime(audio.duration))
+            $("#allTime").html(util.getTime(audio.duration));
+            $("#play").addClass('playing');// 改变播放按钮样式
             Timmer = setInterval(function(){ //控制时间与进度条
                 $("#nowTime").html(util.getTime(audio.currentTime))
                 var per = parseInt((audio.currentTime/audio.duration)*100);
@@ -176,6 +182,7 @@
 
         audio.onpause = function (){// 音频暂停
             isPlaying = false;
+            $("#play").removeClass('playing');// 改变播放按钮样式
             clearInterval(Timmer)
         }
 
@@ -186,18 +193,39 @@
         }
 
         audio.onerror = function(err){
-            console.log(audio.src)
-            if(audio.src != 'chrome-extension://ppchnfigajpiiponlijgmmhaknifgjhj/player/index.html'){
+            if( audio.src.indexOf('chrome-extension://') ){ //此处为默认为空时返回url
                 alert('该音效文件不存在或路径发生变化!')
             }
         }
 
+        function play(fileList){
+            var arr = []; // 每次播放用于存储更新最近播放列表
+            if(fileList){
+                file = fileList; // 播放时确定当前列表（默认/最近/喜欢）;
+            }
+            $("#audio").attr('src',file[index].fileURL);
+            $("#name").html(file[index].fileName);
+            audio.play();
+            if(nowType != 'recent'){ // 当最近播放列表点击播放时，不更新自身
+                recentFile.map(function(val,i){
+                    if(val.fileName == file[index].fileName){
+                        recentFile.splice(i,1);
+                    }
+                });
+                recentFile.unshift(file[index]);
+                localStorage.recentFile = JSON.stringify(recentFile);
+                util.renderRecentList();
+            }
+            
+        }
+        /**音频事件绑定**/
+
 
         $("#musicList").delegate('li','click',function(){ // 点击音效列表播放音效
-            var url = $(this).find('a').attr('data-url');
-            $("#audio").attr('src',url);
-            $("#name").html($(this).text());
-            index = $(this).index()
+            file = allFile;
+            nowType = 'default';
+            index = $(this).index();
+            play();
         })
 
         $("#play").click(function(){ // 点击播放按钮事件（此处按钮样式需要改变）
@@ -216,8 +244,9 @@
             index -= 1;
             if(index == -1){
                 alert('已经是第一首');
+                index = 0;
             }else{
-              $("#audio").attr('src',file[index].fileURL);
+                util.chooseStyle();
                 play();  
             } 
         })
@@ -225,18 +254,14 @@
             index += 1;
             if(index == file.length){
                 alert('已经是最后一首');
+                index = index - 1;
             }else{
-              $("#audio").attr('src',file[index].fileURL);
+                util.chooseStyle();
                 play(); 
             } 
         })
 
-        function play(){
-            audio.play()
-            $("#name").html(file[index].fileName) 
-            
-            //console.log(audio.volume)
-        }
+        
 
         /** 声音控制器模拟 **/
         var changeVolume = false;
@@ -269,18 +294,8 @@
             audio.volume = per/100;
         } 
         /**声音控制器模拟结束 **/
-        $(".ico_close").click(function(){
-            var win = nw.Window.get();
-            win.close()
-        })
-        $(".ico_xiao").click(function(){
-            var win = nw.Window.get();
-            win.minimize()
-        })
-        $(".ico_suoxiao").click(function(){
-            var win = nw.Window.get();
-            win.maximize()
-        })
+
+        
 
         /***排序按钮开关***/
         var s;
@@ -296,20 +311,63 @@
                 s = Sortable.create(bar, {  // 用sortable实现可拖拽排序
                     animation: 150,
                     onEnd: function(){ // 排序结束后更改localstorage.file文件
-                        util.getRightList();
+                        util.getMainList();
+                        util.renderDefaultList();// 重新渲染左侧默认列表
                     }
                 });
             }
         })
 
         
-        /**列表删除**/
+        /**主列表删除**/
         $("#musicList").delegate('span','click',function(e){
             e.stopPropagation();
             var fileURL = $(this).parent().attr('data-url');
             var fileName = $(this).parent().text();
             util.deleteFile(fileURL,fileName);
         });
+
+        /**左侧列表**/
+        $(".tabs").click(function(){
+            $(this).addClass('on').siblings('.tabs').removeClass('on');
+        });
+        $("#tab-local").click(function(){
+            $(".local-con").show();
+            $(".favorite-con").hide();
+        });
+        $("#tab-favorite").click(function(){
+            $(".local-con").hide();
+            $(".favorite-con").show();
+        });
+
+
+        $(".moren_list").click(function(){
+            $(this).toggleClass('on').siblings('.moren_list').removeClass('on');
+        })
+
+        $("#defaultList").delegate('li','click',function(){ //默认列表点击事件
+            nowType = 'default';
+            $(this).addClass('on').siblings('li').removeClass('on');
+            index = $(this).index();
+            play(allFile);
+        });
+        $("#defaultList").delegate('.delete','click',function(e){ //默认列表删除文件
+            e.stopPropagation();
+            var name = $(this).parent().find('p').text();
+            var url = $(this).parent().attr('data-url');
+            util.deleteFile(url,name);
+        });
+
+        $("#recentList").delegate('li','click',function(){ //最近播放列表点击事件
+            nowType = 'recent';
+            $(this).addClass('on').siblings('li').removeClass('on');
+            index = $(this).index();
+            play(recentFile);
+        });
+
+        /**左侧列表**/
+
+
 
     })
 
