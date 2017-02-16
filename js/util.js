@@ -1,6 +1,10 @@
 var util = {
 	init: function(){
         /**localstorage 用于排序，记录当前顺序每次文件增删改查后更新，如有该属性，不遍历musics文件夹**/
+        if(localStorage.favoriteFile){
+            favoriteFile = JSON.parse(localStorage.favoriteFile);
+            this.renderSideList('favoriteList',favoriteFile);
+        }
         if(localStorage.file){
             allFile = JSON.parse(localStorage.file);
         }else{
@@ -17,12 +21,9 @@ var util = {
         }
         if(localStorage.recentFile){
             recentFile = JSON.parse(localStorage.recentFile);
-            this.renderRecentList();
+            this.renderSideList('recentList',recentFile);
         }
-        if(localStorage.favoriteFile){
-            favoriteFile = JSON.parse(localStorage.favoriteFile);
-            this.renderFavoriteList();
-        }
+
         file = allFile;
         /**localstorage 用于排序**/
 	},
@@ -31,49 +32,22 @@ var util = {
         var sideListHtml = '';
 		allFile.map(function(val,index){ // 遍历file数组生成html模板
             mainHtml += '<li><a href="javascript:;" data-url='+val.fileURL+' >'+val.fileName+'<span></span></a></li>'; // 主列表
-            sideListHtml  +=   '<li data-url='+val.fileURL+'>'+
-                                    '<p>'+val.fileName+'</p>'+
-                                    '<span class="delete"></span>'+
-                                    '<span class="favorite"></span>'+
-                                '</li>'; // 左侧默认列表
         })
         $("#musicList").html(mainHtml); // 渲染音效列表
-        $("#defaultList").html(sideListHtml); // 渲染左侧默认列表
+        this.renderSideList('defaultList',allFile);
 	},
-    renderDefaultList: function(){ // 单独渲染左侧默认列表
-        var sideListHtml = '';
-        allFile.map(function(val,index){ // 遍历file数组生成html模板
-            sideListHtml  +=   '<li data-url='+val.fileURL+'>'+
-                                    '<p>'+val.fileName+'</p>'+
-                                    '<span class="delete"></span>'+
-                                    '<span class="favorite"></span>'+
-                                '</li>'; // 左侧默认列表
-        })
-        $("#defaultList").html(sideListHtml); 
-    },
-    renderRecentList: function(){// 单独渲染左侧最近播放列表
+    renderSideList: function(id,fileArr){ // 渲染左侧列表统一函数
         var html = '';
-        recentFile.map(function(val,index){
+        fileArr.map(function(val,index){
+            var favoriteClass = util.isFavorited(val.fileURL)? 'favorited' : 'favorite'; // 判断该音效是否存在favorite列表，修改样式
             html  +=   '<li data-url='+val.fileURL+'>'+
-                                    '<p>'+val.fileName+'</p>'+
-                                    '<span class="delete"></span>'+
-                                    '<span class="favorite"></span>'+
-                                '</li>'; // 最近播放列表
+                            '<p>'+val.fileName+'</p>'+
+                            '<span class="delete"></span>'+
+                            '<span class="'+favoriteClass+'"></span>'+
+                        '</li>'; // 喜欢列表
         })
-        $("#recentList").html(html); 
-    },
-    renderFavoriteList: function(){// 单独渲染左侧喜欢列表
-        var html = '';
-        favoriteFile.map(function(val,index){
-            html  +=   '<li data-url='+val.fileURL+'>'+
-                                    '<p>'+val.fileName+'</p>'+
-                                    '<span class="delete"></span>'+
-                                    '<span class="favorite"></span>'+
-                                '</li>'; // 喜欢列表
-        })
-        $("#favoriteList").html(html);
-        console.log(favoriteFile)
-    },
+        $("#"+id).html(html);
+    }, 
 	getTime: function (time){ // 修改时间格式
         var time = parseInt(time),m,s;
         m = parseInt(time/60);
@@ -96,12 +70,27 @@ var util = {
     deleteFile: function(fileURL,fileName){ // 删除文件
     	var sure = confirm("确定要删除"+fileName+"音效吗？");
         if(sure){
-            file.map(function(val,index){
+            allFile.map(function(val,index){
                 if(val.fileURL == fileURL){
                     file.splice(index,1); 
+                    return
                 }
             })
-            localStorage.file = JSON.stringify(file);
+            localStorage.file = JSON.stringify(allFile);
+            recentFile.map(function(val,index){
+                if(val.fileURL == fileURL){
+                    recentFile.splice(index,1); 
+                    return
+                }
+            })
+            localStorage.recentFile = JSON.stringify(recentFile);
+            favoriteFile.map(function(val,index){
+                if(val.fileURL == fileURL){
+                    favoriteFile.splice(index,1); 
+                    return
+                }
+            })
+            localStorage.favoriteFile = JSON.stringify(favoriteFile);
             fs.unlink(fileURL,function(err){
                 if(err){
                     alert(err)
@@ -109,6 +98,8 @@ var util = {
                     alert('删除成功');
                 }
                 util.refreshList();
+                util.renderSideList('recentList',recentFile);
+                util.renderSideList('favoriteList',favoriteFile);
             })
             
         }
@@ -118,6 +109,8 @@ var util = {
             $("#defaultList").find('li').eq(index).addClass('on').siblings('li').removeClass('on');
         }else if(nowType == 'recent'){
             $("#recentList").find('li').eq(index).addClass('on').siblings('li').removeClass('on');
+        }else if(nowType == 'favorite'){
+            $("#favoriteList").find('li').eq(index).addClass('on').siblings('li').removeClass('on');
         }
     },
     isFavorited: function(fileURL){ // 检测该音效是否已在favorite列表
@@ -126,12 +119,13 @@ var util = {
     		favoriteFile.map(function(val,i){
     			if(val.fileURL == fileURL){
     				flag = true
+                    return flag;
     			}
     		});
     	}
     	return flag;
     },
-    addToFavorite: function(fileURL,fileName){ // 添加音效到喜欢列表
+    addToFavorite: function(dom,fileURL,fileName){ // 添加音效到喜欢列表
     	var flag = this.isFavorited(fileURL);
     	if(!flag){
     		var obj = {};
@@ -139,10 +133,23 @@ var util = {
     		obj.fileName = fileName;
     		favoriteFile.unshift(obj);
     		localStorage.favoriteFile = JSON.stringify(favoriteFile);
-    		this.renderFavoriteList();
-    		alert('添加成功');
+    		this.renderSideList('favoriteList',favoriteFile);
+            dom.attr('class','favorited');
     	}else{
     		alert('该音效已存在喜欢列表');
     	}
+    },
+    removeFromFavorite: function(dom,fileURL,fileName){ // 从喜欢列表移除
+        if(favoriteFile.length){
+            favoriteFile.map(function(val,i){
+                if(val.fileURL == fileURL){
+                    favoriteFile.splice(i,1);
+                    return ;
+                }
+            });
+            localStorage.favoriteFile = JSON.stringify(favoriteFile);
+            this.renderSideList('favoriteList',favoriteFile);
+            dom.attr('class','favorite');
+        }
     }
 }

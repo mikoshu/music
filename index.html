@@ -15,21 +15,21 @@
             <div class="denglu_txt">登录</div>
             </a>
 		</div>
-        <div class="top_jiantou">
+        <div class="top_jiantou miniHide">
         	<a href="#"><img src="images/left_ico.png" width="12" height="19" /></a>
             <a href="#"><img src="images/right_ico.png" width="11" height="19" /></a>
             <a href="javascript:;" id="reload"><img src="images/update_ico.png" width="20" height="20" /></a>
         </div>
-        <div class="top_sousuo">
+        <div class="top_sousuo miniHide">
         <form action="" method="get">
         	<div class="sousuo_input_bk"><input name="textfield" type="text" class="ss_input" id="textfield" value="搜索音效、电音基调......" /></div>
             <div class="sousuo_anniu"><input type="button" class="sousuo_but" value="  " /></div>
         </form>
         </div>
-        <div class="ico_youjian"><img src="images/mail_ico.png" width="19" height="15" /></div>
-        <div class="ico_shezhi"><img src="images/shezhi_ico.png" width="14" height="15" /></div>
-        <div class="ico_tuichu"><img src="images/tuichu_ico.png" width="16" height="17" /></div>
-        <div class="ico_suoxiao"><img src="images/suoxiao_ico.png" width="16" height="16" /></div>
+        <div class="ico_youjian miniHide"><img src="images/mail_ico.png" width="19" height="15" /></div>
+        <div class="ico_shezhi miniHide"><img src="images/shezhi_ico.png" width="14" height="15" /></div>
+        <div class="mini" id="mini"></div>
+        <div class="ico_suoxiao miniHide" ><img src="images/suoxiao_ico.png" width="16" height="16" /></div>
         <div class="ico_xiao"><img src="images/xiao_ico.png" width="12" height="3" /></div>
         <div class="ico_close"><img src="images/close_ico.png" width="15" height="16" /></div>
 	</div>
@@ -72,7 +72,7 @@
 			<div class="ce_back"><img src="images/back_tu.jpg" width="128" height="18" /></div>
             <div class="ce_ad_bk"><img src="images/ce_ad.jpg" width="195" height="87" /></div>
         </div>
-        <div class="mid_right">
+        <div class="mid_right miniHide">
         	<div class="nr_banner">
             	<ul>
                 	<li class="nr_banner_jg">我的音效</li>
@@ -103,7 +103,7 @@
     	<div class="bofang_1" id="last" ><img src="images/bofang_ico_1.png" width="23" height="20" /></div>
         <div class="bofang_2" id="play" ></div>
         <div class="bofang_3" id="next" ><img src="images/bofang_ico_3.png" width="23" height="20" /></div>
-        <div class="jindu_bk">
+        <div class="jindu_bk miniHide">
         	<div class="jindu_shang">
             	<span><img src="images/bofang_ico_hd.png" width="25" height="18" /></span>
                 <p id="name"></p>
@@ -116,14 +116,14 @@
                 <div class="jindu_shijian" id="nowTime">00:00</div>
             </div>
         </div>
-        <div class="bofang_4"><img src="images/bofang_ico_4.png" width="12" height="16" /></div>
-        <div class="bofang_5"><img src="images/bofang_ico_5.png" width="16" height="15" /></div>
-        <div class="bofang_6"><img src="images/bofang_ico_6.png" width="19" height="11" /></div>
-        <div class="bofang_7"><img src="images/bofang_ico_7.png" width="17" height="12" /></div>
-        <div class="shengyin_jindu" id="volume">
+        <div class="bofang_4 miniHide" id="delete"><img src="images/bofang_ico_4.png" width="12" height="16" /></div>
+        <div class="favorite " id="favorite"></div>
+        <div class="circle " id="circle"></div>
+        <div class="bofang_7 miniHide"><img src="images/bofang_ico_7.png" width="17" height="12" /></div>
+        <div class="shengyin_jindu miniHide" id="volume">
 		  <p class="volume"></p>
         </div>
-         <div class="ce_duihua">12</div>
+         <div class="ce_duihua miniHide">12</div>
 	</div>
 </div>
 <audio id="audio" autoplay="autoplay" src='' ></audio>
@@ -159,20 +159,41 @@
             var win = nw.Window.get();
             win.minimize()
         })
-        $(".ico_suoxiao").click(function(){
-            var win = nw.Window.get();
-            win.maximize()
-        })
-         $("#reload").click(function(){ // 刷新页面
+        // $(".ico_suoxiao").click(function(){
+        //     var win = nw.Window.get();
+        //     win.maximize()
+        // })
+        $("#reload").click(function(){ // 刷新页面
             window.location.reload();
         })
+        $('#mini').click(function(){ // mini 隐藏不显示元素
+            var win = nw.Window.get();
+            if($(this).hasClass('mini')){
+                win.width = 195;
+                $(".miniHide").hide();
+                $(this).attr('class','minied');
+                $(".bofang_bk").addClass('miniFooter');
+            }else{
+                win.width = 660;
+                $(".miniHide").show();
+                $(this).attr('class','mini');
+                $(".bofang_bk").removeClass('miniFooter');
+            }
+            
+        });
         /***topbar功能***/
        
         /**音频事件绑定**/
         audio.onplaying = function(){ // 音频播放
             isPlaying = true;
+            var url = $(audio).attr('src');
             $("#allTime").html(util.getTime(audio.duration));
             $("#play").addClass('playing');// 改变播放按钮样式
+            if(util.isFavorited(url)){
+                $("#favorite").attr('class','favorited');
+            }else{
+                $("#favorite").attr('class','favorite');
+            }
             Timmer = setInterval(function(){ //控制时间与进度条
                 $("#nowTime").html(util.getTime(audio.currentTime));
                 var per = parseInt((audio.currentTime/audio.duration)*100);
@@ -214,7 +235,7 @@
                 });
                 recentFile.unshift(file[index]);
                 localStorage.recentFile = JSON.stringify(recentFile);
-                util.renderRecentList();
+                util.renderSideList('recentList',recentFile);
             }
             
         }
@@ -236,7 +257,17 @@
             if(isPlaying){
                 audio.pause()
             }else{
-                play()
+                audio.play();
+                if(nowType != 'recent'){ // 当最近播放列表点击播放时，不更新自身
+                    recentFile.map(function(val,i){
+                        if(val.fileName == file[index].fileName){
+                            recentFile.splice(i,1);
+                        }
+                    });
+                    recentFile.unshift(file[index]);
+                    localStorage.recentFile = JSON.stringify(recentFile);
+                    util.renderSideList('recentList',recentFile);
+                }
             }
             
         })
@@ -259,6 +290,41 @@
                 util.chooseStyle();
                 play(); 
             } 
+        })
+        $("#delete").click(function(){
+            var url = $(audio).attr('src');
+            var name = $("#name").text();
+            if(name != ''){
+                util.deleteFile(url,name);
+                $(audio).attr('src','');
+                $("#name").text('');
+
+            }
+        });
+
+        $("#favorite").click(function(){
+            var dom = $(this);
+            var url = $(audio).attr('src');
+            var name = $("#name").text();
+            if(name != ''){
+                if(dom.hasClass('favorite')){
+                    util.addToFavorite(dom,url,name);
+                }else{
+                    util.removeFromFavorite(dom,url,name);
+                }
+            }
+            
+        })
+
+        $("#circle").click(function(){
+            var $this = $(this);
+            if($this.hasClass('circle')){
+                $this.attr('class','circled');
+                audio.loop = true;
+            }else{
+                $this.attr('class','circle');
+                audio.loop = false;
+            }
         })
 
         
@@ -312,7 +378,7 @@
                     animation: 150,
                     onEnd: function(){ // 排序结束后更改localstorage.file文件
                         util.getMainList();
-                        util.renderDefaultList();// 重新渲染左侧默认列表
+                        util.renderSideList('defaultList',allFile);// 重新渲染左侧默认列表
                     }
                 });
             }
@@ -351,12 +417,7 @@
             index = $(this).index();
             play(allFile);
         });
-        $("#defaultList").delegate('.delete','click',function(e){ //默认列表删除文件
-            e.stopPropagation();
-            var name = $(this).parent().find('p').text();
-            var url = $(this).parent().attr('data-url');
-            util.deleteFile(url,name);
-        });
+        
         
 
         $("#recentList").delegate('li','click',function(){ //最近播放列表点击事件
@@ -366,11 +427,31 @@
             play(recentFile);
         });
 
-        $('#recentList,#defaultList').delegate('.favorite','click',function(e){ //添加音效到喜欢列表
+        $("#favoriteList").delegate('li','click',function(){ //最近播放列表点击事件
+            nowType = 'favorite';
+            $(this).addClass('on').siblings('li').removeClass('on');
+            index = $(this).index();
+            play(favoriteFile);
+        });
+
+        $('#recentList,#defaultList,#favoriteList').delegate('.favorite','click',function(e){ //添加音效到喜欢列表
             e.stopPropagation();
             var name = $(this).parent().find('p').text();
             var url = $(this).parent().attr('data-url');
-            util.addToFavorite(url,name);
+            util.addToFavorite($(this),url,name);
+        });
+
+        $('#recentList,#defaultList,#favoriteList').delegate('.favorited','click',function(e){ //从喜欢列表移除音效
+            e.stopPropagation();
+            var name = $(this).parent().find('p').text();
+            var url = $(this).parent().attr('data-url');
+            util.removeFromFavorite($(this),url,name);
+        });
+        $("#recentList,#defaultList,#favoriteList").delegate('.delete','click',function(e){ //列表删除文件
+            e.stopPropagation();
+            var name = $(this).parent().find('p').text();
+            var url = $(this).parent().attr('data-url');
+            util.deleteFile(url,name);
         });
 
         /**左侧列表**/
