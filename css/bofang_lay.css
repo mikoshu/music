@@ -20,8 +20,8 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
 .ss_input { font-size:12px; color:#99A3AB; font-family:"Microsoft YaHei", "微软雅黑", "SimSun", "宋体"; margin: 0px; padding: 0px; border-style: none; line-height:26px; height:26px; }
 .sousuo_anniu { float:left; width:28px;}
 .sousuo_but { width:28px; float:left; overflow:hidden; height:27px; background-color:transparent; cursor:hand;}
-.ico_youjian { float:left; margin: 13px 9px 0 50px;-webkit-app-region: no-drag;}
-.ico_shezhi { float:left; margin:14px 9px 0 0 ;-webkit-app-region: no-drag;}
+.ico_youjian { float:left; margin: 13px 9px 0 50px;-webkit-app-region: no-drag; cursor:pointer; }
+.ico_shezhi { float:left; margin:14px 9px 0 0 ;-webkit-app-region: no-drag; cursor:pointer;}
 .mini { 
     float:left; 
     display: block;
@@ -30,6 +30,7 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
     margin:13px 9px 0 0 ;
     background:url(../images/tuichu_ico.png);
     -webkit-app-region: no-drag;
+    cursor:pointer;
 }
 .minied{
    float:left; 
@@ -39,10 +40,20 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
     margin:13px 9px 0 40px;
     background:url(../images/minied.png);
     -webkit-app-region: no-drag; 
+    cursor:pointer;
 }
-.ico_suoxiao { float:left; margin:13px 9px 0 0 ;-webkit-app-region: no-drag;}
-.ico_xiao { float:left; margin:19px 9px 0 0 ;-webkit-app-region: no-drag;}
-.ico_close { float:left; margin:12px 9px 0 0 ;-webkit-app-region: no-drag;}
+.ico_suoxiao { float:left; margin:13px 9px 0 0 ;-webkit-app-region: no-drag; cursor:pointer;}
+.ico_xiao { 
+    float:left; 
+    display: block; 
+    width:12px; 
+    height:16px;
+    margin:12px 9px 0 0 ;
+    -webkit-app-region: no-drag;
+    background: url(../images/xiao_ico.png) center no-repeat;
+    cursor:pointer;
+}
+.ico_close { float:left; margin:12px 9px 0 0 ;-webkit-app-region: no-drag; cursor:pointer;}
 .left_fenlei { line-height:16px; }
 .left_fenlei li { height:16px;padding-left:18px;}
 .jihuo { background:#EBEBEB;}
@@ -290,7 +301,7 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
 .xiao_kz { height:35px; background:#0181F7}
 
 .miniFooter{
-    
+
 }
 
 .miniFooter .favorite,.miniFooter .favorited{
