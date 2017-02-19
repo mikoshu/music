@@ -90,7 +90,7 @@
 				<div class="tiaoshi_left_txt">声卡调试</div>
 				<div class="tiaoshi_left_txt">就找图腾音频</div>
                 <div class="toggle_onoff"><a id="sort"></a></div>
-                <div class="tiaoshi_right_jia"><img src="images/jia_ico.png" width="14" height="14" /></div>
+                <div class="tiaoshi_right_jia" title="重新加载音频文件" ><img src="images/jia_ico.png" width="14" height="14" /></div>
             </div>
             <div class="list_shengxiao">
             	<ul class="clearfix" id="musicList">
@@ -100,9 +100,9 @@
         </div>
     </div>
     <div class="bofang_bk">
-    	<div class="bofang_1" id="last" ><img src="images/bofang_ico_1.png" width="23" height="20" /></div>
+    	<div class="bofang_1" id="last" ></div>
         <div class="bofang_2" id="play" ></div>
-        <div class="bofang_3" id="next" ><img src="images/bofang_ico_3.png" width="23" height="20" /></div>
+        <div class="bofang_3" id="next" ></div>
         <div class="jindu_bk miniHide">
         	<div class="jindu_shang">
             	<span><img src="images/bofang_ico_hd.png" width="25" height="18" /></span>
@@ -153,7 +153,10 @@
         /***topbar功能***/
         $(".ico_close").click(function(){
             var win = nw.Window.get();
-            win.close()
+            var sure = confirm("您确定要关闭播放器吗？");
+            if(sure){
+                win.close();
+            }
         })
         $(".ico_xiao").click(function(){
             var win = nw.Window.get();
@@ -194,6 +197,12 @@
             }else{
                 $("#favorite").attr('class','favorite');
             }
+            $("#musicList").find('a').each(function(i,val){
+                if($(val).attr('data-url') == url ){
+                    $(val).parent().addClass('on').siblings('li').removeClass('on');
+                    return
+                }
+            });
             Timmer = setInterval(function(){ //控制时间与进度条
                 $("#nowTime").html(util.getTime(audio.currentTime));
                 var per = parseInt((audio.currentTime/audio.duration)*100);
@@ -245,6 +254,7 @@
         $("#musicList").delegate('li','click',function(){ // 点击音效列表播放音效
             file = allFile;
             nowType = 'default';
+            $(this).addClass('on').siblings('li').removeClass('on');
             index = $(this).index();
             play();
         })
@@ -253,6 +263,7 @@
             var url = $("#audio").attr('src');
             if(url == ''){
                 $("#audio").attr('src',file[index].fileURL);
+                $("#name").text(file[index].fileName);
             }
             if(isPlaying){
                 audio.pause()
@@ -295,10 +306,14 @@
             var url = $(audio).attr('src');
             var name = $("#name").text();
             if(name != ''){
-                util.deleteFile(url,name);
-                $(audio).attr('src','');
-                $("#name").text('');
-
+                var flag = util.deleteFile(url,name);
+                console.log(flag)
+                if(flag){
+                    $(audio).attr('src','');
+                    $("#name").text('');
+                    $(".process").css('width',"0%");
+                    $("#play").attr('class','bofang_2');
+                }
             }
         });
 
@@ -456,7 +471,9 @@
 
         /**左侧列表**/
 
-
+        $(".tiaoshi_right_jia").click(function(){
+            localStorage.clear();
+        })
 
     })
 

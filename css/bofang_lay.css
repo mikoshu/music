@@ -152,6 +152,10 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
     background:#509AD5;
     color:#FFF; 
 }
+.list_shengxiao .on a{
+	background:#509AD5;
+    color:#FFF; 
+}
 .shiting_bk { height:30px; border-bottom:1px solid #CCC;}
 .shiting_left { float:left; padding:6px 0 0 12px;}
 .shiting_right { float:right; padding:7px 12px 0 0;}
@@ -213,7 +217,15 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
 
 
 .bofang_bk { height:40px; background:#007BDD; position:relative;}
-.bofang_1 { float:left; padding:11px 0 0 35px;}
+.bofang_1 { 
+	float:left;
+	display: block;
+	width:23px;
+	height:20px; 
+	margin:11px 0 0 35px;
+	background: url(../images/bofang_ico_1.png) no-repeat;
+	opacity:.8;
+}
 .bofang_2 { 
     display:block; 
     float:left; 
@@ -222,6 +234,7 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
     height:24px;
     background:url(../images/play.png) center no-repeat;
     cursor: default;
+    opacity:.8;
 }
 .bofang_2.playing{
     background:url(../images/bofang_ico_2.png) bottom left no-repeat;
@@ -229,7 +242,17 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
 
 
 
-.bofang_3 { float:left; padding:11px 0 0 16px;}
+.bofang_3 { 
+	float:left; 
+	margin:11px 0 0 16px;
+	width:23px;
+	height:20px; 
+	background: url(../images/bofang_ico_3.png) no-repeat;
+	opacity:.7;
+}
+.bofang_1:hover,.bofang_2:hover,.bofang_3:hover{
+	opacity:1;
+}
 .jindu_bk { padding:6px 0 0 20px; float:left; width:250px;}
 .jindu_shang { height:18px;}
 .jindu_shang span { float:left; display:block;}
@@ -317,5 +340,5 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
     margin:0;
 }
 .miniFooter .bofang_1{
-    padding:11px 0 0 44px;
+    margin:11px 0 0 44px;
 }

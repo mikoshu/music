@@ -103,6 +103,7 @@ var util = {
             })
             
         }
+        return sure
     },
     chooseStyle: function(){
         if(nowType == 'default'){
