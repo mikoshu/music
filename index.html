@@ -127,6 +127,28 @@
 	</div>
 </div>
 <audio id="audio" autoplay="autoplay" src='' ></audio>
+<!--右键弹窗-->
+<div class="pop">
+    <a href="#">重命名</a>
+    <a href="#" id="addShortCuts" >添加快捷键</a>
+</div>
+<!--右键弹窗结束-->
+<!--重命名弹窗-->
+<div class="shortCutsPop">
+    <label>
+        音效名： 
+        <span id="shortCutsName">你猜什么</span>
+    </label>
+    <label>
+        快捷键：
+        <input type="text" id="shortCutsInput" />
+    </label>
+    <div class="btn-box">
+        <a href="#" id="shortCutsSure">确定</a>
+        <a href="#" id="shortCutsCancel" >取消</a>
+    </div>
+</div>
+<!--重命名弹窗结束-->
 
 <script type="text/javascript" src="js/jquery-2.1.1.min.js" ></script>
 <script type="text/javascript" src="js/Sortable.js" ></script>
@@ -145,6 +167,7 @@
     var nowType = 'default'; // 记录当前播放列表类型，不同类型对应不同行为
     var audio = document.getElementById('audio');
     var Timmer;
+    var gui = require('nw.gui');
 
     $(document).ready(function(){
         util.init(); // 初始化
@@ -474,6 +497,56 @@
         $(".tiaoshi_right_jia").click(function(){
             localStorage.clear();
         })
+
+        /**右键添加快捷键**/
+        var shortCutsObj = {};
+        var codeArray = []; // 记录快捷键键值
+        $("#musicList").find('a').mousedown(function(e) { // 显示右键弹窗
+            if(e.button == '2'){
+                var x = e.clientX;
+                var y = e.clientY;
+                var name = $(this).text();
+                var url = $(this).attr('data-url');
+                $(".pop").show().css({'left':x+'px',top:y+'px'});
+                shortCutsObj.name = name;
+                shortCutsObj.url = url;
+                e.stopPropagation();
+            }
+        });
+        $(document).mousedown(function(event) {
+            $(".pop").hide()
+        });
+
+        $("#addShortCuts").mousedown(function(){ // 显示添加快捷键弹窗
+            $("#shortCutsName").text(shortCutsObj.name);
+            $("#shortCutsInput").val("");
+            $(".shortCutsPop").show();         
+        });
+
+        $("#shortCutsCancel").click(function(){
+            $(".shortCutsPop").hide(); 
+        })
+
+        $("#shortCutsInput").keydown(function(e) {  // https://github.com/nwjs/nw.js/wiki/Shortcut
+            console.log(e.keyCode)
+            var code = e.keyCode;
+            if(code == 17 || code == 18){
+                codeArray.push(code);
+            }else{
+                var key = $("#shortCutsInput").val();
+                key.toUpperCase();
+                console.log(key)
+                $("#shortCutsInput").val(key);
+            }
+            e.stopPropagation();
+        });
+        $(window).keydown(function(e) {
+            var code = e.keyCode;
+            if(code == 32){
+                $("#play").trigger('click');
+            }
+        });
+
 
     })
 

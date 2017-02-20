@@ -1,4 +1,4 @@
-var util = {
+util = {
 	init: function(){
         /**localstorage 用于排序，记录当前顺序每次文件增删改查后更新，如有该属性，不遍历musics文件夹**/
         if(localStorage.favoriteFile){
@@ -26,6 +26,8 @@ var util = {
 
         file = allFile;
         /**localstorage 用于排序**/
+        document.oncontextmenu =new Function("return false;")
+
 	},
 	refreshList: function(){ // 渲染全部列表
 		var mainHtml = '';
@@ -38,8 +40,9 @@ var util = {
 	},
     renderSideList: function(id,fileArr){ // 渲染左侧列表统一函数
         var html = '';
+        var self = this;
         fileArr.map(function(val,index){
-            var favoriteClass = util.isFavorited(val.fileURL)? 'favorited' : 'favorite'; // 判断该音效是否存在favorite列表，修改样式
+            var favoriteClass = self.isFavorited(val.fileURL)? 'favorited' : 'favorite'; // 判断该音效是否存在favorite列表，修改样式
             html  +=   '<li data-url='+val.fileURL+'>'+
                             '<p>'+val.fileName+'</p>'+
                             '<span class="delete"></span>'+
@@ -69,6 +72,7 @@ var util = {
     },
     deleteFile: function(fileURL,fileName){ // 删除文件
     	var sure = confirm("确定要删除"+fileName+"音效吗？");
+        var self = this;
         if(sure){
             allFile.map(function(val,index){
                 if(val.fileURL == fileURL){
@@ -97,9 +101,9 @@ var util = {
                 }else{
                     alert('删除成功');
                 }
-                util.refreshList();
-                util.renderSideList('recentList',recentFile);
-                util.renderSideList('favoriteList',favoriteFile);
+                self.refreshList();
+                self.renderSideList('recentList',recentFile);
+                self.renderSideList('favoriteList',favoriteFile);
             })
             
         }
@@ -152,5 +156,8 @@ var util = {
             this.renderSideList('favoriteList',favoriteFile);
             dom.attr('class','favorite');
         }
+    },
+    addShortCuts: function(key,name,url){
+
     }
 }

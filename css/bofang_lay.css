@@ -342,3 +342,91 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
 .miniFooter .bofang_1{
     margin:11px 0 0 44px;
 }
+
+.pop{
+    display: none;
+    position:absolute;
+    left:0;
+    top:0;
+    width:60px;
+    padding:10px;
+    background:#f0f0f0;
+    text-align: center;
+    border-radius:0 4px 4px 4px;
+}
+.pop a{
+    display: block;
+    color:#333;
+    text-decoration:none;
+}
+.pop a:hover{
+    color:#999;
+}
+
+.shortCutsPop{
+    display: none;
+    position: fixed;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    width:250px;
+    padding:20px 20px 10px 50px;
+    background:#fbfbfb;
+    border:1px solid #bababa;
+    border-radius:2px;
+}
+.shortCutsPop label{
+    display:block; 
+    font-size:14px;
+    margin-bottom:10px;
+}
+.shortCutsPop input{
+    width:120px;
+    height:24px;
+    border:1px solid #bababa;
+}
+.shortCutsPop .btn-box{
+    margin-top: 30px;
+    text-align:center;
+}
+.btn-box a{
+    display:inline-block;
+    width:70px;
+    line-height: 26px;
+    color:#000;
+    border:1px solid #bababa;
+    text-decoration:none;
+    margin:0 20px;
+}
+.btn-box a:hover{
+    border-color:#3e7ef8;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
