@@ -1,5 +1,6 @@
 util = {
 	init: function(){
+        var self = this;
         /**localstorage 用于排序，记录当前顺序每次文件增删改查后更新，如有该属性，不遍历musics文件夹**/
         if(localStorage.favoriteFile){
             favoriteFile = JSON.parse(localStorage.favoriteFile);
@@ -23,10 +24,29 @@ util = {
             recentFile = JSON.parse(localStorage.recentFile);
             this.renderSideList('recentList',recentFile);
         }
+        if(localStorage.shortCutsArray){
+            shortCutsArray = JSON.parse(localStorage.shortCutsArray);
+            console.log(shortCutsArray)
+            shortCutsArray.map(function(val,i){
+                self.addShortCuts(val.key,val.url)
+            });
+            self.renderShortCutsList();
+        }
 
         file = allFile;
         /**localstorage 用于排序**/
         document.oncontextmenu =new Function("return false;")
+        //this.addShortCuts();
+        navigator.mediaDevices.enumerateDevices().then(function(resp){
+            console.log(resp)
+            var html = ''
+            resp.map(function(val,i){
+                if(val.kind === 'audiooutput'){
+                    html += '<option value="'+val.deviceId+'">'+val.label+'</option>'
+                } 
+            })
+            $(".chooseAudio").html(html);
+        });
 
 	},
 	refreshList: function(){ // 渲染全部列表
@@ -157,7 +177,45 @@ util = {
             dom.attr('class','favorite');
         }
     },
-    addShortCuts: function(key,name,url){
+    addShortCuts: function(key,url,name){
+        var option = {
+            key: key,
+            active: function(){
+                $(audio).attr('src',url);
+                $("#name").text(name);
+                audio.play();
+            },
+            failed: function(err){
+                alert(err);
+            }
+        };
+        var shortcut = new gui.Shortcut(option);
+        gui.App.registerGlobalHotKey(shortcut);
 
+        var unregShortcut = function() {  // 使用闭包，存储shortcut
+            gui.App.unregisterGlobalHotKey(shortcut)
+        }
+
+        unreg.push(unregShortcut);
+
+        // ;[0]()
+        //gui.App.unregisterGlobalHotKey(shortcut);
+    },
+    renderShortCutsList: function(){
+        var html = '';
+        shortCutsArray.map(function(val,i){
+            html += '<tr>'+
+                        '<td>'+val.name+'</td>'+
+                        '<td>'+val.key+'</td>'+
+                        '<td>'+
+                            '<a href="#" data-index="'+i+'" class="removeShortCut" >删除</a>'+
+                        '</td>'+
+                    '</tr>'
+        })
+        $("#shortCutsList").html(html);
     }
+    // removeShortCuts: function(option){
+    //     var shortcut = new gui.Shortcut(option);
+    //     gui.App.unregisterGlobalHotKey(shortcut);
+    // }
 }

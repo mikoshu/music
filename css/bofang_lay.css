@@ -385,7 +385,7 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
     height:24px;
     border:1px solid #bababa;
 }
-.shortCutsPop .btn-box{
+.btn-box{
     margin-top: 30px;
     text-align:center;
 }
@@ -402,7 +402,58 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
     border-color:#3e7ef8;
 }
 
+.setPop{
+    display:none;
+    position:fixed;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    width:470px;
+    height:330px;
+    background:#fbfbfb;
+    border:1px solid #bababa;
 
+}
+
+.set-left{
+    float:left;
+    width:100px;
+    height:330px;
+    background: #f1f1f1;
+}
+.set-left a{
+    display:block;
+    width:100px;
+    line-height: 30px;
+    text-align: center;
+    font-size:14px;
+    color:#333;
+    text-decoration: none;
+    border-bottom:1px solid #bababa;
+}
+.set-left .on{
+    background: #dadada;
+}
+.set-con{
+    float:left;
+    width:370px;
+    height:330px;
+}
+.table-box{
+    width:300px;
+    height:220px;
+    border:1px solid #bababa;
+    overflow:auto;
+    margin:20px auto;
+}
+.table{
+    width:100%;
+    text-align: center;
+
+}
+.table th{
+    background:#bababa;
+}
 
 
 

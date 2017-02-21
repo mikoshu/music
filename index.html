@@ -149,6 +149,44 @@
     </div>
 </div>
 <!--重命名弹窗结束-->
+<!--设置弹窗-->
+<div class="setPop clearfix">
+    <div class="set-left">
+        <a class="on" href="#">热键</a>
+        <a href="#">音频设置</a>
+    </div>
+    <div class="set-con">
+        <div class="table-box set-tab">
+            <table class="table" cellspacing="0" cellpadding="0" >
+                <tr>
+                    <th>名称</th>
+                    <th>快捷键</th>
+                    <th>操作</th>
+                </tr>
+                <tbody id="shortCutsList">
+                    <tr>
+                        <td>ksaf saf</td>
+                        <td>kfjas</td>
+                        <td>
+                            <a href="#">删除</a>
+                        </td>
+                    </tr>
+                </tbody>
+                
+            </table>
+        </div>
+        <div class="set-tab">
+            <select class="chooseAudio">
+                
+            </select>
+        </div>
+        <div class="btn-box">
+            <a href="#" class="set-sure">确定</a>
+            <a href="#" class="set-cancel">取消</a>
+        </div>
+    </div>
+</div>
+<!--设置弹窗结束-->
 
 <script type="text/javascript" src="js/jquery-2.1.1.min.js" ></script>
 <script type="text/javascript" src="js/Sortable.js" ></script>
@@ -167,6 +205,8 @@
     var nowType = 'default'; // 记录当前播放列表类型，不同类型对应不同行为
     var audio = document.getElementById('audio');
     var Timmer;
+    var shortCutsArray = []; // 存储快捷键
+    var unreg = []; // 存储删除快捷键函数
     var gui = require('nw.gui');
 
     $(document).ready(function(){
@@ -190,7 +230,11 @@
         //     win.maximize()
         // })
         $("#reload").click(function(){ // 刷新页面
-            window.location.reload();
+            unreg.map(function(val,i){
+                val();
+            })
+            var win = nw.Window.get();
+            win.reload();
         })
         $('#mini').click(function(){ // mini 隐藏不显示元素
             var win = nw.Window.get();
@@ -499,6 +543,10 @@
         })
 
         /**右键添加快捷键**/
+        var win_width = window.innerWidth;
+        var win_height = window.innerHeight;
+        var pop_w = 80;
+        var pop_h = 64;
         var shortCutsObj = {};
         var codeArray = []; // 记录快捷键键值
         $("#musicList").find('a').mousedown(function(e) { // 显示右键弹窗
@@ -507,7 +555,13 @@
                 var y = e.clientY;
                 var name = $(this).text();
                 var url = $(this).attr('data-url');
-                $(".pop").show().css({'left':x+'px',top:y+'px'});
+                $(".pop").show().css({'left':x+'px','top':y+'px','right':'auto','bottom':'auto'});
+                if(x > win_width - pop_w){
+                    $(".pop").show().css({'right':'0px','left':'auto'});
+                }
+                if(y > win_height - pop_h){
+                    $(".pop").show().css({'bottom':'0px','top':'auto'});
+                }
                 shortCutsObj.name = name;
                 shortCutsObj.url = url;
                 e.stopPropagation();
@@ -526,19 +580,31 @@
         $("#shortCutsCancel").click(function(){
             $(".shortCutsPop").hide(); 
         })
-
-        $("#shortCutsInput").keydown(function(e) {  // https://github.com/nwjs/nw.js/wiki/Shortcut
-            console.log(e.keyCode)
-            var code = e.keyCode;
-            if(code == 17 || code == 18){
-                codeArray.push(code);
+        var keyname = '';
+        var l = new lastKey(function(code) {
+            if(code == 17){
+                keyname += '+Ctrl';
+            }else if(code == 18){
+                keyname += '+Alt';
+            }else if(code == 16){
+                keyname += '+Shift';
+            }else if(code == 8){
+                keyname = '';
+                $("#shortCutsInput").val('');
             }else{
-                var key = $("#shortCutsInput").val();
-                key.toUpperCase();
-                console.log(key)
-                $("#shortCutsInput").val(key);
+                keyname += '+'+String.fromCharCode(code);
             }
+                //keyname.substring(1,keyname.length)
+            $("#shortCutsInput").val(keyname.substring(1,keyname.length));
+        })
+        $("#shortCutsInput").keydown(function(e) {  // https://github.com/nwjs/nw.js/wiki/Shortcut
+            var code = e.keyCode;
+            l.of(code)
+            //var value = this.value + String.fromCharCode(e.keyCode);
             e.stopPropagation();
+            e.preventDefault();
+        }).keyup(function(e){
+            keyname = '';
         });
         $(window).keydown(function(e) {
             var code = e.keyCode;
@@ -547,8 +613,76 @@
             }
         });
 
+        $("#shortCutsSure").click(function(){
+            var txt = $("#shortCutsInput").val();
+            if(txt == ''){
+                alert('请输入需要设定的快捷键值！');
+                return
+            }else{
+                var obj = {};
+                obj.name = shortCutsObj.name;
+                obj.key = txt;
+                obj.url = shortCutsObj.url;
+                shortCutsArray.push(obj);
+                localStorage.shortCutsArray = JSON.stringify(shortCutsArray);
+                util.addShortCuts(txt,shortCutsObj.url,shortCutsObj.name);
+                alert('添加快捷键成功！');
+                $(".shortCutsPop").hide();
+                util.renderShortCutsList(); // 刷新快捷键列表
+            }
+        })
+
+        $(".ico_shezhi").click(function(){
+            $(".setPop").show();
+        })
+        $(".set-cancel,.set-sure").click(function(){
+            $(".setPop").hide();
+        })
+        $(".set-left a").click(function(){ // 设置弹窗左侧切换
+            var eq = $(this).index();
+            $(this).addClass('on').siblings('a').removeClass('on');
+            $(".set-tab").eq(eq).show().siblings('.set-tab').hide();
+        })
+
+        $(".setPop").delegate('.removeShortCut', 'click', function(e) {
+            var i = $(this).attr('data-index');
+            shortCutsArray.splice(i,1);
+            localStorage.shortCutsArray = JSON.stringify(shortCutsArray);
+            unreg[i]();
+            unreg.splice(i,1);
+            util.renderShortCutsList();
+        });
+
+        $(".chooseAudio").on('change',function(e){
+            var id = $(this).val()
+            if (typeof audio.sinkId !== 'undefined') {
+                audio.setSinkId(id).then(function(resp) {
+                    console.log(resp)
+                    console.log('Success, audio output device attached: ' + id + ' to ' +
+                      'element with ' + audio.title + ' as source.');
+
+                });
+              } else {
+                console.warn('Browser does not support output device selection.');
+              }
+        })
 
     })
+
+    
+    function lastKey(callback) {
+        this._last_key = ''
+        this.keys = []
+        this.callback = callback
+    }
+    lastKey.prototype.of = function(key) {
+        if(key == this._last_key) {
+            return
+        }
+        this._last_key = key
+        this.keys.push(key)
+        this.callback(key)
+    }
 
     
 
