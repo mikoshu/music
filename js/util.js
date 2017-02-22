@@ -24,7 +24,7 @@ util = {
             recentFile = JSON.parse(localStorage.recentFile);
             this.renderSideList('recentList',recentFile);
         }
-        if(localStorage.shortCutsArray){
+        if(localStorage.shortCutsArray){ // 更新快捷键列表
             shortCutsArray = JSON.parse(localStorage.shortCutsArray);
             shortCutsArray.map(function(val,i){
                 self.addShortCuts(val.key,val.url)
@@ -36,7 +36,7 @@ util = {
         /**localstorage 用于排序**/
         document.oncontextmenu =new Function("return false;")
         //this.addShortCuts();
-        navigator.mediaDevices.enumerateDevices().then(function(resp){
+        navigator.mediaDevices.enumerateDevices().then(function(resp){ // 获取用户media设备
             var html = ''
             resp.map(function(val,i){
                 if(val.kind === 'audiooutput'){
@@ -49,9 +49,6 @@ util = {
                 $(".chooseAudio").trigger('change');
             }
         });
-
-
-
 	},
 	refreshList: function(){ // 渲染全部列表
 		var mainHtml = '';
@@ -97,28 +94,16 @@ util = {
     deleteFile: function(fileURL,fileName){ // 删除文件
     	var sure = confirm("确定要删除"+fileName+"音效吗？");
         var self = this;
-        if(sure){
-            allFile.map(function(val,index){
-                if(val.fileURL == fileURL){
-                    file.splice(index,1); 
-                    return
-                }
-            })
+        if(sure){                     // 删除列表里的文件
+            this.deleteFileFromList(allFile,fileURL);
             localStorage.file = JSON.stringify(allFile);
-            recentFile.map(function(val,index){
-                if(val.fileURL == fileURL){
-                    recentFile.splice(index,1); 
-                    return
-                }
-            })
+
+            this.deleteFileFromList(recentFile,fileURL);
             localStorage.recentFile = JSON.stringify(recentFile);
-            favoriteFile.map(function(val,index){
-                if(val.fileURL == fileURL){
-                    favoriteFile.splice(index,1); 
-                    return
-                }
-            })
+
+            this.deleteFileFromList(favoriteFile,fileURL);
             localStorage.favoriteFile = JSON.stringify(favoriteFile);
+
             fs.unlink(fileURL,function(err){
                 if(err){
                     alert(err)
@@ -132,6 +117,14 @@ util = {
             
         }
         return sure
+    },
+    deleteFileFromList: function(arr,url){ // 根据文件url删除列表文件
+        arr.map(function(val,index){
+            if(val.fileURL == url){
+                arr.splice(index,1); 
+                return
+            }
+        })
     },
     chooseStyle: function(){
         if(nowType == 'default'){
@@ -181,7 +174,7 @@ util = {
             dom.attr('class','favorite');
         }
     },
-    addShortCuts: function(key,url,name){
+    addShortCuts: function(key,url,name){ // 使用nw gui 添加快捷键
         var option = {
             key: key,
             active: function(){
@@ -199,9 +192,7 @@ util = {
         var unregShortcut = function() {  // 使用闭包，存储shortcut
             gui.App.unregisterGlobalHotKey(shortcut)
         }
-
         unreg.push(unregShortcut);
-
         // ;[0]()
         //gui.App.unregisterGlobalHotKey(shortcut);
     },
@@ -218,8 +209,4 @@ util = {
         })
         $("#shortCutsList").html(html);
     }
-    // removeShortCuts: function(option){
-    //     var shortcut = new gui.Shortcut(option);
-    //     gui.App.unregisterGlobalHotKey(shortcut);
-    // }
 }

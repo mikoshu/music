@@ -168,13 +168,6 @@
                         <th>操作</th>
                     </tr>
                     <tbody id="shortCutsList">
-                        <tr>
-                            <td>ksaf saf</td>
-                            <td>kfjas</td>
-                            <td>
-                                <a href="#">删除</a>
-                            </td>
-                        </tr>
                     </tbody>
                     
                 </table>
@@ -547,7 +540,11 @@
         /**左侧列表**/
 
         $(".tiaoshi_right_jia").click(function(){
-            localStorage.clear();
+            var sure = confirm("重置播放器将删除所有记录，是否继续？");
+            if(sure){
+                localStorage.clear();
+                window.location.reload();
+            } 
         })
 
         /**右键添加快捷键**/
