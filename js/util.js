@@ -26,7 +26,6 @@ util = {
         }
         if(localStorage.shortCutsArray){
             shortCutsArray = JSON.parse(localStorage.shortCutsArray);
-            console.log(shortCutsArray)
             shortCutsArray.map(function(val,i){
                 self.addShortCuts(val.key,val.url)
             });
@@ -38,7 +37,6 @@ util = {
         document.oncontextmenu =new Function("return false;")
         //this.addShortCuts();
         navigator.mediaDevices.enumerateDevices().then(function(resp){
-            console.log(resp)
             var html = ''
             resp.map(function(val,i){
                 if(val.kind === 'audiooutput'){
@@ -46,7 +44,13 @@ util = {
                 } 
             })
             $(".chooseAudio").html(html);
+            if(localStorage.channel){
+                $(".chooseAudio").val(localStorage.channel);
+                $(".chooseAudio").trigger('change');
+            }
         });
+
+
 
 	},
 	refreshList: function(){ // 渲染全部列表

@@ -143,6 +143,8 @@
         快捷键：
         <input type="text" id="shortCutsInput" />
     </label>
+    <p>提示：快捷键支持 ctrl+字母、alt+字母、shift+字母或者单个字母数字，其他快捷键组合暂不支持！</p>
+    <p style="text-align: center">（输入快捷键时请确保键盘处于英文输入状态）</p>
     <div class="btn-box">
         <a href="#" id="shortCutsSure">确定</a>
         <a href="#" id="shortCutsCancel" >取消</a>
@@ -156,33 +158,39 @@
         <a href="#">音频设置</a>
     </div>
     <div class="set-con">
-        <div class="table-box set-tab">
-            <table class="table" cellspacing="0" cellpadding="0" >
-                <tr>
-                    <th>名称</th>
-                    <th>快捷键</th>
-                    <th>操作</th>
-                </tr>
-                <tbody id="shortCutsList">
+        <div class="set-tab" style="display: block">
+            <h3>快捷键设置</h3>
+            <div class="table-box">
+                <table class="table" cellspacing="0" cellpadding="0" >
                     <tr>
-                        <td>ksaf saf</td>
-                        <td>kfjas</td>
-                        <td>
-                            <a href="#">删除</a>
-                        </td>
+                        <th>名称</th>
+                        <th>快捷键</th>
+                        <th>操作</th>
                     </tr>
-                </tbody>
-                
-            </table>
+                    <tbody id="shortCutsList">
+                        <tr>
+                            <td>ksaf saf</td>
+                            <td>kfjas</td>
+                            <td>
+                                <a href="#">删除</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                    
+                </table>
+            </div>
         </div>
         <div class="set-tab">
-            <select class="chooseAudio">
+            <div class="choose-box">
+                <h3>音频输出设置</h3>
+                <select class="chooseAudio">
                 
-            </select>
+                </select>
+            </div>
         </div>
         <div class="btn-box">
-            <a href="#" class="set-sure">确定</a>
-            <a href="#" class="set-cancel">取消</a>
+            <!-- <a href="#" class="set-sure">确定</a> -->
+            <a href="#" class="set-cancel">关闭</a>
         </div>
     </div>
 </div>
@@ -567,14 +575,16 @@
                 e.stopPropagation();
             }
         });
-        $(document).mousedown(function(event) {
+        $(document).click(function(event) {
             $(".pop").hide()
         });
 
-        $("#addShortCuts").mousedown(function(){ // 显示添加快捷键弹窗
+        $("#addShortCuts").click(function(){ // 显示添加快捷键弹窗
             $("#shortCutsName").text(shortCutsObj.name);
             $("#shortCutsInput").val("");
-            $(".shortCutsPop").show();         
+            $(".shortCutsPop").show(); 
+            console.log('pop')
+            $("#shortCutsInput").trigger('focus');        
         });
 
         $("#shortCutsCancel").click(function(){
@@ -594,10 +604,12 @@
             }else{
                 keyname += '+'+String.fromCharCode(code);
             }
-                //keyname.substring(1,keyname.length)
+            
             $("#shortCutsInput").val(keyname.substring(1,keyname.length));
+            //keyname.substring(1,keyname.length)
+            
         })
-        $("#shortCutsInput").keydown(function(e) {  // https://github.com/nwjs/nw.js/wiki/Shortcut
+        $("#shortCutsInput").keydown(function(e) {  //  添加快捷键
             var code = e.keyCode;
             l.of(code)
             //var value = this.value + String.fromCharCode(e.keyCode);
@@ -624,9 +636,9 @@
                 obj.key = txt;
                 obj.url = shortCutsObj.url;
                 shortCutsArray.push(obj);
-                localStorage.shortCutsArray = JSON.stringify(shortCutsArray);
                 util.addShortCuts(txt,shortCutsObj.url,shortCutsObj.name);
                 alert('添加快捷键成功！');
+                localStorage.shortCutsArray = JSON.stringify(shortCutsArray);
                 $(".shortCutsPop").hide();
                 util.renderShortCutsList(); // 刷新快捷键列表
             }
@@ -653,11 +665,12 @@
             util.renderShortCutsList();
         });
 
-        $(".chooseAudio").on('change',function(e){
-            var id = $(this).val()
+        $(".chooseAudio").on('change',function(e){ // 选择音频输出设备函数
+            var id = $(this).val();
+            localStorage.channel = id;
+            console.log(id);
             if (typeof audio.sinkId !== 'undefined') {
                 audio.setSinkId(id).then(function(resp) {
-                    console.log(resp)
                     console.log('Success, audio output device attached: ' + id + ' to ' +
                       'element with ' + audio.title + ' as source.');
 
