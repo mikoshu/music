@@ -10,14 +10,14 @@
 <div class="bianju_650">
 	<div class="top_banner">
     	<div class="denglu_24bk">
-        	<a href="#">
+        	<a href=":;">
         	<div class="denglu_img"><img src="images/img_tx.png" width="24" height="26" /></div>
             <div class="denglu_txt">登录</div>
             </a>
 		</div>
         <div class="top_jiantou miniHide">
-        	<a href="#"><img src="images/left_ico.png" width="12" height="19" /></a>
-            <a href="#"><img src="images/right_ico.png" width="11" height="19" /></a>
+        	<a href="javascript:;"><img src="images/left_ico.png" width="12" height="19" /></a>
+            <a href="javascript:;"><img src="images/right_ico.png" width="11" height="19" /></a>
             <a href="javascript:;" id="reload"><img src="images/update_ico.png" width="20" height="20" /></a>
         </div>
         <div class="top_sousuo miniHide">
@@ -36,17 +36,17 @@
 	<div class="mid_bk">
     	<div class="mid_left">
         	<div class="left_bbanner">
-            	<a href="#"><img src="images/left_ico_1.png" width="14" height="16" /></a>
-                <a href="#" id="tab-local" class="on tabs"><img src="images/left_ico_2.png" width="14" height="16" /></a>
-                <a href="#"><img src="images/left_ico_3.png" width="14" height="16" /></a>
-                <a href="#"><img src="images/left_ico_4.png" width="14" height="16" /></a>
-                <a href="#" class="tabs" id="tab-favorite" ><img src="images/left_ico_5.png" width="14" height="16" /></a>
+            	<a href="javascript:;"><img src="images/left_ico_1.png" width="14" height="16" /></a>
+                <a href="javascript:;" id="tab-local" class="on tabs"><img src="images/left_ico_2.png" width="14" height="16" /></a>
+                <a href="javascript:;"><img src="images/left_ico_3.png" width="14" height="16" /></a>
+                <a href="javascript:;"><img src="images/left_ico_4.png" width="14" height="16" /></a>
+                <a href="javascript:;" class="tabs" id="tab-favorite" ><img src="images/left_ico_5.png" width="14" height="16" /></a>
             </div>
 			<div class="liebiao_list">
-            	<div class="shiting_bk">
-                	<!--<div class="shiting_left"><img src="images/shiting_ico.png" width="21" height="17" /></div>-->
+            	<!-- <div class="shiting_bk">
+                	<div class="shiting_left"><img src="images/shiting_ico.png" width="21" height="17" /></div>
                     <div class="shiting_right"><img src="images/xiazai_ico.png" width="17" height="16" /></div>
-                </div>
+                </div> -->
                 <div class="local-con">
                     <div class="moren_list on">
                         <p class="mrlink_lb">默认列表</p>
@@ -63,7 +63,11 @@
                     </ul>
                 </div>
                 <div class="favorite-con" style="display:none;">
-                    <ul id="favoriteList" class="gai_list_2" style="display:block;height:188px;">
+                    <div class="moren_list on">
+                        <p class="mrlink_lb">收藏列表</p>
+                        <span></span>
+                    </div>
+                    <ul id="favoriteList" class="gai_list_2" style="height:186px">
 
                     </ul>
                 </div>
@@ -105,7 +109,7 @@
         <div class="bofang_3" id="next" ></div>
         <div class="jindu_bk miniHide">
         	<div class="jindu_shang">
-            	<span><img src="images/bofang_ico_hd.png" width="25" height="18" /></span>
+            	<span></span>
                 <p id="name"></p>
 		  </div>
             <div class="jindu_xia">
@@ -116,10 +120,10 @@
                 <div class="jindu_shijian" id="nowTime">00:00</div>
             </div>
         </div>
-        <div class="bofang_4 miniHide" id="delete"><img src="images/bofang_ico_4.png" width="12" height="16" /></div>
+        <div class="bofang_4 miniHide" id="delete"></div>
         <div class="favorite " id="favorite"></div>
         <div class="circle " id="circle"></div>
-        <div class="bofang_7 miniHide"><img src="images/bofang_ico_7.png" width="17" height="12" /></div>
+        <div class="bofang_7 miniHide"></div>
         <div class="shengyin_jindu miniHide" id="volume">
 		  <p class="volume"></p>
         </div>
@@ -129,8 +133,8 @@
 <audio id="audio" autoplay="autoplay" src='' ></audio>
 <!--右键弹窗-->
 <div class="pop">
-    <a href="#">重命名</a>
-    <a href="#" id="addShortCuts" >添加快捷键</a>
+   <!--  <a href="javascript:;">重命名</a> -->
+    <a href="javascript:;" id="addShortCuts" >添加快捷键</a>
 </div>
 <!--右键弹窗结束-->
 <!--重命名弹窗-->
@@ -146,16 +150,16 @@
     <p>提示：快捷键支持 ctrl+字母、alt+字母、shift+字母或者单个字母数字，其他快捷键组合暂不支持！</p>
     <p style="text-align: center">（输入快捷键时请确保键盘处于英文输入状态）</p>
     <div class="btn-box">
-        <a href="#" id="shortCutsSure">确定</a>
-        <a href="#" id="shortCutsCancel" >取消</a>
+        <a href="javascript:;" id="shortCutsSure">确定</a>
+        <a href="javascript:;" id="shortCutsCancel" >取消</a>
     </div>
 </div>
 <!--重命名弹窗结束-->
 <!--设置弹窗-->
 <div class="setPop clearfix">
     <div class="set-left">
-        <a class="on" href="#">热键</a>
-        <a href="#">音频设置</a>
+        <a class="on" href="javascript:;">热键</a>
+        <a href="javascript:;">音频设置</a>
     </div>
     <div class="set-con">
         <div class="set-tab" style="display: block">
@@ -182,8 +186,8 @@
             </div>
         </div>
         <div class="btn-box">
-            <!-- <a href="#" class="set-sure">确定</a> -->
-            <a href="#" class="set-cancel">关闭</a>
+            <!-- <a href="javascript:;" class="set-sure">确定</a> -->
+            <a href="javascript:;" class="set-cancel">关闭</a>
         </div>
     </div>
 </div>
@@ -291,7 +295,9 @@
         }
 
         audio.onerror = function(err){
-            if( audio.src.indexOf('chrome-extension://') ){ //此处为默认为空时返回url
+            var host = window.location.href;
+            console.log(audio.src);
+            if( audio.src.indexOf('chrome-extension://') && audio.src != host ){ //此处为默认为空时返回url
                 alert('该音效文件不存在或路径发生变化!')
             }
         }
@@ -375,7 +381,6 @@
             var name = $("#name").text();
             if(name != ''){
                 var flag = util.deleteFile(url,name);
-                console.log(flag)
                 if(flag){
                     $(audio).attr('src','');
                     $("#name").text('');
@@ -385,7 +390,7 @@
             }
         });
 
-        $("#favorite").click(function(){
+        $("#favorite").click(function(){ // 点击喜欢
             var dom = $(this);
             var url = $(audio).attr('src');
             var name = $("#name").text();
@@ -395,11 +400,13 @@
                 }else{
                     util.removeFromFavorite(dom,url,name);
                 }
+                util.renderSideList('defaultList',allFile);
+                util.renderSideList('recentList',recentFile);
             }
             
         })
 
-        $("#circle").click(function(){
+        $("#circle").click(function(){ // 循环播放
             var $this = $(this);
             if($this.hasClass('circle')){
                 $this.attr('class','circled');
@@ -522,6 +529,8 @@
             var name = $(this).parent().find('p').text();
             var url = $(this).parent().attr('data-url');
             util.addToFavorite($(this),url,name);
+            util.renderSideList('defaultList',allFile);
+            util.renderSideList('recentList',recentFile);
         });
 
         $('#recentList,#defaultList,#favoriteList').delegate('.favorited','click',function(e){ //从喜欢列表移除音效
@@ -529,6 +538,8 @@
             var name = $(this).parent().find('p').text();
             var url = $(this).parent().attr('data-url');
             util.removeFromFavorite($(this),url,name);
+            util.renderSideList('defaultList',allFile);
+            util.renderSideList('recentList',recentFile);
         });
         $("#recentList,#defaultList,#favoriteList").delegate('.delete','click',function(e){ //列表删除文件
             e.stopPropagation();
@@ -551,7 +562,7 @@
         var win_width = window.innerWidth;
         var win_height = window.innerHeight;
         var pop_w = 80;
-        var pop_h = 64;
+        var pop_h = 34;
         var shortCutsObj = {};
         var codeArray = []; // 记录快捷键键值
         $("#musicList").find('a').mousedown(function(e) { // 显示右键弹窗

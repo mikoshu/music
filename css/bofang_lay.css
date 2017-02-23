@@ -179,7 +179,7 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
     display:block;
 }
 
-.gai_list_2 {display:none; height:124px; overflow-y: auto; line-height:30px; font-size:14px; color:#213547;}
+.gai_list_2 {display:none; height:155px; overflow-y: auto; line-height:30px; font-size:14px; color:#213547;}
 .gai_list_2 li { height:30px; border-bottom:1px solid #CCC;  }
 .gai_list_2 li p { float:left; padding-left:36px; background: url(../images/yinyue_tubiao.png) no-repeat 10px center; cursor:default;}
 
@@ -225,6 +225,7 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
 	margin:11px 0 0 35px;
 	background: url(../images/bofang_ico_1.png) no-repeat;
 	opacity:.8;
+    cursor: pointer;
 }
 .bofang_2 { 
     display:block; 
@@ -235,6 +236,7 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
     background:url(../images/play.png) center no-repeat;
     cursor: default;
     opacity:.8;
+    cursor: pointer;
 }
 .bofang_2.playing{
     background:url(../images/bofang_ico_2.png) bottom left no-repeat;
@@ -248,14 +250,21 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
 	width:23px;
 	height:20px; 
 	background: url(../images/bofang_ico_3.png) no-repeat;
-	opacity:.7;
+	opacity:.8;
+    cursor: pointer;
 }
 .bofang_1:hover,.bofang_2:hover,.bofang_3:hover{
 	opacity:1;
 }
 .jindu_bk { padding:6px 0 0 20px; float:left; width:250px;}
 .jindu_shang { height:18px;}
-.jindu_shang span { float:left; display:block;}
+.jindu_shang span { 
+    float:left;
+    width:25px;
+    height:18px;
+    background:url(../images/bofang_ico_hd.png) no-repeat; 
+    display:block;
+}
 .jindu_shang p { float:left; color:#FFF; line-height:16px; padding-left:5px;s}
 .jindu_xia { height:16px; line-height:16px;}
 .jindu_shijian { float:left; color:#FFF;}
@@ -273,7 +282,19 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
 	background:#EB7D63;
 }
 
-.bofang_4 { float:left; padding:15px 13px 0 0;}
+.bofang_4 { 
+    float:left; 
+    display: block;
+    width:12px;
+    height:16px;
+    margin:15px 13px 0 10px;
+    background: url(../images/bofang_ico_4.png) top center no-repeat;
+    cursor: pointer;
+
+}
+.bofang_4:hover{
+    background: url(../images/bofang_ico_4_a.png) top center no-repeat;
+}
 .bofang_bk .favorite { 
     float:left; 
     display: block; 
@@ -281,6 +302,10 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
     height:15px; 
     margin:16px 13px 0 0;
     background: url(../images/bofang_ico_5.png) top center no-repeat;
+    cursor: pointer;
+}
+.bofang_bk .favorite:hover{
+    background: url(../images/favorited2.png) top center no-repeat;
 }
 .bofang_bk .favorited{
     float:left; 
@@ -297,6 +322,10 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
     height:11px; 
     margin:17px 13px 0 0;
     background: url(../images/bofang_ico_6.png) no-repeat;
+    cursor: pointer;
+}
+.circle:hover{
+    background: url(../images/circle.png) no-repeat;
 }
 .circled { 
     float:left;
@@ -306,8 +335,25 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
     margin:17px 13px 0 0;
     background: url(../images/circle.png) no-repeat;
 }
-.bofang_7 { float:left; padding:17px 13px 0 0;}
-.shengyin_jindu { width:47px; border:1px solid #E0E0E0; height:4px; background: #fff; line-height:4px; float:left; margin:19px 8px 0 0; overflow:hidden;}
+.bofang_7 { 
+    float:left; 
+    display:block;
+    width:17px;
+    height:12px;
+    background: url(../images/bofang_ico_7.png) no-repeat;
+    margin:17px 5px 0 0;
+}
+.shengyin_jindu { 
+    width:47px; 
+    border:1px solid #E0E0E0; 
+    height:4px; 
+    background: #fff; 
+    line-height:4px; 
+    float:left; 
+    margin:20px 8px 0 0; 
+    overflow:hidden;
+    cursor: pointer;
+}
 .ce_duihua { width:48px; height:22px; line-height:24px; background:#034077 url(../images/bofang_ico_8.png) no-repeat 10px center; border:2px solid #7968A0; float:left; margin:8px 0 0 9px; text-indent: 28px; color:#D98500; font-weight:bold; }
 
 
@@ -349,10 +395,11 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
     left:0;
     top:0;
     width:60px;
-    padding:10px;
-    background:#f0f0f0;
+    padding:5px 10px;
+    background:#fbfbfb;
     text-align: center;
     border-radius:0 4px 4px 4px;
+    border:1px solid #bababa;
 }
 .pop a{
     display: block;
