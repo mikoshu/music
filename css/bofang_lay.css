@@ -10,7 +10,7 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
 
 .top_banner { height:40px; background:#007BDD; border-bottom:1px solid #FFF; -webkit-app-region: drag;}
 .top_banner a { color:#FFF; text-decoration:none; -webkit-app-region: no-drag;}
-.denglu_24bk { float:left; padding:8px 0 0 16px;}
+.denglu_24bk { float:left; padding:8px 0 0 16px; -webkit-app-region: no-drag;}
 .denglu_img { float:left;}
 .denglu_txt { float:left; padding:0 0 0 10px; width:35px; line-height:24px; font-size:14px;}
 .top_jiantou { float:left; width:74px; padding:10px 0 0 71px; }
@@ -581,6 +581,83 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
 .midFooter .favorite,.midFooter .favorited,.midFooter .circle,.midFooter .circled{
     display: none !important;
 }
+
+/*登入弹窗*/
+.login-box{
+    display:none;
+    position: fixed;
+    left:50%;
+    top:50%;
+    transform: translate(-50%,-50%);
+    width:280px;
+    height:220px;
+    background:#fbfbfb;
+    border:1px solid #bababa;
+    border-radius:4px;
+    padding:10px 20px 10px;
+    font-size:14px;
+}
+.login-box p{
+    text-align: center;
+    margin-bottom:20px;
+    line-height:20px;
+}
+.login-box ul{
+
+}
+.login-box li{
+    line-height: 30px;
+    margin:20px 0;
+}
+.login-box input[type=text],.login-box input[type=password]{
+    border:1px solid #bababa;
+    width:160px;
+    height:30px;
+    padding-left:6px;
+}
+.login-box a{
+    font-size:12px;
+    margin-left:5px;
+}
+.login-box .btn-box{
+    margin-top:15px;
+}
+.login-box label{
+    padding-left:45px;
+}
+.login-box input[type=checkbox]{
+    vertical-align: -2px;
+}
+.mini-login{
+    width:160px;
+    height:200px;
+    padding:10px;
+}
+.mini-login ul a,.mini-login span{
+    display:none;
+}
+.mini-login input[type=text],.mini-login input[type=password]{
+    width:150px;
+}
+.login-box label{
+    padding-left:10px;
+}
+.mini-login .btn-box a{
+    margin:0px;
+    margin-left:5px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

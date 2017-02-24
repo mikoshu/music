@@ -9,8 +9,8 @@
 <body>
 <div class="bianju_650">
 	<div class="top_banner mid-hide">
-    	<div class="denglu_24bk">
-        	<a href=":;">
+    	<div class="denglu_24bk" id="show-login">
+        	<a href="javascript:;">
         	<div class="denglu_img"><img src="images/img_tx.png" width="24" height="26" /></div>
             <div class="denglu_txt">登录</div>
             </a>
@@ -195,6 +195,31 @@
     </div>
 </div>
 <!--设置弹窗结束-->
+<!--登录弹窗-->
+<div class="login-box">
+    <p class="msg"></p>
+    <ul>
+        <li class="clearfix">
+            <span>账号：</span>
+            <input type="text" placeholder='请输入账号' />
+            <a href="javascript:;" class="hrefTo" data-url="https://account.antblue.com/register.html" >注册账号</a>
+        </li>
+        <li class="clearfix">
+            <span>密码：</span>
+            <input type="password" placeholder='请输入密码' />
+            <a href="javascript:;" class="hrefTo" data-url="https://account.antblue.com/password_find.html" >忘记密码</a>
+        </li>
+    </ul>
+    <label>
+        <input type="checkbox" />
+        自动登录
+    </label>
+    <div class="btn-box">
+        <a href="javascript:;" id="login-sure">确定</a>
+        <a href="javascript:;" id="login-cancel" >取消</a>
+    </div>
+</div>
+<!--登录弹窗结束-->
 
 <script type="text/javascript" src="js/jquery-2.1.1.min.js" ></script>
 <script type="text/javascript" src="js/Sortable.js" ></script>
@@ -245,13 +270,17 @@
         });
         $(".to-max").click(function(){
             var win = nw.Window.get();
-            win.width = 660;
-            win.height= 450;
             $(".mid-hide").show();
             $(".bofang_bk").removeClass('midFooter');
             $(".mid_bk").css('height','369px');
             $(".bofang_7").removeClass('ml-10');
             $(this).hide();
+            win.width = 660;
+            win.height= 451;
+            setTimeout(function(){
+                win.width = 660;
+                win.height= 450;
+            },50)
         });
         $("#reload").click(function(){ // 刷新页面
             unreg.map(function(val,i){
@@ -267,11 +296,13 @@
                 $(".miniHide").hide();
                 $(this).attr('class','minied');
                 $(".bofang_bk").addClass('miniFooter');
+                $(".login-box").addClass('mini-login');
             }else{
                 win.width = 660;
                 $(".miniHide").show();
                 $(this).attr('class','mini');
                 $(".bofang_bk").removeClass('miniFooter');
+                $(".login-box").removeClass('mini-login');
             }
             
         });
@@ -712,6 +743,20 @@
               }
         });
 
+        /**登录弹窗事件**/
+        var opener = require('opener');
+        $("#show-login").click(function(){
+            $('.login-box').show();
+        });
+
+        $("#login-cancel").click(function(){
+            $('.login-box').hide();
+        });
+
+        $(".hrefTo").click(function(){
+            var url = $(this).attr('data-url');
+            opener(url);
+        });
 
     })
 
