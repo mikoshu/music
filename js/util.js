@@ -208,5 +208,25 @@ util = {
                     '</tr>'
         })
         $("#shortCutsList").html(html);
+    },
+    getListIndex: function(list,url){ // 获取当前播放索引值
+        var len = list.length;
+        var listIndex = false;
+        for(var i=0;i<len;i++){
+            if(list[i].fileURL == url){
+                listIndex = i;
+                break;
+            }
+        }
+        return listIndex;
+    },
+    sideListAddClass: function(id,list,url){ // 获取当前播放索引值
+        var nowIndex = this.getListIndex(list,url);
+        var $ul =  $('#'+id);
+        if(typeof(nowIndex) == 'number'){
+            var top = $ul.find('li').eq(nowIndex).offset().top - $ul.offset().top + $ul.scrollTop();
+            $('#'+id).find('li').eq(nowIndex).addClass('on').siblings('li').removeClass('on'); 
+            $('#'+id).scrollTop(top);
+        } 
     }
 }

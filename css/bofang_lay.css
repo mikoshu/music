@@ -6,7 +6,7 @@ body, code, dd, div, dl, dt, fieldset, form, h1, h2, h3, h4, h5, h6, input, lege
 ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
 .clearfix:after { content: ""; height: 0; visibility: hidden; display: block; clear: both; }
 .clearfix { zoom: 1; }
-.bianju_650 { width:100%;  height:450px;}
+.bianju_650 { width:100%;  /*height:450px;*/}
 
 .top_banner { height:40px; background:#007BDD; border-bottom:1px solid #FFF; -webkit-app-region: drag;}
 .top_banner a { color:#FFF; text-decoration:none; -webkit-app-region: no-drag;}
@@ -68,7 +68,7 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
 
 .mid_bk { height:369px; overflow: hidden;}
 .mid_left { float:left; width:195px; border-right:1px solid #E2E2E2; height:369px;overflow: hidden;}
-.mid_right { float:right; width:454px;height:369px;overflow: hidden;}
+.mid_right { float:right; width:454px;/*height:369px;*/overflow: hidden;}
 .left_bbanner { height:33px; border-bottom:1px solid #E2E2E2; background:#007BDD;}
 .left_bbanner a {width:38px; float:left; border-right:1px solid #269DDB; height:25px; display:block; text-align:center; padding-top:8px}
 .left_bbanner a:hover { background:#509AD5;}
@@ -94,9 +94,15 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
     width:37px; 
     height:17px; 
 }
+.toggle_onoff a:hover{
+    background:url(../images/toggle_on.png);
+}
 .toggle_onoff .on { 
     background:url(../images/toggle_on.png);
 }
+/*.toggle_onoff .on:hover { 
+    background:url(../images/toggle_off.png);
+}*/
 .list_shengxiao { padding:2px;}
 
 .list_shengxiao ul{height:250px; overflow-y:scroll;}
@@ -216,7 +222,7 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
 
 
 
-.bofang_bk { height:40px; background:#007BDD; position:relative;}
+.bofang_bk { height:40px; background:#007BDD; position:relative; -webkit-app-region: drag;}
 .bofang_1 { 
 	float:left;
 	display: block;
@@ -226,6 +232,7 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
 	background: url(../images/bofang_ico_1.png) no-repeat;
 	opacity:.8;
     cursor: pointer;
+    -webkit-app-region: no-drag;
 }
 .bofang_2 { 
     display:block; 
@@ -237,6 +244,7 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
     cursor: default;
     opacity:.8;
     cursor: pointer;
+    -webkit-app-region: no-drag;
 }
 .bofang_2.playing{
     background:url(../images/bofang_ico_2.png) bottom left no-repeat;
@@ -252,11 +260,12 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
 	background: url(../images/bofang_ico_3.png) no-repeat;
 	opacity:.8;
     cursor: pointer;
+    -webkit-app-region: no-drag;
 }
 .bofang_1:hover,.bofang_2:hover,.bofang_3:hover{
 	opacity:1;
 }
-.jindu_bk { padding:6px 0 0 20px; float:left; width:250px;}
+.jindu_bk { padding:6px 0 0 20px; float:left; width:250px; }
 .jindu_shang { height:18px;}
 .jindu_shang span { 
     float:left;
@@ -265,8 +274,8 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
     background:url(../images/bofang_ico_hd.png) no-repeat; 
     display:block;
 }
-.jindu_shang p { float:left; color:#FFF; line-height:16px; padding-left:5px;s}
-.jindu_xia { height:16px; line-height:16px;}
+.jindu_shang p { float:left; color:#FFF; line-height:16px; padding-left:5px;-webkit-app-region: no-drag;}
+.jindu_xia { height:16px; line-height:16px; -webkit-app-region: no-drag;}
 .jindu_shijian { float:left; color:#FFF;}
 .jindu_tiao { width:176px; float:left; height:4px; background: #fff; line-height:4px; border:1px solid #E0E0E0; margin:4px; overflow:hidden;}
 
@@ -290,7 +299,7 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
     margin:15px 13px 0 10px;
     background: url(../images/bofang_ico_4.png) top center no-repeat;
     cursor: pointer;
-
+    -webkit-app-region: no-drag;
 }
 .bofang_4:hover{
     background: url(../images/bofang_ico_4_a.png) top center no-repeat;
@@ -303,6 +312,7 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
     margin:16px 13px 0 0;
     background: url(../images/bofang_ico_5.png) top center no-repeat;
     cursor: pointer;
+    -webkit-app-region: no-drag;
 }
 .bofang_bk .favorite:hover{
     background: url(../images/favorited2.png) top center no-repeat;
@@ -314,6 +324,7 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
     height:15px; 
     margin:16px 13px 0 0;
     background: url(../images/favorited2.png) top center no-repeat;
+    -webkit-app-region: no-drag;
 }
 .circle { 
     float:left;
@@ -323,6 +334,7 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
     margin:17px 13px 0 0;
     background: url(../images/bofang_ico_6.png) no-repeat;
     cursor: pointer;
+    -webkit-app-region: no-drag;
 }
 .circle:hover{
     background: url(../images/circle.png) no-repeat;
@@ -334,6 +346,7 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
     height:11px; 
     margin:17px 13px 0 0;
     background: url(../images/circle.png) no-repeat;
+    -webkit-app-region: no-drag;
 }
 .bofang_7 { 
     float:left; 
@@ -353,8 +366,21 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
     margin:20px 8px 0 0; 
     overflow:hidden;
     cursor: pointer;
+    -webkit-app-region: no-drag;
 }
-.ce_duihua { width:48px; height:22px; line-height:24px; background:#034077 url(../images/bofang_ico_8.png) no-repeat 10px center; border:2px solid #7968A0; float:left; margin:8px 0 0 9px; text-indent: 28px; color:#D98500; font-weight:bold; }
+.ce_duihua { 
+    width:48px; 
+    height:22px; 
+    line-height:24px; 
+    background:#034077 url(../images/bofang_ico_8.png) no-repeat 10px center; 
+    border:2px solid #7968A0; 
+    float:left; 
+    margin:8px 0 0 9px; 
+    text-indent: 28px; 
+    color:#D98500; 
+    font-weight:bold; 
+    -webkit-app-region: no-drag;
+}
 
 
 .bofang_mini { width:355px; height:240px;}
@@ -538,8 +564,23 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
     margin-top:10px;
 }
 
+.ml-10{
+    margin-left:17px;
+}
 
-
+.to-max{
+    display:none;
+    float:left;
+    width:14px;
+    height:14px;
+    margin:15px 0 0 20px;
+    background:url(../images/icon-max.png) no-repeat;
+    cursor: pointer;
+    -webkit-app-region: no-drag;
+}
+.midFooter .favorite,.midFooter .favorited,.midFooter .circle,.midFooter .circled{
+    display: none !important;
+}
 
 
 

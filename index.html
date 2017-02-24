@@ -8,7 +8,7 @@
 
 <body>
 <div class="bianju_650">
-	<div class="top_banner">
+	<div class="top_banner mid-hide">
     	<div class="denglu_24bk">
         	<a href=":;">
         	<div class="denglu_img"><img src="images/img_tx.png" width="24" height="26" /></div>
@@ -34,7 +34,7 @@
         <div class="ico_close"><img src="images/close_ico.png" width="15" height="16" /></div>
 	</div>
 	<div class="mid_bk">
-    	<div class="mid_left">
+    	<div class="mid_left mid-hide">
         	<div class="left_bbanner">
             	<a href="javascript:;"><img src="images/left_ico_1.png" width="14" height="16" /></a>
                 <a href="javascript:;" id="tab-local" class="on tabs"><img src="images/left_ico_2.png" width="14" height="16" /></a>
@@ -77,7 +77,7 @@
             <div class="ce_ad_bk"><img src="images/ce_ad.jpg" width="195" height="87" /></div>
         </div>
         <div class="mid_right miniHide">
-        	<div class="nr_banner">
+        	<div class="nr_banner mid-hide">
             	<ul>
                 	<li class="nr_banner_jg">我的音效</li>
                     <li>音效库</li>
@@ -85,7 +85,7 @@
                     <li>直播工具</li>
                 </ul>
             </div>
-            <div class="nr_ad">
+            <div class="nr_ad mid-hide">
             	<div class="nr_ad_left"></div>
                 <div class="nr_ad_right"></div>
             </div>
@@ -93,7 +93,7 @@
             	<div class="tiaoshi_left_tu"><img src="images/vois_ico.png" width="16" height="16" /></div>
 				<div class="tiaoshi_left_txt">声卡调试</div>
 				<div class="tiaoshi_left_txt">就找图腾音频</div>
-                <div class="toggle_onoff"><a id="sort"></a></div>
+                <div class="toggle_onoff"><a id="sort" href="javascript:;"></a></div>
                 <div class="tiaoshi_right_jia" title="重新加载音频文件" ><img src="images/jia_ico.png" width="14" height="14" /></div>
             </div>
             <div class="list_shengxiao">
@@ -104,9 +104,9 @@
         </div>
     </div>
     <div class="bofang_bk">
-    	<div class="bofang_1" id="last" ></div>
+    	<div class="bofang_1 mid-hide" id="last" ></div>
         <div class="bofang_2" id="play" ></div>
-        <div class="bofang_3" id="next" ></div>
+        <div class="bofang_3 mid-hide" id="next" ></div>
         <div class="jindu_bk miniHide">
         	<div class="jindu_shang">
             	<span></span>
@@ -120,14 +120,17 @@
                 <div class="jindu_shijian" id="nowTime">00:00</div>
             </div>
         </div>
-        <div class="bofang_4 miniHide" id="delete"></div>
-        <div class="favorite " id="favorite"></div>
-        <div class="circle " id="circle"></div>
+        <div class="bofang_4 miniHide mid-hide" id="delete"></div>
+        <div class="favorite mid-hide" id="favorite"></div>
+        <div class="circle mid-hide" id="circle"></div>
         <div class="bofang_7 miniHide"></div>
         <div class="shengyin_jindu miniHide" id="volume">
 		  <p class="volume"></p>
         </div>
-         <div class="ce_duihua miniHide">12</div>
+         <div class="ce_duihua miniHide mid-hide">12</div>
+        <div class="to-max">
+            
+        </div>
 	</div>
 </div>
 <audio id="audio" autoplay="autoplay" src='' ></audio>
@@ -230,10 +233,26 @@
             var win = nw.Window.get();
             win.minimize()
         })
-        // $(".ico_suoxiao").click(function(){
-        //     var win = nw.Window.get();
-        //     win.maximize()
-        // })
+        $(".ico_suoxiao").click(function(){ // 主题部分mini
+            var win = nw.Window.get();
+            win.width = 454;
+            win.height= 316;
+            $(".mid-hide").hide();
+            $(".bofang_bk").addClass('midFooter');
+            $(".mid_bk").css('height','auto');
+            $(".bofang_7").addClass('ml-10');
+            $('.to-max').show();
+        });
+        $(".to-max").click(function(){
+            var win = nw.Window.get();
+            win.width = 660;
+            win.height= 450;
+            $(".mid-hide").show();
+            $(".bofang_bk").removeClass('midFooter');
+            $(".mid_bk").css('height','369px');
+            $(".bofang_7").removeClass('ml-10');
+            $(this).hide();
+        });
         $("#reload").click(function(){ // 刷新页面
             unreg.map(function(val,i){
                 val();
@@ -241,7 +260,7 @@
             var win = nw.Window.get();
             win.reload();
         })
-        $('#mini').click(function(){ // mini 隐藏不显示元素
+        $('#mini').click(function(){ // 列表 mini 隐藏不显示元素
             var win = nw.Window.get();
             if($(this).hasClass('mini')){
                 win.width = 195;
@@ -275,6 +294,7 @@
                     return
                 }
             });
+            
             Timmer = setInterval(function(){ //控制时间与进度条
                 $("#nowTime").html(util.getTime(audio.currentTime));
                 var per = parseInt((audio.currentTime/audio.duration)*100);
@@ -331,6 +351,10 @@
             $(this).addClass('on').siblings('li').removeClass('on');
             index = $(this).index();
             play();
+            var url = $(this).find('a').attr('data-url');
+            util.sideListAddClass('defaultList',allFile,url); // 右侧列表添加选中样式
+            //util.sideListAddClass('recentList',recentFile,url); // 右侧列表添加选中样式
+            //util.sideListAddClass('favoriteList',favoriteFile,url); // 右侧列表添加选中样式
         })
 
         $("#play").click(function(){ // 点击播放按钮事件（此处按钮样式需要改变）
@@ -686,7 +710,8 @@
               } else {
                 console.warn('Browser does not support output device selection.');
               }
-        })
+        });
+
 
     })
 
