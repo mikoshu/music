@@ -11,8 +11,8 @@
 	<div class="top_banner mid-hide">
     	<div class="denglu_24bk" id="show-login">
         	<a href="javascript:;">
-        	<div class="denglu_img"><img src="images/img_tx.png" width="24" height="26" /></div>
-            <div class="denglu_txt">登录</div>
+        	<div class="denglu_img" ><img id="avatar" src="images/img_tx.png" width="26" height="26" /></div>
+            <div class="denglu_txt" id="nickname" >登录</div>
             </a>
 		</div>
         <div class="top_jiantou miniHide">
@@ -74,7 +74,7 @@
 				
             </div>
 			<div class="ce_back"><img src="images/back_tu.jpg" width="128" height="18" /></div>
-            <div class="ce_ad_bk"><img src="images/ce_ad.jpg" width="195" height="87" /></div>
+            <div class="ce_ad_bk"><img id="ad1" src="images/ce_ad.jpg" width="195" height="87" /></div>
         </div>
         <div class="mid_right miniHide">
         	<div class="nr_banner mid-hide">
@@ -86,8 +86,12 @@
                 </ul>
             </div>
             <div class="nr_ad mid-hide">
-            	<div class="nr_ad_left"></div>
-                <div class="nr_ad_right"></div>
+            	<div class="nr_ad_left">
+                 <img id="ad2" src="" alt="" width="332" height="58" />   
+                </div>
+                <div class="nr_ad_right">
+                    <img id="ad3" src="" alt="" width="106" height="58" />
+                </div>
             </div>
             <div class="tiaoshi_bk">
             	<div class="tiaoshi_left_tu"><img src="images/vois_ico.png" width="16" height="16" /></div>
@@ -197,21 +201,21 @@
 <!--设置弹窗结束-->
 <!--登录弹窗-->
 <div class="login-box">
-    <p class="msg"></p>
+    <p id="msg" class="msg"></p>
     <ul>
         <li class="clearfix">
             <span>账号：</span>
-            <input type="text" placeholder='请输入账号' />
+            <input type="text" id="username" placeholder='请输入账号' />
             <a href="javascript:;" class="hrefTo" data-url="https://account.antblue.com/register.html" >注册账号</a>
         </li>
         <li class="clearfix">
             <span>密码：</span>
-            <input type="password" placeholder='请输入密码' />
+            <input type="password" id="password" placeholder='请输入密码' />
             <a href="javascript:;" class="hrefTo" data-url="https://account.antblue.com/password_find.html" >忘记密码</a>
         </li>
     </ul>
     <label>
-        <input type="checkbox" />
+        <input type="checkbox" id="autoLogin" />
         自动登录
     </label>
     <div class="btn-box">
@@ -241,6 +245,7 @@
     var shortCutsArray = []; // 存储快捷键
     var unreg = []; // 存储删除快捷键函数
     var gui = require('nw.gui');
+    var opener = require('opener');
 
     $(document).ready(function(){
         util.init(); // 初始化
@@ -744,7 +749,6 @@
         });
 
         /**登录弹窗事件**/
-        var opener = require('opener');
         $("#show-login").click(function(){
             $('.login-box').show();
         });
@@ -757,6 +761,23 @@
             var url = $(this).attr('data-url');
             opener(url);
         });
+
+        $("#login-sure").click(function(){
+            var username = $("#username").val();
+            var password = $("#password").val();
+            util.login(username,password);
+        })
+
+        $("#autoLogin").change(function(){
+            var checked = $(this).prop('checked')
+            console.log(checked)
+            if(checked){
+                localStorage.isAutoLogin = checked;
+            }else{
+                localStorage.isAutoLogin = '';
+            }
+            
+        })
 
     })
 

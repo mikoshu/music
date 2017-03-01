@@ -31,6 +31,18 @@ util = {
             });
             self.renderShortCutsList();
         }
+        if(localStorage.password){ // 记住密码时自动填入
+            $("#password").val(localStorage.password)
+        }
+        if(localStorage.username){ // 记住用户名时自动填入
+            $("#username").val(localStorage.username)
+        }
+        if(localStorage.isAutoLogin){ // 判断是否自动登录
+            this.login(localStorage.username,localStorage.password);
+            $("#autoLogin").prop('checked','checked');
+        }
+
+        this.getAd(); // 获取广告
 
         file = allFile;
         /**localstorage 用于排序**/
@@ -228,5 +240,50 @@ util = {
             $('#'+id).find('li').eq(nowIndex).addClass('on').siblings('li').removeClass('on'); 
             $('#'+id).scrollTop(top);
         } 
+    },
+    login: function(username,password){
+        $.ajax({
+            url: 'http://101.37.27.68/api/login.ab',
+            type: 'post',
+            data: {
+                username: username,
+                password: password
+            },
+            success: function(data){
+                if(data.responseCode == 200){
+                    //alert('登录成功！');
+                    $('.login-box').hide();
+                    $('#avatar').attr('src',data.userInfo.headImage);
+                    $('#nickname').text(data.userInfo.nickName);
+                    // 登录成功自动记录密码
+                    localStorage.username = username;
+                    localStorage.password = password;
+
+                }else if(data.responseCode == 201){
+                    alert('用户信息不全，请先完善个人信息');
+                    opener('http://101.37.27.68/login.jsp');
+                }else{
+                    alert(data.error);
+                }
+
+            },
+            complete: function(data){
+                //console.log(data);
+            }
+        })
+    },
+    getAd: function(){
+        $.ajax({
+            url: 'http://101.37.27.68/api/banners.ab',
+            type: 'get',
+            success: function(data){
+                data.map(function(val,i){
+                    $("#ad"+val.position).attr('src',val.aliPath);
+                    $("#ad"+val.position).click(function(){
+                        opener(val.link);
+                    });
+                })
+            }
+        })
     }
 }

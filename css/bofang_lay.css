@@ -12,6 +12,7 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
 .top_banner a { color:#FFF; text-decoration:none; -webkit-app-region: no-drag;}
 .denglu_24bk { float:left; padding:8px 0 0 16px; -webkit-app-region: no-drag;}
 .denglu_img { float:left;}
+.denglu_img img{ border-radius: 50%; }
 .denglu_txt { float:left; padding:0 0 0 10px; width:35px; line-height:24px; font-size:14px;}
 .top_jiantou { float:left; width:74px; padding:10px 0 0 71px; }
 .top_jiantou a { float:left; margin-right:10px;}
@@ -100,9 +101,11 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
 .toggle_onoff .on { 
     background:url(../images/toggle_on.png);
 }
-/*.toggle_onoff .on:hover { 
+
+.toggle_onoff .on:hover { 
     background:url(../images/toggle_off.png);
-}*/
+}
+
 .list_shengxiao { padding:2px;}
 
 .list_shengxiao ul{height:250px; overflow-y:scroll;}
@@ -314,9 +317,9 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
     cursor: pointer;
     -webkit-app-region: no-drag;
 }
-.bofang_bk .favorite:hover{
+/*.bofang_bk .favorite:hover{
     background: url(../images/favorited2.png) top center no-repeat;
-}
+}*/
 .bofang_bk .favorited{
     float:left; 
     display: block; 
@@ -336,9 +339,9 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
     cursor: pointer;
     -webkit-app-region: no-drag;
 }
-.circle:hover{
+/*.circle:hover{
     background: url(../images/circle.png) no-repeat;
-}
+}*/
 .circled { 
     float:left;
     display: block;
@@ -346,6 +349,7 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
     height:11px; 
     margin:17px 13px 0 0;
     background: url(../images/circle.png) no-repeat;
+    cursor: pointer;
     -webkit-app-region: no-drag;
 }
 .bofang_7 { 
