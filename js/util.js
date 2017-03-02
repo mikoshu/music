@@ -263,7 +263,7 @@ util = {
                     alert('用户信息不全，请先完善个人信息');
                     opener('http://101.37.27.68/login.jsp');
                 }else{
-                    alert(data.error);
+                    $("#msg").text(data.error);
                 }
 
             },
@@ -277,13 +277,40 @@ util = {
             url: 'http://101.37.27.68/api/banners.ab',
             type: 'get',
             success: function(data){
+                console.log(data)
                 data.map(function(val,i){
-                    $("#ad"+val.position).attr('src',val.aliPath);
-                    $("#ad"+val.position).click(function(){
-                        opener(val.link);
-                    });
+                    if(i < data.length - 1){
+                        $("#ad"+val.position).attr('src',val.aliPath)
+                        .click(function(){
+                            opener(val.link);
+                        }); 
+                    }else{
+                        $("#Adtxt").html(val.description)
+                        .on('click',function(){
+                            opener(val.link);
+                        })
+                    }
+                    
                 })
             }
         })
+    },
+    logout: function(){
+        var sure = confirm('是否确定退出登录？');
+        if(sure){
+            $.ajax({
+                url: 'http://101.37.27.68/api/logout.ab',
+                type: 'post',
+                success: function(data){
+                  console.log(data)
+                  if(data == true){
+                    alert('退出登录成功！');
+                    $("#avatar").attr('src','images/img_tx.png');
+                    $("#nickname").text('登录');
+                  }  
+                }
+            })
+        }
+        
     }
 }

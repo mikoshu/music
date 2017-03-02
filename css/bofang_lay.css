@@ -13,8 +13,24 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
 .denglu_24bk { float:left; padding:8px 0 0 16px; -webkit-app-region: no-drag;}
 .denglu_img { float:left;}
 .denglu_img img{ border-radius: 50%; }
-.denglu_txt { float:left; padding:0 0 0 10px; width:35px; line-height:24px; font-size:14px;}
-.top_jiantou { float:left; width:74px; padding:10px 0 0 71px; }
+.denglu_txt { 
+    float:left; 
+    padding:0 0 0 10px; 
+    width:105px; 
+    line-height:24px; 
+    font-size:14px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+    -webkit-app-region: drag;
+}
+.denglu_txt span{
+    -webkit-app-region: no-drag;
+}
+.short-name{
+    width:36px;
+}
+.top_jiantou { float:left; width:74px; padding:10px 0 0 5px; }
 .top_jiantou a { float:left; margin-right:10px;}
 .top_sousuo { width:210px; height:27px; margin:6px 0 0 14px; float:left; background:url(../images/sousuo_bj.png);-webkit-app-region: no-drag;}
 .sousuo_input_bk { width:167px; height:26px; padding-top:1px; float:left; margin-left:13px;  overflow:hidden;}
@@ -22,7 +38,44 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
 .sousuo_anniu { float:left; width:28px;}
 .sousuo_but { width:28px; float:left; overflow:hidden; height:27px; background-color:transparent; cursor:hand;}
 .ico_youjian { float:left; margin: 13px 9px 0 50px;-webkit-app-region: no-drag; cursor:pointer; }
-.ico_shezhi { float:left; margin:14px 9px 0 0 ;-webkit-app-region: no-drag; cursor:pointer;}
+.ico_shezhi { 
+    position:relative;
+    float:left; 
+    width:14px;
+    height:15px;
+    margin:14px 9px 0 0 ;
+    -webkit-app-region: no-drag; 
+    cursor:pointer;
+}
+.ico_shezhi ul{
+    display: none;
+    position: absolute;
+    width:70px;
+    height:48px;
+    right:-64px;
+    top:8px;
+    background:#f1f1f1;
+    border: 1px solid #bababa;
+    text-align: center;
+    line-height:24px;
+    z-index:99;
+}
+.ico_shezhi:hover ul{
+    display: block;
+}
+.ico_shezhi li{
+    height:24px;
+    border-bottom: 1px solid #bababa;
+    cursor:pointer;
+    -webkit-app-region: no-drag; 
+}
+.ico_shezhi li:last-child{
+    border-bottom: none;
+}
+.ico_shezhi li:hover{
+    color:#fff;
+    background: #007BDD;
+}
 .mini { 
     float:left; 
     display: block;
@@ -38,7 +91,7 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
     display: block;
     width:16px;
     height:17px;
-    margin:13px 9px 0 40px;
+    margin:13px 9px 0 35px;
     background:url(../images/minied.png);
     -webkit-app-region: no-drag; 
     cursor:pointer;
@@ -76,17 +129,17 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
 .left_bbanner .on{background:#509AD5;}
 .liebiao_list { height:218px;overflow:hidden; }
 .ce_back { height:18px; padding:6px;}
-.ce_ad_bk { height:87px; white-space:195px; overflow:hidden;}
+.ce_ad_bk { height:87px; white-space:195px; overflow:hidden; cursor: pointer;}
 .nr_banner { height:33px; border-bottom:1px solid #E2E2E2; color:#4C4C4C;}
 .nr_banner li { float:left; width:72px; height:31px; line-height:31px; text-align:center; margin-left:32px; font-size:16px;  }
 .nr_banner li:hover { color:#269AF7; border-bottom:2px solid #56B1F9; cursor:hand;}
 .nr_banner_jg { color:#269AF7; border-bottom:2px solid #56B1F9; cursor:hand;}
 .nr_ad { height:58px; margin:2px;}
-.nr_ad_left { height:58px; float:left; width:332px; margin-right:2px; background:#D7D7D7 }
-.nr_ad_right { height:58px; float:left; width:106px; background:#D7D7D7}
+.nr_ad_left { height:58px; float:left; width:332px; margin-right:2px; background:#D7D7D7; cursor: pointer; }
+.nr_ad_right { height:58px; float:left; width:106px; background:#D7D7D7; cursor: pointer;}
 .tiaoshi_bk { height:22px; }
 .tiaoshi_left_tu { float:left; padding:3px;}
-.tiaoshi_left_txt { float:left; padding-left:33px; color:#8C8C8C;}
+.tiaoshi_left_txt { float:left; padding-left:33px; color:#8C8C8C; cursor: pointer; }
 .tiaoshi_right_jia { float:right; padding:4px 7px;}
 .toggle_onoff { float:right; margin:2px; margin-right:25px;}
 .toggle_onoff a { 
@@ -495,13 +548,14 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
     height:330px;
     background:#fbfbfb;
     border:1px solid #bababa;
-
+    border-radius:4px;
+    overflow:hidden;
 }
 
 .set-left{
     float:left;
     width:100px;
-    height:330px;
+    height:300px;
     background: #f1f1f1;
 }
 .set-left a{
@@ -515,13 +569,13 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
     border-bottom:1px solid #bababa;
 }
 .set-left .on{
-    background: #007BDD;
+    background: #005090;
     color:#fff;
 }
 .set-con{
     float:left;
     width:400px;
-    height:330px;
+    height:300px;
     position:relative;
 }
 .setPop .btn-box{
@@ -537,7 +591,7 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
 }
 .table-box{
     width:300px;
-    height:200px;
+    height:170px;
     border:1px solid #bababa;
     overflow:auto;
     margin:0px auto;
@@ -593,18 +647,23 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
     left:50%;
     top:50%;
     transform: translate(-50%,-50%);
-    width:280px;
-    height:220px;
+    width:320px;
+    height:260px;
     background:#fbfbfb;
     border:1px solid #bababa;
     border-radius:4px;
-    padding:10px 20px 10px;
+    
     font-size:14px;
+    overflow: hidden;
+}
+.login-con{
+   padding:10px 20px 10px; 
 }
 .login-box p{
     text-align: center;
-    margin-bottom:20px;
-    line-height:20px;
+    line-height:16px;
+    color:red;
+    font-size:12px;
 }
 .login-box ul{
 
@@ -633,8 +692,10 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
     vertical-align: -2px;
 }
 .mini-login{
-    width:160px;
-    height:200px;
+    width:180px;
+    height:260px;
+}
+.mini-login .login-con{
     padding:10px;
 }
 .mini-login ul a,.mini-login span{
@@ -651,7 +712,14 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
     margin-left:5px;
 }
 
-
+.pop-head{
+    padding:0 10px;
+    line-height: 30px;
+    background:#007BDD;
+    color:#fff;
+    font-size:16px;
+    text-align: center;
+}
 
 
 

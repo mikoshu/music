@@ -12,7 +12,9 @@
     	<div class="denglu_24bk" id="show-login">
         	<a href="javascript:;">
         	<div class="denglu_img" ><img id="avatar" src="images/img_tx.png" width="26" height="26" /></div>
-            <div class="denglu_txt" id="nickname" >登录</div>
+            <div class="denglu_txt" >
+                <span id="nickname">登录</span>
+            </div>
             </a>
 		</div>
         <div class="top_jiantou miniHide">
@@ -27,7 +29,13 @@
         </form>
         </div>
         <div class="ico_youjian miniHide"><img src="images/mail_ico.png" width="19" height="15" /></div>
-        <div class="ico_shezhi miniHide"><img src="images/shezhi_ico.png" width="14" height="15" /></div>
+        <div class="ico_shezhi miniHide">
+            <img src="images/shezhi_ico.png" width="14" height="15" />
+            <ul>
+                <li id="show-set">基础设置</li>
+                <li id="logout">注销登录</li>
+            </ul>
+        </div>
         <div class="mini" id="mini"></div>
         <div class="ico_suoxiao miniHide" ><img src="images/suoxiao_ico.png" width="16" height="16" /></div>
         <div class="ico_xiao"></div>
@@ -95,8 +103,8 @@
             </div>
             <div class="tiaoshi_bk">
             	<div class="tiaoshi_left_tu"><img src="images/vois_ico.png" width="16" height="16" /></div>
-				<div class="tiaoshi_left_txt">声卡调试</div>
-				<div class="tiaoshi_left_txt">就找图腾音频</div>
+				<div class="tiaoshi_left_txt" id="Adtxt">声卡调试</div>
+				<!-- <div class="tiaoshi_left_txt">就找图腾音频</div> -->
                 <div class="toggle_onoff"><a id="sort" href="javascript:;"></a></div>
                 <div class="tiaoshi_right_jia" title="重新加载音频文件" ><img src="images/jia_ico.png" width="14" height="14" /></div>
             </div>
@@ -164,6 +172,7 @@
 <!--重命名弹窗结束-->
 <!--设置弹窗-->
 <div class="setPop clearfix">
+    <div class="pop-head">基础设置</div>
     <div class="set-left">
         <a class="on" href="javascript:;">热键</a>
         <a href="javascript:;">音频设置</a>
@@ -201,27 +210,31 @@
 <!--设置弹窗结束-->
 <!--登录弹窗-->
 <div class="login-box">
-    <p id="msg" class="msg"></p>
-    <ul>
-        <li class="clearfix">
-            <span>账号：</span>
-            <input type="text" id="username" placeholder='请输入账号' />
-            <a href="javascript:;" class="hrefTo" data-url="https://account.antblue.com/register.html" >注册账号</a>
-        </li>
-        <li class="clearfix">
-            <span>密码：</span>
-            <input type="password" id="password" placeholder='请输入密码' />
-            <a href="javascript:;" class="hrefTo" data-url="https://account.antblue.com/password_find.html" >忘记密码</a>
-        </li>
-    </ul>
-    <label>
-        <input type="checkbox" id="autoLogin" />
-        自动登录
-    </label>
-    <div class="btn-box">
-        <a href="javascript:;" id="login-sure">确定</a>
-        <a href="javascript:;" id="login-cancel" >取消</a>
+    <div class="pop-head">登录</div>
+    <div class="login-con">
+        <p id="msg" class="msg"></p>
+        <ul>
+            <li class="clearfix">
+                <span>账号：</span>
+                <input type="text" id="username" placeholder='请输入账号' />
+                <a href="javascript:;" class="hrefTo" data-url="http://101.37.27.68/register.ab" >注册账号</a>
+            </li>
+            <li class="clearfix">
+                <span>密码：</span>
+                <input type="password" id="password" placeholder='请输入密码' />
+                <a href="javascript:;" class="hrefTo" data-url="http://101.37.27.68/forgetpassword.ab" >忘记密码</a>
+            </li>
+        </ul>
+        <label>
+            <input type="checkbox" id="autoLogin" />
+            自动登录
+        </label>
+        <div class="btn-box">
+            <a href="javascript:;" id="login-sure">确定</a>
+            <a href="javascript:;" id="login-cancel" >取消</a>
+        </div>
     </div>
+    
 </div>
 <!--登录弹窗结束-->
 
@@ -302,12 +315,14 @@
                 $(this).attr('class','minied');
                 $(".bofang_bk").addClass('miniFooter');
                 $(".login-box").addClass('mini-login');
+                $(".denglu_txt").addClass('short-name');
             }else{
                 win.width = 660;
                 $(".miniHide").show();
                 $(this).attr('class','mini');
                 $(".bofang_bk").removeClass('miniFooter');
                 $(".login-box").removeClass('mini-login');
+                $(".denglu_txt").removeClass('short-name');
             }
             
         });
@@ -712,7 +727,7 @@
             }
         })
 
-        $(".ico_shezhi").click(function(){
+        $("#show-set").on('click',function(){
             $(".setPop").show();
         })
         $(".set-cancel,.set-sure").click(function(){
@@ -777,6 +792,9 @@
                 localStorage.isAutoLogin = '';
             }
             
+        });
+        $("#logout").click(function(){
+            util.logout();
         })
 
     })
