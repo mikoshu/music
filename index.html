@@ -31,10 +31,6 @@
         <div class="ico_youjian miniHide"><img src="images/mail_ico.png" width="19" height="15" /></div>
         <div class="ico_shezhi miniHide">
             <img src="images/shezhi_ico.png" width="14" height="15" />
-            <ul>
-                <li id="show-set">基础设置</li>
-                <li id="logout">注销登录</li>
-            </ul>
         </div>
         <div class="mini" id="mini"></div>
         <div class="ico_suoxiao miniHide" ><img src="images/suoxiao_ico.png" width="16" height="16" /></div>
@@ -75,7 +71,7 @@
                         <p class="mrlink_lb">收藏列表</p>
                         <span></span>
                     </div>
-                    <ul id="favoriteList" class="gai_list_2" style="height:186px">
+                    <ul id="favoriteList" class="gai_list_2" style="height:216px">
 
                     </ul>
                 </div>
@@ -121,7 +117,7 @@
         <div class="bofang_3 mid-hide" id="next" ></div>
         <div class="jindu_bk miniHide">
         	<div class="jindu_shang">
-            	<span></span>
+            	<span id="type" >HD</span>
                 <p id="name"></p>
 		  </div>
             <div class="jindu_xia">
@@ -367,7 +363,7 @@
 
         audio.onerror = function(err){
             var host = window.location.href;
-            console.log(audio.src);
+            //console.log(audio.src);
             if( audio.src.indexOf('chrome-extension://') && audio.src != host ){ //此处为默认为空时返回url
                 alert('该音效文件不存在或路径发生变化!')
             }
@@ -380,6 +376,8 @@
             }
             $("#audio").attr('src',file[index].fileURL);
             $("#name").html(file[index].fileName);
+            var type = file[index].fileURL.split('.').pop().toUpperCase();
+            $("#type").text(type);
             audio.play();
             if(nowType != 'recent'){ // 当最近播放列表点击播放时，不更新自身
                 recentFile.map(function(val,i){
@@ -413,6 +411,7 @@
             if(url == ''){
                 $("#audio").attr('src',file[index].fileURL);
                 $("#name").text(file[index].fileName);
+                $("#type").text(file[index].fileURL.split('.').pop().toUpperCase());
             }
             if(isPlaying){
                 audio.pause()
@@ -727,7 +726,7 @@
             }
         })
 
-        $("#show-set").on('click',function(){
+        $(".ico_shezhi").on('click',function(){
             $(".setPop").show();
         })
         $(".set-cancel,.set-sure").click(function(){
@@ -765,7 +764,12 @@
 
         /**登录弹窗事件**/
         $("#show-login").click(function(){
-            $('.login-box').show();
+            if($(this).hasClass('logined')){
+                util.logout()
+            }else{
+                $('.login-box').show();
+            }
+            
         });
 
         $("#login-cancel").click(function(){

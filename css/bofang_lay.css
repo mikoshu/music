@@ -127,8 +127,8 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
 .left_bbanner a {width:38px; float:left; border-right:1px solid #269DDB; height:25px; display:block; text-align:center; padding-top:8px}
 .left_bbanner a:hover { background:#509AD5;}
 .left_bbanner .on{background:#509AD5;}
-.liebiao_list { height:218px;overflow:hidden; }
-.ce_back { height:18px; padding:6px;}
+.liebiao_list { height:248px;overflow:hidden; }
+.ce_back { height:18px; padding:6px; display: none;}
 .ce_ad_bk { height:87px; white-space:195px; overflow:hidden; cursor: pointer;}
 .nr_banner { height:33px; border-bottom:1px solid #E2E2E2; color:#4C4C4C;}
 .nr_banner li { float:left; width:72px; height:31px; line-height:31px; text-align:center; margin-left:32px; font-size:16px;  }
@@ -148,16 +148,16 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
     width:37px; 
     height:17px; 
 }
-.toggle_onoff a:hover{
+/*.toggle_onoff a:hover{
     background:url(../images/toggle_on.png);
-}
+}*/
 .toggle_onoff .on { 
     background:url(../images/toggle_on.png);
 }
 
-.toggle_onoff .on:hover { 
+/*.toggle_onoff .on:hover { 
     background:url(../images/toggle_off.png);
-}
+}*/
 
 .list_shengxiao { padding:2px;}
 
@@ -241,7 +241,7 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
     display:block;
 }
 
-.gai_list_2 {display:none; height:155px; overflow-y: auto; line-height:30px; font-size:14px; color:#213547;}
+.gai_list_2 {display:none; height:185px; overflow-y: auto; line-height:30px; font-size:14px; color:#213547;}
 .gai_list_2 li { height:30px; border-bottom:1px solid #CCC;  }
 .gai_list_2 li p { float:left; padding-left:36px; background: url(../images/yinyue_tubiao.png) no-repeat 10px center; cursor:default;}
 
@@ -325,10 +325,13 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
 .jindu_shang { height:18px;}
 .jindu_shang span { 
     float:left;
-    width:25px;
-    height:18px;
-    background:url(../images/bofang_ico_hd.png) no-repeat; 
+    background:#f0f0f0; 
     display:block;
+    line-height:14px;
+    padding:1px 4px;
+    border-radius:5px;
+    font-weight: bold;
+    color:#007BDD;
 }
 .jindu_shang p { float:left; color:#FFF; line-height:16px; padding-left:5px;-webkit-app-region: no-drag;}
 .jindu_xia { height:16px; line-height:16px; -webkit-app-region: no-drag;}

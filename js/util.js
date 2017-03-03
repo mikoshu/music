@@ -255,6 +255,7 @@ util = {
                     $('.login-box').hide();
                     $('#avatar').attr('src',data.userInfo.headImage);
                     $('#nickname').text(data.userInfo.nickName);
+                    $("#show-login").addClass('logined');
                     // 登录成功自动记录密码
                     localStorage.username = username;
                     localStorage.password = password;
@@ -307,6 +308,9 @@ util = {
                     alert('退出登录成功！');
                     $("#avatar").attr('src','images/img_tx.png');
                     $("#nickname").text('登录');
+                    $("#show-login").removeClass('logined');
+                    $("#autoLogin").prop('checked','');
+                    localStorage.isAutoLogin = '';
                   }  
                 }
             })
