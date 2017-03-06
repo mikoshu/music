@@ -116,6 +116,10 @@ util = {
             this.deleteFileFromList(favoriteFile,fileURL);
             localStorage.favoriteFile = JSON.stringify(favoriteFile);
 
+            this.deleteShortCutsList(fileURL);
+            localStorage.shortCutsArray = JSON.stringify(shortCutsArray);
+            this.renderShortCutsList();
+
             fs.unlink(fileURL,function(err){
                 if(err){
                     alert(err)
@@ -137,6 +141,16 @@ util = {
                 return
             }
         })
+    },
+    deleteShortCutsList: function(url){
+        shortCutsArray.map(function(val,i){
+            if(val.url == url){
+                shortCutsArray.splice(i,1);
+                unreg[i]();
+                unreg.splice(i,1);
+                return 
+            }
+        });
     },
     chooseStyle: function(){
         if(nowType == 'default'){
@@ -207,6 +221,7 @@ util = {
         unreg.push(unregShortcut);
         // ;[0]()
         //gui.App.unregisterGlobalHotKey(shortcut);
+        //console.log(shortCutsArray)
     },
     renderShortCutsList: function(){
         var html = '';
@@ -278,7 +293,7 @@ util = {
             url: 'http://101.37.27.68/api/banners.ab',
             type: 'get',
             success: function(data){
-                console.log(data)
+
                 data.map(function(val,i){
                     if(i < data.length - 1){
                         $("#ad"+val.position).attr('src',val.aliPath)
@@ -303,7 +318,6 @@ util = {
                 url: 'http://101.37.27.68/api/logout.ab',
                 type: 'post',
                 success: function(data){
-                  console.log(data)
                   if(data == true){
                     alert('退出登录成功！');
                     $("#avatar").attr('src','images/img_tx.png');

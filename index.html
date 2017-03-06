@@ -639,7 +639,7 @@
         var pop_h = 34;
         var shortCutsObj = {};
         var codeArray = []; // 记录快捷键键值
-        $("#musicList").find('a').mousedown(function(e) { // 显示右键弹窗
+        $("#musicList").delegate('a','mousedown',function(e) { // 显示右键弹窗
             if(e.button == '2'){
                 var x = e.clientX;
                 var y = e.clientY;
@@ -665,7 +665,6 @@
             $("#shortCutsName").text(shortCutsObj.name);
             $("#shortCutsInput").val("");
             $(".shortCutsPop").show(); 
-            console.log('pop')
             $("#shortCutsInput").trigger('focus');        
         });
 
@@ -674,17 +673,22 @@
         })
         var keyname = '';
         var l = new lastKey(function(code) {
-            if(code == 17){
-                keyname += '+Ctrl';
-            }else if(code == 18){
-                keyname += '+Alt';
-            }else if(code == 16){
-                keyname += '+Shift';
-            }else if(code == 8){
-                keyname = '';
-                $("#shortCutsInput").val('');
+            if( (code>64&&code<91)|| (code>47&&code<58) || code == 8 ||code == 16 || code == 17 || code == 18 ){
+               if(code == 17){
+                    keyname += '+Ctrl';
+                }else if(code == 18){
+                    keyname += '+Alt';
+                }else if(code == 16){
+                    keyname += '+Shift';
+                }else if(code == 8){
+                    keyname = '';
+                    $("#shortCutsInput").val('');
+                }else{
+                    keyname += '+'+String.fromCharCode(code);
+                } 
             }else{
-                keyname += '+'+String.fromCharCode(code);
+                alert('暂不支持此快捷键');
+                return 
             }
             
             $("#shortCutsInput").val(keyname.substring(1,keyname.length));
@@ -750,7 +754,6 @@
         $(".chooseAudio").on('change',function(e){ // 选择音频输出设备函数
             var id = $(this).val();
             localStorage.channel = id;
-            console.log(id);
             if (typeof audio.sinkId !== 'undefined') {
                 audio.setSinkId(id).then(function(resp) {
                     console.log('Success, audio output device attached: ' + id + ' to ' +
@@ -789,7 +792,6 @@
 
         $("#autoLogin").change(function(){
             var checked = $(this).prop('checked')
-            console.log(checked)
             if(checked){
                 localStorage.isAutoLogin = checked;
             }else{
@@ -817,6 +819,11 @@
         this.keys.push(key)
         this.callback(key)
     }
+
+    // $(document).on('keydown',function(event) {
+    //      Act on the event 
+    //     console.log(event.keyCode)
+    // });
 
     
 
