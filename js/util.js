@@ -61,6 +61,20 @@ util = {
                 $(".chooseAudio").trigger('change');
             }
         });
+        // Create a tray icon
+        var tray = new nw.Tray({ title: 'Tray', icon: './favorited.png' });
+
+        // Give it a menu
+        var menu = new nw.Menu();
+        menu.append(new nw.MenuItem({
+            label: '退出' ,
+            click: function(){
+                var win = nw.Window.get();
+                win.close();
+            }
+        }));
+        tray.menu = menu;
+
 	},
 	refreshList: function(){ // 渲染全部列表
 		var mainHtml = '';
