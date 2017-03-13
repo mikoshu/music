@@ -74,6 +74,10 @@ util = {
             }
         }));
         tray.menu = menu;
+        tray.on('click',function(){
+            var win = nw.Window.get();
+            win.show();
+        });
 
 	},
 	refreshList: function(){ // 渲染全部列表
