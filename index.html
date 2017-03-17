@@ -172,6 +172,7 @@
     <div class="set-left">
         <a class="on" href="javascript:;">热键</a>
         <a href="javascript:;">音频设置</a>
+        <a href="javascript:;">其他</a>
     </div>
     <div class="set-con">
         <div class="set-tab" style="display: block">
@@ -197,6 +198,13 @@
                 </select>
             </div>
         </div>
+        <div class="set-tab">
+            <h3>其他设置</h3>
+            <label class="set-config">
+                <input type="checkbox" id="realClose" />
+                关闭程序时最小化到系统托盘
+            </label>
+        </div>
         <div class="btn-box">
             <!-- <a href="javascript:;" class="set-sure">确定</a> -->
             <a href="javascript:;" class="set-cancel">关闭</a>
@@ -213,12 +221,12 @@
             <li class="clearfix">
                 <span>账号：</span>
                 <input type="text" id="username" placeholder='请输入账号' />
-                <a href="javascript:;" class="hrefTo" data-url="http://101.37.27.68/register.ab" >注册账号</a>
+                <a href="javascript:;" class="hrefTo" data-url="http://101.37.27.68/register.html" >注册账号</a>
             </li>
             <li class="clearfix">
                 <span>密码：</span>
                 <input type="password" id="password" placeholder='请输入密码' />
-                <a href="javascript:;" class="hrefTo" data-url="http://101.37.27.68/forgetpassword.ab" >忘记密码</a>
+                <a href="javascript:;" class="hrefTo" data-url="http://101.37.27.68/password_find.html" >忘记密码</a>
             </li>
         </ul>
         <label>
@@ -255,6 +263,7 @@
     var unreg = []; // 存储删除快捷键函数
     var gui = require('nw.gui');
     var opener = require('opener');
+    var tray;
 
     $(document).ready(function(){
         util.init(); // 初始化
@@ -263,10 +272,20 @@
         /***topbar功能***/
         $(".ico_close").click(function(){
             var win = nw.Window.get();
-            var sure = confirm("您确定要关闭播放器吗？");
-            if(sure){
-                win.close();
+            if(localStorage.isClose){
+                var close = localStorage.isClose == 'true' ? true : false;
+                if(close){
+                    win.hide();
+                }else{
+                    var sure = confirm("您确定要关闭播放器吗？");
+                    if(sure){
+                        win.close();
+                    }
+                }
+            }else{
+                win.hide();
             }
+            
         })
         $(".ico_xiao").click(function(){
             var win = nw.Window.get();
@@ -297,9 +316,10 @@
             },50)
         });
         $("#reload").click(function(){ // 刷新页面
-            unreg.map(function(val,i){
+            unreg.map(function(val,i){ // 解绑快捷键
                 val();
             })
+            tray.remove(); // 移除托盘
             var win = nw.Window.get();
             win.reload();
         })
@@ -802,6 +822,11 @@
         $("#logout").click(function(){
             util.logout();
         })
+        // 设置是否关闭到系统托盘
+        $('#realClose').change(function(){
+            var isClose = $(this).prop('checked');
+            localStorage.isClose = isClose;
+        });
 
     })
 

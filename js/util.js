@@ -41,6 +41,12 @@ util = {
             this.login(localStorage.username,localStorage.password);
             $("#autoLogin").prop('checked','checked');
         }
+        if(localStorage.isClose){
+            var check = localStorage.isClose == 'true' ? true : false ; 
+            $("#realClose").prop('checked',check);
+        }else{
+            $("#realClose").prop('checked','checked');
+        }
 
         this.getAd(); // 获取广告
 
@@ -62,10 +68,26 @@ util = {
             }
         });
         // Create a tray icon
-        var tray = new nw.Tray({ title: 'Tray', icon: './favorited.png' });
+        tray = new nw.Tray({ title: 'Tray', icon: './icon.png' });
 
         // Give it a menu
         var menu = new nw.Menu();
+        menu.append(new nw.MenuItem({
+            label: '登录' ,
+            click: function(){
+                var win = nw.Window.get();
+                win.show();
+                $(".login-box").show();
+            }
+        }));
+        menu.append(new nw.MenuItem({
+            label: '选项设置' ,
+            click: function(){
+                var win = nw.Window.get();
+                win.show();
+                $(".setPop").show();
+            }
+        }));
         menu.append(new nw.MenuItem({
             label: '退出' ,
             click: function(){
@@ -276,29 +298,41 @@ util = {
     },
     login: function(username,password){
         $.ajax({
-            url: 'http://101.37.27.68/api/login.ab',
+            url: 'http://101.37.27.68/newuc/signin',
             type: 'post',
             data: {
-                username: username,
-                password: password
+                adt: username,
+                pwd: password
             },
             success: function(data){
-                if(data.responseCode == 200){
-                    //alert('登录成功！');
+                console.log(data)
+                if(data.success){
                     $('.login-box').hide();
-                    $('#avatar').attr('src',data.userInfo.headImage);
-                    $('#nickname').text(data.userInfo.nickName);
+                    //$('#avatar').attr('src',data.name);
+                    $('#nickname').text(data.name);
                     $("#show-login").addClass('logined');
                     // 登录成功自动记录密码
                     localStorage.username = username;
                     localStorage.password = password;
-
-                }else if(data.responseCode == 201){
-                    alert('用户信息不全，请先完善个人信息');
-                    opener('http://101.37.27.68/login.jsp');
                 }else{
-                    $("#msg").text(data.error);
+                    alert('登录失败')
                 }
+                // if(data.responseCode == 200){
+                //     //alert('登录成功！');
+                //     $('.login-box').hide();
+                //     $('#avatar').attr('src',data.userInfo.headImage);
+                //     $('#nickname').text(data.userInfo.nickName);
+                //     $("#show-login").addClass('logined');
+                //     // 登录成功自动记录密码
+                //     localStorage.username = username;
+                //     localStorage.password = password;
+
+                // }else if(data.responseCode == 201){
+                //     alert('用户信息不全，请先完善个人信息');
+                //     opener('http://101.37.27.68/login.jsp');
+                // }else{
+                //     $("#msg").text(data.error);
+                // }
 
             },
             complete: function(data){

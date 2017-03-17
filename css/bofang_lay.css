@@ -612,6 +612,15 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
     padding:20px 20px 0;
 }
 
+.set-config{
+    display: block;
+    margin-top:30px;
+    margin-left:20px;
+}
+.set-config input{
+    vertical-align: -3px;
+}
+
 .choose-box{
     text-align: center;
 }
