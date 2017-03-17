@@ -304,8 +304,8 @@ util = {
                 adt: username,
                 pwd: password
             },
-            success: function(data){
-                console.log(data)
+            success: function(data){   
+                var data = JSON.parse(data);
                 if(data.success){
                     $('.login-box').hide();
                     //$('#avatar').attr('src',data.name);
