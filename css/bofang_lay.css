@@ -129,14 +129,35 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
 .left_bbanner .on{background:#509AD5;}
 .liebiao_list { height:248px;overflow:hidden; }
 .ce_back { height:18px; padding:6px; display: none;}
-.ce_ad_bk { height:87px; white-space:195px; overflow:hidden; cursor: pointer;}
+.ce_ad_bk { height:87px; white-space:195px; overflow:hidden; cursor: pointer; position: relative;}
+.ce_ad_bk img{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width:195px;
+    height: 87px;
+}
 .nr_banner { height:33px; border-bottom:1px solid #E2E2E2; color:#4C4C4C;}
 .nr_banner li { float:left; width:72px; height:31px; line-height:31px; text-align:center; margin-left:32px; font-size:16px;  }
 .nr_banner li:hover { color:#269AF7; border-bottom:2px solid #56B1F9; cursor:hand;}
 .nr_banner_jg { color:#269AF7; border-bottom:2px solid #56B1F9; cursor:hand;}
 .nr_ad { height:58px; margin:2px;}
-.nr_ad_left { height:58px; float:left; width:332px; margin-right:2px; background:#D7D7D7; cursor: pointer; }
-.nr_ad_right { height:58px; float:left; width:106px; background:#D7D7D7; cursor: pointer;}
+.nr_ad_left { height:58px; float:left; width:332px; margin-right:2px; background:#D7D7D7; cursor: pointer; position: relative; }
+.nr_ad_left img{
+    position: absolute;
+    left: 0;
+    top:0;
+    width:332px;
+    height:58px;
+}
+.nr_ad_right { height:58px; float:left; width:106px; background:#D7D7D7; cursor: pointer; position: relative;}
+.nr_ad_right img{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width:106px;
+    height:58px;
+}
 .tiaoshi_bk { height:22px; }
 .tiaoshi_left_tu { float:left; padding:3px;}
 .tiaoshi_left_txt { float:left; padding-left:33px; color:#8C8C8C; cursor: pointer; }
@@ -486,6 +507,7 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
     text-align: center;
     border-radius:0 4px 4px 4px;
     border:1px solid #bababa;
+    z-index: 999;
 }
 .pop a{
     display: block;
@@ -507,6 +529,7 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
     background:#fbfbfb;
     border:1px solid #bababa;
     border-radius:2px;
+    z-index: 999;
 }
 .shortCutsPop label{
     display:block; 
@@ -553,6 +576,7 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
     border:1px solid #bababa;
     border-radius:4px;
     overflow:hidden;
+    z-index: 999;
 }
 
 .set-left{
@@ -664,7 +688,7 @@ ul,li { margin: 0px; padding: 0px; border: none; list-style-type: none;}
     background:#fbfbfb;
     border:1px solid #bababa;
     border-radius:4px;
-    
+    z-index: 999;
     font-size:14px;
     overflow: hidden;
 }

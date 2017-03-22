@@ -48,7 +48,10 @@ util = {
             $("#realClose").prop('checked','checked');
         }
 
-        this.getAd(); // 获取广告
+        this.getAd(1); // 获取广告
+        this.getAd(2); // 获取广告
+        this.getAd(3); // 获取广告
+        this.getAd(4);
 
         file = allFile;
         /**localstorage 用于排序**/
@@ -340,37 +343,98 @@ util = {
             }
         })
     },
-    getAd: function(){
+    getAd: function(n){
+        var dom = $("#ad"+n);
+        var imgIndex = 0;
         $.ajax({
-            url: 'http://101.37.27.68/api/banners.ab',
+            url: 'http://101.37.27.68/banner/banners',
             type: 'get',
+            data: {
+                position: n
+            },
             success: function(data){
-
-                data.map(function(val,i){
-                    if(i < data.length - 1){
-                        $("#ad"+val.position).attr('src',val.aliPath)
-                        .click(function(){
-                            opener(val.link);
-                        }); 
-                    }else{
-                        $("#Adtxt").html(val.description)
-                        .on('click',function(){
-                            opener(val.link);
-                        })
-                    }
-                    
-                })
+                if(n < 4){
+                    getImg(data);
+                }else{
+                    getTxt(data);
+                }
             }
-        })
+        });
+
+        function getImg(data){
+            var data = JSON.parse(data);
+            var len = data.length;
+            var html = '';
+            data.map(function(val,i){
+                html += '<img data-link="'+val.link+'" src="'+val.filepath+'"/>';
+            });
+            dom.html(html);
+            dom.delegate('img', 'click', function(event) {
+                var url = $(this).attr('data-link');
+                opener(url);
+            });
+
+            var timmer = setInterval(function(){
+                dom.find('img').eq(imgIndex).fadeIn(500).siblings('img').fadeOut(500);
+                if(imgIndex == len-1){
+                    imgIndex = 0;
+                }else{
+                    imgIndex += 1;
+                }
+                
+            },10000);
+        }
+        function getTxt(data){
+            var data = JSON.parse(data);
+            var len = data.length;
+            var html = '';
+            data.map(function(val,i){
+                html += '<span data-link="'+val.link+'">'+val.description+'</span>';
+            });
+            dom.html(html);
+            dom.delegate('span', 'click', function(event) {
+                var url = $(this).attr('data-link');
+                opener(url);
+            });
+            var timmer = setInterval(function(){
+                dom.find('span').eq(imgIndex).css('z-index',10)
+                .siblings('span').css('z-index',0);
+                if(imgIndex == len-1){
+                    imgIndex = 0;
+                }else{
+                    imgIndex += 1;
+                }
+                
+            },10000);
+        }
+        
+
+
+                // data.map(function(val,i){
+                //     if(i < data.length - 1){
+                //         $("#ad"+val.position).attr('src',val.aliPath)
+                //         .click(function(){
+                //             opener(val.link);
+                //         }); 
+                //     }else{
+                //         $("#Adtxt").html(val.description)
+                //         .on('click',function(){
+                //             opener(val.link);
+                //         })
+                //     }
+                    
+                // })
+
+
     },
     logout: function(){
         var sure = confirm('是否确定退出登录？');
         if(sure){
             $.ajax({
-                url: 'http://101.37.27.68/api/logout.ab',
+                url: 'http://101.37.27.68/newuc/logout',
                 type: 'post',
                 success: function(data){
-                  if(data == true){
+                  if(data == 'true'){
                     alert('退出登录成功！');
                     $("#avatar").attr('src','images/img_tx.png');
                     $("#nickname").text('登录');
