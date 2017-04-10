@@ -121,8 +121,12 @@ util = {
             var favoriteClass = self.isFavorited(val.fileURL)? 'favorited' : 'favorite'; // 判断该音效是否存在favorite列表，修改样式
             html  +=   '<li data-url='+val.fileURL+'>'+
                             '<p>'+val.fileName+'</p>'+
-                            '<span class="delete"></span>'+
-                            '<span class="'+favoriteClass+'"></span>'+
+                            '<a href="javascript:;" class="more"></a>'+
+                            '<a href="javascript:;" class="'+favoriteClass+'"></a>'+
+                            '<a href="javascript:;" class="delete"></a>'+
+                            
+
+                            '<span class="type">'+val.fileURL.split('.').pop().toUpperCase()+'</span>'
                         '</li>'; // 喜欢列表
         })
         $("#"+id).html(html);
@@ -436,7 +440,7 @@ util = {
                 success: function(data){
                   if(data == 'true'){
                     alert('退出登录成功！');
-                    $("#avatar").attr('src','images/img_tx.png');
+                    $("#avatar").attr('src','images/ic_head.png');
                     $("#nickname").text('登录');
                     $("#show-login").removeClass('logined');
                     $("#autoLogin").prop('checked','');

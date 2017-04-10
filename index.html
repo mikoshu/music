@@ -6,7 +6,7 @@
 <link href="css/bofang_lay.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body class="defalut">
+<body class="default">
 <div class="bianju_650">
 	<div class="top_banner mid-hide">
         <a href="javascript:;" class="logo"></a>
@@ -118,14 +118,20 @@
         </div>
     </div>
     <div class="bofang_bk">
+        <dl class="jindu_shang clearfix">
+            <dd>
+                <img src="images/control_image_cd.png" alt="" />
+            </dd>
+            <dt>
+                <p id="name"></p>
+                <span id="type" >HD</span>
+            </dt>
+        </dl>
     	<div class="bofang_1 mid-hide" id="last" ></div>
         <div class="bofang_2" id="play" ></div>
         <div class="bofang_3 mid-hide" id="next" ></div>
         <div class="jindu_bk miniHide">
-        	<div class="jindu_shang">
-            	<span id="type" >HD</span>
-                <p id="name"></p>
-		  </div>
+        	
             <div class="jindu_xia">
             	<div class="jindu_shijian" id="allTime">00:00</div>
                 <div class="jindu_tiao">
@@ -141,7 +147,9 @@
         <div class="shengyin_jindu miniHide" id="volume">
 		  <p class="volume"></p>
         </div>
-         <div class="ce_duihua miniHide mid-hide">12</div>
+         <div class="ce_duihua miniHide mid-hide">
+             <span>2</span>
+         </div>
         <div class="to-max">
             
         </div>
@@ -300,7 +308,7 @@
         $(".ico_suoxiao").click(function(){ // 主题部分mini
             var win = nw.Window.get();
             win.width = 454;
-            win.height= 316;
+            win.height= 310;
             $(".mid-hide").hide();
             $(".bofang_bk").addClass('midFooter');
             $(".mid_bk").css('height','auto');
@@ -311,7 +319,7 @@
             var win = nw.Window.get();
             $(".mid-hide").show();
             $(".bofang_bk").removeClass('midFooter');
-            $(".mid_bk").css('height','369px');
+            $(".mid_bk").css('height','354px');
             $(".bofang_7").removeClass('ml-10');
             $(this).hide();
             win.width = 660;
