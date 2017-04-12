@@ -138,7 +138,7 @@ body{
 .left_bbanner a {width:35px; float:left; height:25px; display:block; text-align:center; padding-top:8px}
 .left_bbanner a:hover { background: rgba(71,146,234,0.15);}
 .left_bbanner .on{background: rgba(71,146,234,0.15);}
-.liebiao_list { height:266px;overflow:hidden; background:#f5f5f5;  }
+.liebiao_list { height:267px;overflow:hidden; background:#f5f5f5;  }
 .ce_back { height:18px; padding:6px; display: none;}
 .ce_ad_bk { height:87px; white-space:195px; overflow:hidden; cursor: pointer; position: relative;}
 .ce_ad_bk img{
@@ -171,9 +171,9 @@ body{
 }
 .tiaoshi_bk { height:30px; }
 .tiaoshi_left_tu { float:left;  margin-left:20px; margin-top:5px;}
-.tiaoshi_left_txt { float:left; padding-left:33px; color:#A7A7A7; font-size:12px; cursor: pointer;line-height: 30px; }
-.tiaoshi_right_jia { float:right; margin:5px 15px 0 0px;}
-.toggle_onoff { float:right; margin:2px; margin-right:20px;}
+.tiaoshi_left_txt { float:left; padding-left:33px; color:#A7A7A7; font-size:12px; cursor: pointer;line-height: 30px; -webkit-app-region: no-drag;}
+.tiaoshi_right_jia { float:right; margin:5px 15px 0 0px; -webkit-app-region: no-drag;}
+.toggle_onoff { float:right; margin:2px; margin-right:20px; -webkit-app-region: no-drag;}
 .toggle_onoff a { 
     background:url(../images/switch_off.png); 
     display:block;
@@ -186,6 +186,7 @@ body{
 }*/
 .toggle_onoff .on { 
     background:url(../images/switch_on.png);
+
 }
 
 /*.toggle_onoff .on:hover { 
@@ -361,6 +362,7 @@ body{
     -webkit-app-region: no-drag;
 }
 .bofang_2 { 
+    position: relative;
     display:block; 
     float:left; 
     margin:13px 0 0 8px;
@@ -371,6 +373,7 @@ body{
     opacity:.8;
     cursor: pointer;
     -webkit-app-region: no-drag;
+    z-index: 2;
 }
 .bofang_2.playing{
     background:url(../images/control_stop.png) bottom left no-repeat;
@@ -558,15 +561,20 @@ body{
 
 .miniFooter .favorite,.miniFooter .favorited{
     position:absolute;
-    left:14px;
-    top:15px;
+    left:16px;
+    top:20px;
+    width:12px;
+    height:12px;
     margin:0;
 }
+.miniFooter .favorite{
+    background: url(../images/sidepage_ic_like_normal.png) no-repeat;
+}
+.miniFooter .favorited{
+    background: url(../images/sidepage_ic_like_focus.png) no-repeat;
+}
 .miniFooter  .circle,.miniFooter  .circled{
-    position:absolute;
-    right:15px;
-    top:15px;
-    margin:0;
+   display: none !important;
 }
 .miniFooter .bofang_1{
     margin:18px 0 0 64px;
@@ -826,7 +834,7 @@ body{
 
 .pop-head{
     padding:0 10px;
-    line-height: 30px;
+    line-height: 40px;
     background-image: linear-gradient(-1deg, #3083E5 0%, #4CAEFB 100%);
     color:#fff;
     font-size:16px;
@@ -873,15 +881,115 @@ body{
     border-radius:4px;
 }
 
+.circle-progress{
+    display: none;
+    position:absolute;
+    left:82px;
+    top:9px;
+    width:32px;
+    height:32px;
+    z-index: 1;
+}
+.miniFooter .circle-progress,.miniFooter .border{
+    display: block;
+}
+.border{
+    display: none;
+    position:absolute;
+    left:83px;
+    top:10px;
+    width:24px;
+    height:24px;
+    border:3px solid rgba(255,255,255,.3);
+    border-radius: 50%;
+}
+.miniFooter{-webkit-app-region: no-drag;}
+.miniFooter .bofang_2{
+    background: url(../images/sidepage_play.png) 6px 5px no-repeat;
+}
+.miniFooter .playing{
+    background: url(../images/sidepage_suspend.png) center no-repeat;
+}
 
+.mini-volume{
+    display: none;
+    position: absolute;
+    top: 19px;
+    right: 15px;
+    width:12px;
+    height: 12px;
+    background: url(../images/sidepage_ic_voice.png);
+    -webkit-app-region: no-drag;
+}
+.mini-volume input{
+    display: none;
+    position: absolute;
+    top:-28px;
+    left:-20px;
+    -webkit-appearance: none;
+    width:50px;
+    height:4px;
+    transform:rotate(-90deg);
+    -webkit-app-region: no-drag;
+    border-radius: 10px;
+}
+.miniFooter .mini-volume{
+    display: block;
+}
+input[type=range]:focus {
+    outline: none;
+}
 
+input[type=range]::-webkit-slider-runnable-track {
+    -webkit-appearance: none;
+    height: 4px;
+    border-radius: 10px; /*将轨道设为圆角的*/
+    background: rgba(255,255,255,.5);
+}
 
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 10px;
+    width: 10px;
+    margin-top: -3px; /*使滑块超出轨道部分的偏移量相等*/
+    background: #ffffff; 
+    border-radius: 50%; /*外观设置为圆形*/
+    border: solid 0.125em rgba(205, 224, 230, 0.5); /*设置边框*/
+    box-shadow: 0 .125em .125em #3b4547; /*添加底部阴影*/
+}
+.mini-type{
+    display: none;
+    position: absolute;
+    top:17px;
+    right:32px;
+    padding:2px 4px;
+    line-height: 12px;
+    border-radius:6px;
+    font-size: 12px;
+    background: #ccc;
+    color:#333;
+    transform: scale(.75);
+}
+.miniFooter .mini-type{
+    display: block;
+}
 
-
-
-
-
-
+.mid-close{
+    display: none;
+    float:right;
+    width:15px;
+    height:15px;
+    margin: 7px 10px 0 0px;
+    background: url(../images/miniplayer_ic_off.png) no-repeat;
+    cursor:pointer;
+    -webkit-app-region: no-drag;
+}
+.midTool{
+    -webkit-app-region: drag;
+}
+.midTool .mid-close{
+    display: block;
+}
 
 
 

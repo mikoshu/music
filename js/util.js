@@ -450,5 +450,21 @@ util = {
             })
         }
         
+    },
+    close: function(){
+        var win = nw.Window.get();
+        if(localStorage.isClose){
+            var close = localStorage.isClose == 'true' ? true : false;
+            if(close){
+                win.hide();
+            }else{
+                var sure = confirm("您确定要关闭播放器吗？");
+                if(sure){
+                    win.close();
+                }
+            }
+        }else{
+            win.hide();
+        }
     }
 }

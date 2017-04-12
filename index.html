@@ -107,6 +107,7 @@
             	<div class="tiaoshi_left_tu"><img src="images/content_ic_voice.png" width="20" height="20" /></div>
 				<div class="tiaoshi_left_txt" id="ad4">声卡调试</div>
 				<!-- <div class="tiaoshi_left_txt">就找图腾音频</div> -->
+                <div class="mid-close"></div>
                 <div class="toggle_onoff"><a id="sort" href="javascript:;"></a></div>
                 <div class="tiaoshi_right_jia" title="重新加载音频文件" ><img src="images/content_ic_plus.png" width="18" height="18" /></div>
             </div>
@@ -130,6 +131,8 @@
     	<div class="bofang_1 mid-hide" id="last" ></div>
         <div class="bofang_2" id="play" ></div>
         <div class="bofang_3 mid-hide" id="next" ></div>
+        <canvas id="mini-progress" class="circle-progress"></canvas>
+        <div class="border"></div>
         <div class="jindu_bk miniHide">
         	
             <div class="jindu_xia">
@@ -150,9 +153,11 @@
          <div class="ce_duihua miniHide mid-hide">
              <span>2</span>
          </div>
-        <div class="to-max">
-            
+        <div class="to-max"></div>
+        <div class="mini-volume">
+            <input type="range" id="mVolume" min="0" max="100"  />
         </div>
+        <span class="mini-type" id="miniType">HD</span>
 	</div>
 </div>
 <audio id="audio" autoplay="autoplay" src='' ></audio>
@@ -278,6 +283,12 @@
     var gui = require('nw.gui');
     var opener = require('opener');
     var tray;
+    var canvas = document.getElementById("mini-progress"); // 环形进度条 canvas
+    var cxt = canvas.getContext('2d');
+    canvas.width = 32;
+    canvas.height = 32;
+    var mVolume = document.getElementById('mVolume');
+
 
     $(document).ready(function(){
         util.init(); // 初始化
@@ -285,30 +296,20 @@
 
         /***topbar功能***/
         $(".ico_close").click(function(){
-            var win = nw.Window.get();
-            if(localStorage.isClose){
-                var close = localStorage.isClose == 'true' ? true : false;
-                if(close){
-                    win.hide();
-                }else{
-                    var sure = confirm("您确定要关闭播放器吗？");
-                    if(sure){
-                        win.close();
-                    }
-                }
-            }else{
-                win.hide();
-            }
-            
-        })
+            util.close();
+        });
+        $(".mid-close").click(function(){
+            util.close();
+        });
         $(".ico_xiao").click(function(){
             var win = nw.Window.get();
             win.minimize()
-        })
+        });
         $(".ico_suoxiao").click(function(){ // 主题部分mini
             var win = nw.Window.get();
             win.width = 454;
             win.height= 310;
+            $(".tiaoshi_bk").addClass('midTool');
             $(".mid-hide").hide();
             $(".bofang_bk").addClass('midFooter');
             $(".mid_bk").css('height','auto');
@@ -321,6 +322,7 @@
             $(".bofang_bk").removeClass('midFooter');
             $(".mid_bk").css('height','354px');
             $(".bofang_7").removeClass('ml-10');
+            $(".tiaoshi_bk").removeClass('midTool');
             $(this).hide();
             win.width = 660;
             win.height= 451;
@@ -340,7 +342,7 @@
         $('#mini').click(function(){ // 列表 mini 隐藏不显示元素
             var win = nw.Window.get();
             if($(this).hasClass('mini')){
-                win.width = 195;
+                win.width = 205;
                 $(".miniHide").hide();
                 $(this).attr('class','minied');
                 $(".bofang_bk").addClass('miniFooter');
@@ -380,7 +382,13 @@
                 $("#nowTime").html(util.getTime(audio.currentTime));
                 var per = parseInt((audio.currentTime/audio.duration)*100);
                 $(".process").css('width',per+'%');
-            },500)
+                cxt.clearRect(0,0,32,32);
+                cxt.beginPath();
+                cxt.lineWidth = 3;
+                cxt.strokeStyle = "#4CAEFB";
+                cxt.arc(16,16,13,0,Math.PI*2*per/100,false);
+                cxt.stroke();
+            },200)
         }
 
         audio.onpause = function (){// 音频暂停
@@ -392,6 +400,10 @@
         audio.onended = function(){ // 音频结束
             $("#nowTime").html(util.getTime(audio.duration))
             $(".process").css('width','100%');
+
+            cxt.beginPath();
+            cxt.arc(16,16,13,0,Math.PI*2,false);
+            cxt.stroke();
             clearInterval(Timmer)
         }
 
@@ -412,6 +424,7 @@
             $("#name").html(file[index].fileName);
             var type = file[index].fileURL.split('.').pop().toUpperCase();
             $("#type").text(type);
+            $("#miniType").text(type);
             audio.play();
             if(nowType != 'recent'){ // 当最近播放列表点击播放时，不更新自身
                 recentFile.map(function(val,i){
@@ -528,6 +541,7 @@
         
 
         /** 声音控制器模拟 **/
+
         var changeVolume = false;
         var maxWidth = 47;
         $("#volume").mousedown(function(){
@@ -558,7 +572,30 @@
             audio.volume = per/100;
         } 
         /**声音控制器模拟结束 **/
+        /**mini声音控制**/
 
+        $(".mini-volume").click(function(e){
+            mVolume.value = audio.volume*100;
+            mVolume.style.display = 'block';
+            e.stopPropagation();  
+        });
+
+        $('body').on('click',function(e){
+            mVolume.style.display = 'none';    
+        });
+
+        $(mVolume).on('click',function(e){
+            e.stopPropagation();  
+        });
+
+        $(mVolume).on('input',function(e){
+            var wlen = $(this).val();
+            audio.volume = wlen/100;
+
+            $("#volume").find('p').css('width',wlen+'%');
+        });
+
+        /**mini声音控制结束**/
         
 
         /***排序按钮开关***/
