@@ -19,8 +19,8 @@
             </a>
 		</div>
         <div class="top_jiantou miniHide">
-        	<a href="javascript:;"><img src="images/arrow_left.png" width="14" height="14" /></a>
-            <a href="javascript:;"><img src="images/arrow_right.png" width="14" height="14" /></a>
+        	<a href="javascript:;" id="win-back" ><img src="images/arrow_left.png" width="14" height="14" /></a>
+            <a href="javascript:;" id="win-next" ><img src="images/arrow_right.png" width="14" height="14" /></a>
             <a href="javascript:;" id="reload"><img src="images/ic_renew.png" width="14" height="14" /></a>
         </div>
         <div class="top_sousuo miniHide">
@@ -95,11 +95,11 @@
                 </div>
             </div>
         	<div class="nr_banner mid-hide">
-            	<ul>
-                	<li class="nr_banner_jg">我的音效</li>
-                    <li>音效库</li>
-                    <li>电音库</li>
-                    <li>直播工具</li>
+            	<ul id="tab">
+                	<li data-name="tab-my" class="nr_banner_jg">我的音效</li>
+                    <li data-name="tab-lib" >音效库</li>
+                    <li data-name="tab-search">电音库</li>
+                    <li data-name="tab-tool">直播工具</li>
                 </ul>
             </div>
             
@@ -111,10 +111,50 @@
                 <div class="toggle_onoff"><a id="sort" href="javascript:;"></a></div>
                 <div class="tiaoshi_right_jia" title="重新加载音频文件" ><img src="images/content_ic_plus.png" width="18" height="18" /></div>
             </div>
-            <div class="list_shengxiao">
+            <div class="list_shengxiao" id="tab-my" style="display: block;">
             	<ul class="clearfix" id="musicList">
                 	<!--遍历文件夹音效内容-->
                 </ul>
+            </div>
+            <div class="list_shengxiao clearfix" id="tab-lib">
+                <div class="lib-side" id="lib-side">
+                    <!-- <div class="lib-mod"> 模板
+                        <h3>人物音效</h3>
+                        <ul>
+                            <li>掌声</li>
+                            <li>掌声</li>
+                            <li>掌声</li>
+                            <li>掌声</li>
+                            <li>掌声</li>
+                            <li>掌声</li>
+                        </ul>
+                    </div> -->
+                </div>
+                <div class="lib-con" >
+                    <div id="lib-con"></div>
+                    <div class="page"></div>
+                    <!-- <h3>掌声</h3> 模板
+                    <table>
+                        <tr>
+                            <th>标题</th>
+                            <th>类型</th>
+                            <th>时长</th>
+                            <th>操作</th>
+                        </tr>
+                        <tr>
+                            <td>生么法</td>
+                            <td>掌声</td>
+                            <td>3s</td>
+                            <td>...</td>
+                        </tr>
+                    </table> -->
+                </div>
+            </div>
+            <div class="list_shengxiao" id="tab-search">
+                <iframe src="http://101.37.27.68/v21/query" width="454" height="288" frameborder="0"></iframe>
+            </div>
+            <div class="list_shengxiao" id="tab-tool">
+                直播工具...
             </div>
         </div>
     </div>
@@ -262,8 +302,12 @@
 <!--登录弹窗结束-->
 
 <script type="text/javascript" src="js/jquery-2.1.1.min.js" ></script>
+<script src="js/jquery.pagination.min.js"></script>
 <script type="text/javascript" src="js/Sortable.js" ></script>
 <script type="text/javascript" src="js/util.js" ></script>
+<!-- <script type="text/javascript" src="js/cbsplit.js"></script>
+<script type="text/javascript" src="js/jquery.ba-hashchange.js"></script>
+<script type="text/javascript" src="js/jquery.router.js"></script> -->
 <script>
     var fs = require('fs');
     var path = require('path');
@@ -272,6 +316,7 @@
     var allFile = []; // 全部音效文件
     var favoriteFile = []; // 喜欢的音效文件
     var recentFile = []; // 最近播放的音效文件
+    var libFile = []; // 音效库内文件列表
     var file = []; // 执行遍历的临时文件数组
     var isPlaying = false;
     var playMode = 'one';
@@ -308,7 +353,7 @@
         $(".ico_suoxiao").click(function(){ // 主题部分mini
             var win = nw.Window.get();
             win.width = 454;
-            win.height= 310;
+            win.height= 308;
             $(".tiaoshi_bk").addClass('midTool');
             $(".mid-hide").hide();
             $(".bofang_bk").addClass('midFooter');
@@ -337,6 +382,7 @@
             })
             tray.remove(); // 移除托盘
             var win = nw.Window.get();
+            location.href="#tab-my";
             win.reload();
         })
         $('#mini').click(function(){ // 列表 mini 隐藏不显示元素
@@ -357,6 +403,12 @@
                 $(".denglu_txt").removeClass('short-name');
             }
             
+        });
+        $("#win-back").click(function(){
+            history.back();
+        });
+        $("#win-next").click(function(){
+            history.forward();
         });
         /***topbar功能***/
        
@@ -422,6 +474,7 @@
             }
             $("#audio").attr('src',file[index].fileURL);
             $("#name").html(file[index].fileName);
+            $("#name").attr('title',file[index].fileName);
             var type = file[index].fileURL.split('.').pop().toUpperCase();
             $("#type").text(type);
             $("#miniType").text(type);
@@ -878,10 +931,50 @@
             var isClose = $(this).prop('checked');
             localStorage.isClose = isClose;
         });
-
+        // 音效库以及相关内容切换
+        $("#tab").find('li').on('click',function(e){
+            var name = $(this).attr('data-name');
+            window.location.href = '#'+name;
+        });
+        // 播放音效库文件
+        $('body').delegate('.playthis','click',function(){
+            var i = $(this).attr('data-index');
+            $(this).parents('tr').addClass('on').siblings('tr').removeClass('on');
+            index = i;
+            play(libFile);
+            util.renderSideList('recentList',recentFile);
+            util.renderSideList('defaultList',allFile);
+            util.renderSideList('favoriteList',favoriteFile);
+        });
+        $("body").delegate('.lib-show','click',function(e){
+            if($(this).hasClass('on')){
+                $(this).removeClass('on')
+                $(this).next().css("height",'76px');
+            }else{
+                $(this).addClass('on')
+                $(this).next().css("height",'auto');
+            }
+            
+        });
+        $("body").delegate('.lib-type','click',function(){
+            var id = $(this).attr('data-id');
+            util.renderLibHtmlCon(id,1);
+        });
+        
     })
 
-    
+    $(window).bind('hashchange', function(e, triggered) { // 绑定hash值
+            var hash = location.hash.replace(/^#/, '');
+            if(hash != ''){
+                $("#tab").find('li').each(function(i,val){
+                    if($(val).attr("data-name") == hash ){
+                        $(val).addClass('nr_banner_jg').siblings('li').removeClass('nr_banner_jg');
+                    }
+                })
+                $("#"+hash).css('display','block').siblings('.list_shengxiao').css('display','none');
+            }
+    });
+
     function lastKey(callback) {
         this._last_key = ''
         this.keys = []

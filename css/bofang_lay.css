@@ -18,7 +18,7 @@ body{
     background: rgba(0,0,0,.6);
 }
 
-.top_banner { height:46px; border-bottom:1px solid #FFF; -webkit-app-region: drag;}
+.top_banner { height:47px; -webkit-app-region: drag;}
 .top_banner a { color:#FFF; text-decoration:none; -webkit-app-region: no-drag;}
 
 .denglu_img { float:left;}
@@ -132,7 +132,7 @@ body{
 .liebiao_lanmu span { float:right; display:block; padding:7px}
 
 .mid_bk { height:353px; overflow: hidden;}
-.mid_left { float:left; width:205px; height:354px;overflow: hidden;}
+.mid_left { float:left; width:205px; height:353px;overflow: hidden;}
 .mid_right { float:right; width:454px;/*height:369px;*/overflow: hidden;}
 .left_bbanner {float:left; width:35px; height:354px;  background:#eaeaea;}
 .left_bbanner a {width:35px; float:left; height:25px; display:block; text-align:center; padding-top:8px}
@@ -193,9 +193,9 @@ body{
     background:url(../images/toggle_off.png);
 }*/
 
-.list_shengxiao { padding:0 2px;}
+.list_shengxiao {width:450px; height: 228px; padding:0 2px; display: none;}
 
-.list_shengxiao ul{height:230px; overflow-y:scroll;}
+.list_shengxiao ul{height:228px; overflow-y:scroll;}
 
 
 .list_shengxiao li {
@@ -420,7 +420,8 @@ body{
     line-height:12px;
     color:#fff;
 }
-.jindu_shang p { color:#FFF; height:12px; line-height:12px; -webkit-app-region: no-drag;}
+.jindu_shang p {width:60px; color:#FFF; height:12px; line-height:12px; overflow: hidden; text-overflow:ellipsis;
+    white-space: nowrap; -webkit-app-region: no-drag;}
 .jindu_xia { height:16px; line-height:16px; -webkit-app-region: no-drag;}
 .jindu_shijian { float:left; color:#FFF;}
 .jindu_tiao { width:160px; float:left; height:4px; background:rgba(255,255,255,.3); line-height:4px; margin:6px 6px; overflow:hidden; border-radius:4px;}
@@ -449,9 +450,7 @@ body{
     cursor: pointer;
     -webkit-app-region: no-drag;
 }
-.bofang_4:hover{
-    background: url(../images/bofang_ico_4_a.png) top center no-repeat;
-}
+
 .bofang_bk .favorite { 
     float:left; 
     display: block; 
@@ -991,13 +990,119 @@ input[type=range]::-webkit-slider-thumb {
     display: block;
 }
 
+.lib-side{
+    float:left;
+    width:128px;
+    height:228px;
+    overflow: auto;
+}
 
+.lib-side::-webkit-scrollbar,.lib-con::-webkit-scrollbar{
+    width:6px;
+    background: #eee;
+    border-radius:4px;
+}
+.lib-side::-webkit-scrollbar-thumb,.lib-con::-webkit-scrollbar-thumb{
+    width:6px;
+    background: #ccc;
+    border-radius:4px;
+}
 
+.lib-mod{width:120px;margin-bottom:10px;}
+.lib-mod h3{
+    width:118px;
+    margin:0 auto;
+    font-size:14px;
+    text-align: center;
+    color:#949494;
+    line-height: 26px;
+    background: #eee;
+    cursor: pointer;
+}
 
+.lib-mod h3 span{
+    display: inline-block;
+    margin-left:4px;
+    width:10px;
+    height: 10px;
+    background: url(../images/list_arrow_right.png) no-repeat;
+    transition: transform .5s;
+}
+.lib-mod .on span{
+    transform: rotate(90deg);
+}
+.lib-mod ul{
+    overflow: hidden;
+    height:76px;
+}
+.lib-mod ul li{
+    float:left;
+    width:58px;
+    height: 24px;
+    margin:1px;
+    font-size:12px;
+    line-height: 24px;
+    border-radius:0;
+    cursor: pointer;
+}
 
+.lib-con{
+    float:left;
+    width:316px;
+    height:228px;
+    margin-left:6px;
+    overflow: auto;
+}
+.lib-con h3{
+    padding-left:2px;
+    border-bottom:1px solid #d9d9d9;
+    background:#f4f4f4;
+}
+.lib-con table{
+    width:100%;
+}
 
+.lib-con table th{
+    text-align: left;
+    font-weight: normal;
+}
+.lib-con table .on{
+    color:#52abf6;
+}
+.lib-con table td{}
+.lib-con table td span{cursor: pointer;}
+.lib-con table tr:nth-child(odd){
+    background: #f4f4f4;
+}
+.lib-con .lib-name span{
+    display: inline-block;
+    width:140px;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+}
 
-
+.page{
+    text-align: center;
+    font-size:14px;
+    margin-top:10px;
+}
+.page a{
+    display: inline-block;
+    width:20px;
+    height: 20px;
+    text-align: center;
+    line-height: 20px;
+    color:#333;
+    text-decoration:none;
+}
+.page .active{
+    display: inline-block;
+    width:20px;
+    height:20px;
+    color:#fff;
+    background:#52abf6;
+}
 
 
 

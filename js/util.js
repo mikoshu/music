@@ -104,6 +104,9 @@ util = {
             win.show();
         });
 
+        //test
+        util.renderLibHtmlSide();
+
 	},
 	refreshList: function(){ // 渲染全部列表
 		var mainHtml = '';
@@ -324,23 +327,6 @@ util = {
                 }else{
                     alert('登录失败')
                 }
-                // if(data.responseCode == 200){
-                //     //alert('登录成功！');
-                //     $('.login-box').hide();
-                //     $('#avatar').attr('src',data.userInfo.headImage);
-                //     $('#nickname').text(data.userInfo.nickName);
-                //     $("#show-login").addClass('logined');
-                //     // 登录成功自动记录密码
-                //     localStorage.username = username;
-                //     localStorage.password = password;
-
-                // }else if(data.responseCode == 201){
-                //     alert('用户信息不全，请先完善个人信息');
-                //     opener('http://101.37.27.68/login.jsp');
-                // }else{
-                //     $("#msg").text(data.error);
-                // }
-
             },
             complete: function(data){
                 //console.log(data);
@@ -411,25 +397,6 @@ util = {
                 
             },10000);
         }
-        
-
-
-                // data.map(function(val,i){
-                //     if(i < data.length - 1){
-                //         $("#ad"+val.position).attr('src',val.aliPath)
-                //         .click(function(){
-                //             opener(val.link);
-                //         }); 
-                //     }else{
-                //         $("#Adtxt").html(val.description)
-                //         .on('click',function(){
-                //             opener(val.link);
-                //         })
-                //     }
-                    
-                // })
-
-
     },
     logout: function(){
         var sure = confirm('是否确定退出登录？');
@@ -466,5 +433,91 @@ util = {
         }else{
             win.hide();
         }
+    },
+    renderLibHtmlSide: function(){
+        $.ajax({
+            url: 'http://101.37.27.68/api/listcatagory',
+            success: function(data){
+                var data = JSON.parse(data);
+                var defaultId = data[0].children[0].id;
+                var html = '';
+                data.map(function(val,i){
+                    if(val.hasOwnProperty('children') && val.children.length != 0 ){
+                        html += '<div class="lib-mod" data-id="'+val.id+'" >'+
+                                    '<h3 class="lib-show">'+val.text+'<span></span></h3>'+
+                                    '<ul>';
+                        val.children.map(function(child,n){
+                            html += '<li class="lib-type" data-id="'+child.id+'" >'+child.text+'</li>'   
+                        })
+                        html += '</ul>'+
+                                '</div>'
+                    }
+                    
+                })
+                $("#lib-side").html(html);
+                util.renderLibHtmlCon(defaultId,1);
+            },
+            error: function(err){
+                console.log(err);
+                alert("音效分类列表请求错误，请检查网络!");
+            }
+        })
+    },
+    renderLibHtmlCon: function(id,page){
+        $.ajax({
+            url: 'http://101.37.27.68/api/catagory/'+id,
+            data:{
+                page:page,
+                pageSize: 10
+            },
+            success: function(data){
+                var data = JSON.parse(data);
+                //console.log(data);
+                var html = '';
+                libFile = [];
+                if(data.hasOwnProperty("content")&&data.content.length > 0){
+                    html += '<h3>'+data.content[0].groupid+'</h3>'+
+                            '<table>'+
+                                '<tr>'+
+                                    '<th class="lib-name">标题</th>'+
+                                    '<th>类型</th>'+
+                                    '<th>时长</th>'+
+                                    '<th>操作</th>'+
+                                '</tr>';
+                    data.content.map(function(val,i){
+                        var obj = {}
+                        obj.fileName = val.name;
+                        obj.fileURL = 'http://101.37.27.68/api/sound/'+val.id+'.'+val.ext;
+                        libFile.push(obj);
+                        html += '<tr>'+
+                                    '<td class="lib-name"><span class="playthis" data-index="'+i+'" title="'+val.name+'" >'+val.name+'</span></td>'+
+                                    '<td>'+val.groupid+'</td>'+
+                                    '<td>'+val.duration+'s</td>'+
+                                    '<td>...</td>'+
+                                '</tr>';     
+                    });
+                    html += '</table>';
+                    $("#lib-con").html(html);
+                    $(".page").pagination({
+                        totalData: data.totalCount,
+                        showData: 10,
+                        pageCount: 5,
+                        current: page,
+                        coping: true,
+                        callback: function(api){
+                            util.renderLibHtmlCon(id,api.getCurrent());
+                        }
+
+                    })
+                }else{
+                    alert("该类型音效没有内容")
+                }
+                
+            },
+            error: function(err){
+                console.log(err)
+                alert("音效分类列表请求错误，请检查网络!");
+            }
+        })
     }
 }
