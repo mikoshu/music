@@ -1,3 +1,4 @@
+var  mm = require('musicmetadata');
 util = {
 	init: function(){
         var self = this;
@@ -9,16 +10,7 @@ util = {
         if(localStorage.file){
             allFile = JSON.parse(localStorage.file);
         }else{
-            var dir = fs.readdirSync(musicURL);
-            dir.forEach(function(val){ // 遍历musics文件夹里的文件，默认只有一级目录，子目录没做处理
-                var obj = {};
-                obj.fileURL = path.join(musicURL, val);
-                var name = val.split(".");
-                name.pop();
-                obj.fileName = name.join('.');
-                allFile.push(obj); // 将遍历结果放入file数组
-            });
-            localStorage.file = JSON.stringify(allFile);
+            this.readDefaultFolder(); // 读取本地默认文件
         }
         if(localStorage.recentFile){
             recentFile = JSON.parse(localStorage.recentFile);
@@ -48,6 +40,10 @@ util = {
             $("#realClose").prop('checked','checked');
         }
 
+        this.readDownloadFolder();
+        
+        //console.log(downloadFile)
+
         this.getAd(1); // 获取广告
         this.getAd(2); // 获取广告
         this.getAd(3); // 获取广告
@@ -55,7 +51,7 @@ util = {
 
         file = allFile;
         /**localstorage 用于排序**/
-        document.oncontextmenu =new Function("return false;")
+        document.oncontextmenu =new Function("return false;"); // 禁止鼠标右键
         //this.addShortCuts();
         navigator.mediaDevices.enumerateDevices().then(function(resp){ // 获取用户media设备
             var html = ''
@@ -108,11 +104,93 @@ util = {
         util.renderLibHtmlSide();
 
 	},
+    readDefaultFolder: function(){// 遍历默认文件夹
+        allFile = [];
+        var self = this;
+        var callback = function(){
+            self.renderSideList('defaultList',allFile);
+            localStorage.file = JSON.stringify(allFile);
+            self.refreshList();
+        };
+        this.readFile(musicURL,allFile,callback);
+
+        // var dir = fs.readdirSync(musicURL);
+        // dir.forEach(function(val){ // 遍历musics文件夹里的文件，默认只有一级目录，子目录没做处理
+        //     var obj = {};
+        //     obj.fileURL = path.join(musicURL, val);
+        //     var name = val.split(".");
+        //     name.pop();
+        //     obj.fileName = name.join('.');
+        //     allFile.push(obj); // 将遍历结果放入file数组
+        // });
+        // localStorage.file = JSON.stringify(allFile);
+    },
+    readDownloadFolder: function(){ // 遍历下载文件夹
+        downloadFile = [];
+        var self = this;
+        var callback = function(){
+            self.renderSideList('downloadList',downloadFile)
+        };
+        this.readFile(downloadURL,downloadFile,callback);
+
+        // var dir = fs.readdirSync(downloadURL);
+        // dir.forEach(function(val){ // 遍历musics文件夹里的文件，默认只有一级目录，子目录没做处理
+        //     var obj = {};
+        //     obj.fileURL = path.join(downloadURL, val);
+        //     var name = val.split(".");
+        //     name.pop();
+        //     obj.fileName = name.join('.');
+        //     downloadFile.push(obj); // 将遍历结果放入file数组
+        // });
+
+        //console.log(this.musicList)
+        //localStorage.downloadFile = JSON.stringify(downloadFile);
+    },
+    readFile: function(dirname,arr,fn){ // 读取路径并且递归文件夹
+        var self = this;
+        var dir = fs.readdirSync(dirname);
+        var len = dir.length;
+        //console.log(len)
+        dir.forEach(function(val,i){
+            val = path.join(dirname,val);
+            fs.stat(val,function(err,stat){
+                if(err){
+                    throw err
+                }else{
+                    if(stat.isDirectory()){
+                        self.readFile(val)
+                    }else{
+                        // https://github.com/leetreveil/musicmetadata
+                        var ext = path.extname(val); // 判断文件是否为音频
+                        if(ext == ".mp3" || ext == ".wav" || ext == ".wma" || ext == ".ogg" || ext == ".ape" || ext == ".acc" || ext == ".m4a"){
+                            var stream = fs.createReadStream(val)
+                            var parser = mm(stream,{ duration: true }, function (err, data) {
+                              if (err) throw err;
+                                var name = path.basename(val,ext);
+                                //var size = (parseInt(stat.size)/1024/1024).toFixed(1) + "MB";
+                                //var ep = data.album == ''? '未知':data.album;
+                                var duration = parseInt(data.duration); // 计算音频时长
+                                var m = parseInt(duration/60) >9 ? parseInt(duration/60) : '0'+ parseInt(duration/60) ;
+                                var s = duration%60 > 9 ? duration%60 : '0'+duration%60 ;
+                                duration = m+':'+s; 
+                                stream.close();
+
+                                arr.push({fileName:name, fileURL: val, Time: duration});
+                                if(fn){
+                                    fn();  
+                                }
+                            });  
+                        }
+                    }
+                }
+            })
+        })
+    },
 	refreshList: function(){ // 渲染全部列表
 		var mainHtml = '';
         var sideListHtml = '';
 		allFile.map(function(val,index){ // 遍历file数组生成html模板
-            mainHtml += '<li><a href="javascript:;" data-url='+val.fileURL+' >'+val.fileName+'<span></span></a></li>'; // 主列表
+            mainHtml += '<li><a href="javascript:;" data-url='+val.fileURL+' data-time="'+val.Time+'" title="'+val.fileName+'" >'+val.fileName+'<span></span></a></li>'; // 主列表
         })
         $("#musicList").html(mainHtml); // 渲染音效列表
         this.renderSideList('defaultList',allFile);
@@ -123,13 +201,12 @@ util = {
         fileArr.map(function(val,index){
             var favoriteClass = self.isFavorited(val.fileURL)? 'favorited' : 'favorite'; // 判断该音效是否存在favorite列表，修改样式
             html  +=   '<li data-url='+val.fileURL+'>'+
-                            '<p>'+val.fileName+'</p>'+
+                            '<p title="'+val.fileName+'">'+val.fileName+'</p>'+
                             '<a href="javascript:;" class="more"></a>'+
                             '<a href="javascript:;" class="'+favoriteClass+'"></a>'+
                             '<a href="javascript:;" class="delete"></a>'+
-                            
-
-                            '<span class="type">'+val.fileURL.split('.').pop().toUpperCase()+'</span>'
+                            '<span class="time">'+val.Time+'</span>'+
+                            '<span class="type">'+val.fileURL.split('.').pop().toUpperCase()+'</span>'+
                         '</li>'; // 喜欢列表
         })
         $("#"+id).html(html);
@@ -148,6 +225,7 @@ util = {
                 var obj = {};
                 obj.fileName = $(val).find('a').text();
                 obj.fileURL = $(val).find('a').attr('data-url');
+                obj.Time = $(val).find('a').attr('data-time');
                 arr.push(obj);
             })
             allFile = arr;
@@ -170,15 +248,18 @@ util = {
             localStorage.shortCutsArray = JSON.stringify(shortCutsArray);
             this.renderShortCutsList();
 
+            this.deleteFileFromList(downloadFile,fileURL);
+
             fs.unlink(fileURL,function(err){
                 if(err){
                     alert(err)
                 }else{
-                    alert('删除成功');
+                    alert('删除成功！');
                 }
                 self.refreshList();
                 self.renderSideList('recentList',recentFile);
                 self.renderSideList('favoriteList',favoriteFile);
+                self.renderSideList('downloadList',downloadFile);
             })
             
         }
@@ -223,12 +304,13 @@ util = {
     	}
     	return flag;
     },
-    addToFavorite: function(dom,fileURL,fileName){ // 添加音效到喜欢列表
+    addToFavorite: function(dom,fileURL,fileName,time){ // 添加音效到喜欢列表
     	var flag = this.isFavorited(fileURL);
     	if(!flag){
     		var obj = {};
     		obj.fileURL = fileURL;
     		obj.fileName = fileName;
+            obj.Time = time;
     		favoriteFile.unshift(obj);
     		localStorage.favoriteFile = JSON.stringify(favoriteFile);
     		this.renderSideList('favoriteList',favoriteFile);
@@ -361,7 +443,7 @@ util = {
             dom.html(html);
             dom.delegate('img', 'click', function(event) {
                 var url = $(this).attr('data-link');
-                opener(url);
+                nw.Shell.openExternal(url);
             });
 
             var timmer = setInterval(function(){
@@ -384,7 +466,7 @@ util = {
             dom.html(html);
             dom.delegate('span', 'click', function(event) {
                 var url = $(this).attr('data-link');
-                opener(url);
+                nw.Shell.openExternal(url);
             });
             var timmer = setInterval(function(){
                 dom.find('span').eq(imgIndex).css('z-index',10)
@@ -433,6 +515,15 @@ util = {
         }else{
             win.hide();
         }
+    },
+    reload: function(){
+        unreg.map(function(val,i){ // 解绑快捷键
+            val();
+        })
+        tray.remove(); // 移除托盘
+        var win = nw.Window.get();
+        location.href="#tab-my";
+        win.reload();
     },
     renderLibHtmlSide: function(){
         $.ajax({
@@ -488,12 +579,17 @@ util = {
                         var obj = {}
                         obj.fileName = val.name;
                         obj.fileURL = 'http://101.37.27.68/api/sound/'+val.id+'.'+val.ext;
+                        var duration = parseInt(val.duration);
+                        var m = parseInt(duration/60) >9 ? parseInt(duration/60) : '0'+ parseInt(duration/60) ;
+                        var s = duration%60 > 9 ? duration%60 : '0'+duration%60 ;
+                        duration = m+':'+s; 
+                        obj.Time = duration;
                         libFile.push(obj);
                         html += '<tr>'+
                                     '<td class="lib-name"><span class="playthis" data-index="'+i+'" title="'+val.name+'" >'+val.name+'</span></td>'+
                                     '<td>'+val.groupid+'</td>'+
                                     '<td>'+val.duration+'s</td>'+
-                                    '<td>...</td>'+
+                                    '<td><a href="javascript:;" class="toDownload" data-name="'+val.name+'.'+val.ext+'" data-url="'+obj.fileURL+'">下载</a></td>'+
                                 '</tr>';     
                     });
                     html += '</table>';
@@ -519,5 +615,50 @@ util = {
                 alert("音效分类列表请求错误，请检查网络!");
             }
         })
-    }
+    },
+    rename: function(obj){
+        var filename = path.basename(obj.oldURL).split(".")[0];
+        var ext = path.extname(obj.oldURL);
+        var url = path.dirname(obj.oldURL);
+        var newURL = path.join(url,obj.newName+ext);
+        fs.rename(obj.oldURL,newURL,function(err){
+            if(err){
+                console.log(err);
+            }else{
+                alert("文件名修改成功！");
+                var nameObj = {
+                    oldName: filename,
+                    newName: obj.newName,
+                    oldURL: obj.oldURL,
+                    newURL: newURL
+                }
+                util.replaceName(nameObj,'defaultList',allFile);
+                util.replaceName(nameObj,'favoriteList',favoriteFile);
+                util.replaceName(nameObj,'recentList',recentFile);
+            }
+        });
+    },
+    replaceName: function(obj,id,fileArr){
+        var arr = fileArr;
+        var len = arr.length;
+        for(var i=0;i<len;i++){
+            if(arr[i].fileURL == obj.oldURL){
+                arr[i].fileURL = obj.newURL;
+                arr[i].fileName = obj.newName;
+                break;
+            }
+        }
+        if(id == 'defaultList'){
+            localStorage.file = JSON.stringify(fileArr);
+        }else if(id == "favoriteList"){
+            localStorage.favoriteFile = JSON.stringify(fileArr);
+        }else if(id == 'recentList'){
+            localStorage.recentFile = JSON.stringify(fileArr);
+        }
+        
+        util.renderSideList(id,fileArr);
+        util.refreshList();
+        
+    },
+    
 }

@@ -42,18 +42,26 @@
     	<div class="mid_left mid-hide">
             <div class="clearfix">
                 <div class="left_bbanner">
-                    <a href="javascript:;"><img src="images/sidebar_ic_list.png" alt="" /></a>
-                    <a href="javascript:;" id="tab-local" class="on tabs"><img src="images/sidebar_ic_laptop.png"/></a>
-                    <a href="javascript:;"><img src="images/sidebar_ic_download.png"  /></a>
-                    <a href="javascript:;"><img src="images/sidebar_ic_elecvoice.png"  /></a>
-                    <a href="javascript:;" class="tabs" id="tab-favorite" ><img src="images/sidebar_ic_like.png" /></a>
+                    <a href="javascript:;" title="试听列表" class="tabs"><img src="images/sidebar_ic_list.png" alt="" /></a>
+                    <a href="javascript:;" title="本地音效" class="on tabs"><img src="images/sidebar_ic_laptop.png"/></a>
+                    <a href="javascript:;" title="下载列表" class="tabs"><img src="images/sidebar_ic_download.png" /></a>
+                    <!-- <a href="javascript:;" title="电音查询记录"><img src="images/sidebar_ic_elecvoice.png"  /></a> -->
+                    <a href="javascript:;" title="收藏列表" class="tabs" ><img src="images/sidebar_ic_like.png" /></a>
                 </div>
                 <div class="liebiao_list">
                     <!-- <div class="shiting_bk">
                         <div class="shiting_left"><img src="images/shiting_ico.png" width="21" height="17" /></div>
                         <div class="shiting_right"><img src="images/xiazai_ico.png" width="17" height="16" /></div>
                     </div> -->
-                    <div class="local-con">
+                    <div>
+                        <div class="moren_list on">
+                            <p class="mrlink_lb">最近播放</p>
+                            <span></span>
+                        </div>
+                        <ul id="recentList" class="gai_list_2">
+                        </ul>
+                    </div>
+                    <div class="local-con" style="display: block;">
                         <div class="moren_list on">
                             <p class="mrlink_lb">默认列表</p>
                             <span></span>
@@ -61,14 +69,18 @@
                         <ul id="defaultList" class="gai_list_2">
                             
                         </ul>
-                        <div class="moren_list">
-                            <p class="mrlink_lb">最近播放</p>
+                        
+                    </div>
+                    <div>
+                        <div class="moren_list on">
+                            <p class="mrlink_lb">下载列表</p>
                             <span></span>
                         </div>
-                        <ul id="recentList" class="gai_list_2">
+                        <ul id="downloadList" class="gai_list_2" style="height:236px">
+
                         </ul>
                     </div>
-                    <div class="favorite-con" style="display:none;">
+                    <div class="favorite-con" >
                         <div class="moren_list on">
                             <p class="mrlink_lb">收藏列表</p>
                             <span></span>
@@ -110,6 +122,7 @@
                 <div class="mid-close"></div>
                 <div class="toggle_onoff"><a id="sort" href="javascript:;"></a></div>
                 <div class="tiaoshi_right_jia" title="重新加载音频文件" ><img src="images/content_ic_plus.png" width="18" height="18" /></div>
+                <input type="file" id="file" style="display: none"  nwdirectory >
             </div>
             <div class="list_shengxiao" id="tab-my" style="display: block;">
             	<ul class="clearfix" id="musicList">
@@ -185,7 +198,7 @@
         </div>
         <div class="bofang_4 miniHide mid-hide" id="delete"></div>
         <div class="favorite mid-hide" id="favorite"></div>
-        <div class="circle mid-hide" id="circle"></div>
+        <div class="circle mid-hide" id="circle" title="单曲播放"></div>
         <div class="bofang_7 miniHide"></div>
         <div class="shengyin_jindu miniHide" id="volume">
 		  <p class="volume"></p>
@@ -203,8 +216,9 @@
 <audio id="audio" autoplay="autoplay" src='' ></audio>
 <!--右键弹窗-->
 <div class="pop">
-   <!--  <a href="javascript:;">重命名</a> -->
+    <a href="javascript:;" id="rename">重命名</a>
     <a href="javascript:;" id="addShortCuts" >添加快捷键</a>
+    <a href="javascript:;" id="rightDelete" >删除</a>
 </div>
 <!--右键弹窗结束-->
 <!--重命名弹窗-->
@@ -300,6 +314,23 @@
     
 </div>
 <!--登录弹窗结束-->
+<!--重命名弹窗-->
+<div class="rename-pop">
+    <label>
+        原文件名： 
+        <span id="oldName">你猜什么</span>
+    </label>
+    <label>
+        新文件名：
+        <input type="text" id="newName" />
+    </label>
+    <p style="text-align: center">（文件名请勿超过6个字）</p>
+    <div class="btn-box">
+        <a href="javascript:;" id="rename-sure">确定</a>
+        <a href="javascript:;" id="rename-cancel" >取消</a>
+    </div>
+</div>
+<!--重命名弹窗结束-->
 
 <script type="text/javascript" src="js/jquery-2.1.1.min.js" ></script>
 <script src="js/jquery.pagination.min.js"></script>
@@ -311,11 +342,14 @@
 <script>
     var fs = require('fs');
     var path = require('path');
+    var Download = require('download');
     var musicURL = path.join(process.cwd(),'player/musics/');
+    var downloadURL = path.join(process.cwd(),'player/download/');
     var index = 0; // 默认选中第一个音效
     var allFile = []; // 全部音效文件
     var favoriteFile = []; // 喜欢的音效文件
     var recentFile = []; // 最近播放的音效文件
+    var downloadFile = []; // 下载列表
     var libFile = []; // 音效库内文件列表
     var file = []; // 执行遍历的临时文件数组
     var isPlaying = false;
@@ -326,13 +360,13 @@
     var shortCutsArray = []; // 存储快捷键
     var unreg = []; // 存储删除快捷键函数
     var gui = require('nw.gui');
-    var opener = require('opener');
     var tray;
     var canvas = document.getElementById("mini-progress"); // 环形进度条 canvas
     var cxt = canvas.getContext('2d');
     canvas.width = 32;
     canvas.height = 32;
     var mVolume = document.getElementById('mVolume');
+    var playCircle = false;
 
 
     $(document).ready(function(){
@@ -377,13 +411,7 @@
             },50)
         });
         $("#reload").click(function(){ // 刷新页面
-            unreg.map(function(val,i){ // 解绑快捷键
-                val();
-            })
-            tray.remove(); // 移除托盘
-            var win = nw.Window.get();
-            location.href="#tab-my";
-            win.reload();
+           util.reload();
         })
         $('#mini').click(function(){ // 列表 mini 隐藏不显示元素
             var win = nw.Window.get();
@@ -456,7 +484,11 @@
             cxt.beginPath();
             cxt.arc(16,16,13,0,Math.PI*2,false);
             cxt.stroke();
-            clearInterval(Timmer)
+            clearInterval(Timmer);
+            if(playCircle){
+                index = index == file.length-1 ? 0 : index+1;
+                play(file);  
+            }
         }
 
         audio.onerror = function(err){
@@ -479,6 +511,7 @@
             $("#type").text(type);
             $("#miniType").text(type);
             audio.play();
+            console.log(nowType)
             if(nowType != 'recent'){ // 当最近播放列表点击播放时，不更新自身
                 recentFile.map(function(val,i){
                     if(val.fileName == file[index].fileName){
@@ -488,7 +521,15 @@
                 recentFile.unshift(file[index]);
                 localStorage.recentFile = JSON.stringify(recentFile);
                 util.renderSideList('recentList',recentFile);
+                if(nowType == 'default'){
+                    util.sideListAddClass('defaultList',allFile,allFile[index].fileURL);
+                }else if(nowType == 'favorite'){
+                    util.sideListAddClass('favoriteList',favoriteFile,favoriteFile[index].fileURL);
+                }else if(nowType == 'download'){
+                    util.sideListAddClass('downloadList',downloadFile,downloadFile[index].fileURL);
+                }
             }
+            
             
         }
         /**音频事件绑定**/
@@ -568,9 +609,10 @@
             var dom = $(this);
             var url = $(audio).attr('src');
             var name = $("#name").text();
+            var time = file[index].Time;
             if(name != ''){
                 if(dom.hasClass('favorite')){
-                    util.addToFavorite(dom,url,name);
+                    util.addToFavorite(dom,url,name,time);
                 }else{
                     util.removeFromFavorite(dom,url,name);
                 }
@@ -583,11 +625,20 @@
         $("#circle").click(function(){ // 循环播放
             var $this = $(this);
             if($this.hasClass('circle')){
-                $this.attr('class','circled');
+                $this.attr('class','circled1');
+                $this.attr('title','单曲循环');
                 audio.loop = true;
+                playCircle = false;
+            }else if($this.hasClass('circled1')){
+                $this.attr('class','circled2');
+                $this.attr('title','列表循环');
+                audio.loop = false;
+                playCircle = true;
             }else{
                 $this.attr('class','circle');
+                $this.attr('title','单曲播放');
                 audio.loop = false;
+                playCircle = false;
             }
         })
 
@@ -684,16 +735,10 @@
         /**左侧列表**/
         $(".tabs").click(function(){
             $(this).addClass('on').siblings('.tabs').removeClass('on');
+            var eq = $(this).index();
+            $(".liebiao_list > div").eq(eq).show().siblings('div').hide();
         });
-        $("#tab-local").click(function(){
-            $(".local-con").show();
-            $(".favorite-con").hide();
-        });
-        $("#tab-favorite").click(function(){
-            $(".local-con").hide();
-            $(".favorite-con").show();
-        });
-
+       
 
         $(".moren_list").click(function(){
             $(this).toggleClass('on').siblings('.moren_list').removeClass('on');
@@ -721,17 +766,24 @@
             index = $(this).index();
             play(favoriteFile);
         });
+        $("#downloadList").delegate('li','click',function(){ //最近播放列表点击事件
+            nowType = 'download';
+            $(this).addClass('on').siblings('li').removeClass('on');
+            index = $(this).index();
+            play(downloadFile);
+        });
 
-        $('#recentList,#defaultList,#favoriteList').delegate('.favorite','click',function(e){ //添加音效到喜欢列表
+        $('.gai_list_2').delegate('.favorite','click',function(e){ //添加音效到喜欢列表
             e.stopPropagation();
             var name = $(this).parent().find('p').text();
             var url = $(this).parent().attr('data-url');
-            util.addToFavorite($(this),url,name);
+            var time = $(this).parent().find('.time').html();
+            util.addToFavorite($(this),url,name,time);
             util.renderSideList('defaultList',allFile);
             util.renderSideList('recentList',recentFile);
         });
 
-        $('#recentList,#defaultList,#favoriteList').delegate('.favorited','click',function(e){ //从喜欢列表移除音效
+        $('.gai_list_2').delegate('.favorited','click',function(e){ //从喜欢列表移除音效
             e.stopPropagation();
             var name = $(this).parent().find('p').text();
             var url = $(this).parent().attr('data-url');
@@ -739,7 +791,7 @@
             util.renderSideList('defaultList',allFile);
             util.renderSideList('recentList',recentFile);
         });
-        $("#recentList,#defaultList,#favoriteList").delegate('.delete','click',function(e){ //列表删除文件
+        $(".gai_list_2").delegate('.delete','click',function(e){ //列表删除文件
             e.stopPropagation();
             var name = $(this).parent().find('p').text();
             var url = $(this).parent().attr('data-url');
@@ -749,18 +801,30 @@
         /**左侧列表**/
 
         $(".tiaoshi_right_jia").click(function(){
-            var sure = confirm("重置播放器将删除所有记录，是否继续？");
-            if(sure){
-                localStorage.clear();
-                window.location.reload();
-            } 
+            $("#file").trigger('click');
+            // var sure = confirm("重置播放器将删除所有记录，是否继续？");
+            // if(sure){
+            //     localStorage.clear();
+            //     window.location.reload();
+            // } 
+        })
+        $("#file").on('change',function(){
+            var folder = $(this).val();
+            console.log($(this).val());
+            var newAddFile = []; 
+            var callback = function(){
+                allFile = allFile.concat(newAddFile);
+                localStorage.file = JSON.stringify(allFile);
+                util.refreshList();
+            }
+            util.readFile(folder,newAddFile,callback);
         })
 
         /**右键添加快捷键**/
         var win_width = window.innerWidth;
         var win_height = window.innerHeight;
-        var pop_w = 80;
-        var pop_h = 34;
+        var pop_w = $(".pop").width();
+        var pop_h = $(".pop").height();
         var shortCutsObj = {};
         var codeArray = []; // 记录快捷键键值
         $("#musicList").delegate('a','mousedown',function(e) { // 显示右键弹窗
@@ -853,6 +917,39 @@
                 util.renderShortCutsList(); // 刷新快捷键列表
             }
         })
+        /** 重命名事件触发 **/
+        $("#rename").on('click',function(e){
+            $(".rename-pop").css("display","block");
+            $("#oldName").text(shortCutsObj.name);
+            $("#newName").val(shortCutsObj.name);
+            $("#newName").trigger('focus');
+        });
+        $("#rename-cancel").on('click',function(e){
+            $(".rename-pop").css("display","none");
+        });
+        $("#rename-sure").on('click',function(e){
+            var newName = $("#newName").val();
+            var obj = {
+                newName: newName,
+                oldName: shortCutsObj.name,
+                oldURL : shortCutsObj.url
+            }
+            if(newName == ''){
+                alert("文件名不能为空！");
+            }else if(newName.length > 6){
+                alert("文件名长度不能超过6个字！");
+            }else{
+                util.rename(obj);
+                $(".rename-pop").css("display","none");
+            }
+        });
+        /** 重命名事件触发 **/
+        /**右键删除**/
+        
+        $("#rightDelete").on('click',function(){
+            util.deleteFile(shortCutsObj.url,shortCutsObj.name)
+        }) 
+        
 
         $(".ico_shezhi").on('click',function(){
             $(".setPop").show();
@@ -905,7 +1002,7 @@
 
         $(".hrefTo").click(function(){
             var url = $(this).attr('data-url');
-            opener(url);
+            nw.Shell.openExternal(url);
         });
 
         $("#login-sure").click(function(){
@@ -960,6 +1057,26 @@
             var id = $(this).attr('data-id');
             util.renderLibHtmlCon(id,1);
         });
+        // 下载音效库文件
+        $("body").delegate('.toDownload','click',function(e){
+            var url = $(this).attr("data-url");
+            var name = $(this).attr("data-name");
+            // Download(url, 'player/download').then(() => {
+            //     alert("下载完成")
+            // });
+            Download(url).then(data => {
+                fs.writeFile('player/download/'+name, data,{},(err)=>{
+                    if(err){
+                        alert(err);
+                    }else{
+                        alert("下载成功！");
+                        util.readDownloadFolder();
+                        //util.renderSideList('downloadList',downloadFile);
+                    }
+                });
+            });
+
+        })
         
     })
 
