@@ -173,6 +173,9 @@ body{
 .tiaoshi_bk { height:30px; }
 .tiaoshi_left_tu { float:left;  margin-left:20px; margin-top:5px;}
 .tiaoshi_left_txt { float:left; padding-left:33px; color:#A7A7A7; font-size:12px; cursor: pointer;line-height: 30px; -webkit-app-region: no-drag;}
+.tiaoshi_left_txt:hover{
+    color:#92aeff;
+}
 .tiaoshi_right_jia { float:right; margin:5px 15px 0 0px; -webkit-app-region: no-drag;}
 .toggle_onoff { float:right; margin:2px; margin-right:20px; -webkit-app-region: no-drag;}
 .toggle_onoff a { 
@@ -214,7 +217,6 @@ body{
     font-size: 12px;
     width:90px; 
     height:32px; 
-    overflow: hidden;
     position:relative;
     display:block;  
     color:#333;
@@ -261,7 +263,7 @@ body{
 .shiting_bk { height:30px; border-bottom:1px solid #CCC;}
 .shiting_left { float:left; padding:6px 0 0 12px;}
 .shiting_right { float:right; padding:7px 12px 0 0;}
-.moren_list { height:30px; line-height:30px; font-size:10px; color:#333; cursor: pointer;-webkit-user-select: none;}
+.moren_list { position: relative; height:30px; line-height:30px; font-size:10px; color:#333; cursor: pointer;-webkit-user-select: none;}
 .moren_list p { float:left; }
 .moren_list span { 
     float:left;
@@ -279,7 +281,7 @@ body{
 .mrlink_lb {padding-left: 14px; }
 
 
-.moren_list.on~ul{
+.moren_list.on+ul{
     display:block;
 }
 
@@ -530,7 +532,7 @@ body{
     margin:15px 5px 0 0;
 }
 .shengyin_jindu { 
-    width:47px; 
+    width:65px; 
     height:4px; 
     background: rgba(255,255,255,.3); 
     border-radius:4px;
@@ -608,7 +610,7 @@ body{
     position:absolute;
     left:0;
     top:0;
-    width:60px;
+    width:65px;
     padding:5px 10px;
     background:#fbfbfb;
     text-align: center;
@@ -623,6 +625,29 @@ body{
     text-decoration:none;
 }
 .pop a:hover{
+    color:#999;
+}
+
+.left-pop{
+    display: none;
+    position:absolute;
+    left:0;
+    top:0;
+    width:60px;
+    padding:5px 10px;
+    background:#fbfbfb;
+    text-align: center;
+    border-radius:0 4px 4px 4px;
+    border:1px solid #bababa;
+    z-index: 999;
+    -webkit-app-region: no-drag;
+}
+.left-pop a{
+    display: block;
+    color:#333;
+    text-decoration:none;
+}
+.left-pop a:hover{
     color:#999;
 }
 
@@ -704,7 +729,7 @@ body{
     border-bottom:1px solid #bababa;
 }
 .set-left .on{
-    background: #005090;
+    background: #178fef;
     color:#fff;
 }
 .set-con{
@@ -1157,4 +1182,81 @@ input[type=range]::-webkit-slider-thumb {
     margin-top:14px;
 }
 
+.group-pop{
+    display: none;
+    position: fixed;
+    left:50%;
+    top:50%;
+    transform: translate(-50%,-50%);
+    width:230px;
+    padding:20px;
+    background: #fbfbfb;
+    border:1px solid #bababa;
+    z-index: 999;
+    border-radius:2px;
+}
+.group-pop label{
+    display: block;
+    height: 30px;
+    padding-left: 20px;
+}
+.group-pop input{
+    width:120px;
+    height:26px;
+    border:1px solid #bababa;
+    padding-left:4px;
+}
+.group-pop .btn-box{
+    margin-top:14px;
+}
 
+.add-group{
+    height: 266px;
+}
+
+.init-button{
+    margin-top:15px;
+    margin-left: 18px;
+}
+
+.choose-pop{
+    display: none;
+    position: fixed;
+    left:50%;
+    top:50%;
+    transform: translate(-50%,-50%);
+    width:230px;
+    padding:20px;
+    background: #fbfbfb;
+    border:1px solid #bababa;
+    z-index: 999;
+    border-radius:2px;
+}
+
+.choose-pop label{
+    display: block;
+    height: 24px;
+    padding-left: 60px;
+}
+.choose-pop input{
+    width:14px;
+    vertical-align: middle;
+}
+.choose-pop .btn-box{
+    margin-top:14px;
+}
+
+.moren_list .remove{
+    text-decoration:none;
+    position: absolute;
+    right:20px;
+    top:0px;
+    font-size:16px;
+    display: none;
+}
+.moren_list .remove:hover{
+    color:#4CAEFB;
+}
+.moren_list:hover .remove{
+    display: block;
+}

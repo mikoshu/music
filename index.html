@@ -29,8 +29,8 @@
             <div class="sousuo_anniu"><input type="button" class="sousuo_but" value="  " /></div>
         </form>
         </div>
-        <div class="ico_youjian miniHide"><img src="images/ic_mail.png" width="16" height="16" /></div>
-        <div class="ico_shezhi miniHide">
+        <!-- <div class="ico_youjian miniHide"><img src="images/ic_mail.png" width="16" height="16" /></div> -->
+        <div class="ico_shezhi miniHide" style="margin-left: 65px;">
             <img src="images/ic_setting.png" width="16" height="16" />
         </div>
         <div class="mini" id="mini"></div>
@@ -53,7 +53,7 @@
                         <div class="shiting_left"><img src="images/shiting_ico.png" width="21" height="17" /></div>
                         <div class="shiting_right"><img src="images/xiazai_ico.png" width="17" height="16" /></div>
                     </div> -->
-                    <div>
+                    <div class="liebiao-con">
                         <div class="moren_list on">
                             <p class="mrlink_lb">最近播放</p>
                             <span></span>
@@ -61,7 +61,7 @@
                         <ul id="recentList" class="gai_list_2">
                         </ul>
                     </div>
-                    <div class="local-con" style="display: block;">
+                    <div class="local-con add-group liebiao-con"  style="display: block;">
                         <div class="moren_list on">
                             <p class="mrlink_lb">默认列表</p>
                             <span></span>
@@ -69,9 +69,12 @@
                         <ul id="defaultList" class="gai_list_2">
                             
                         </ul>
+                        <div class="my-group">
+                            
+                        </div>
                         
                     </div>
-                    <div>
+                    <div class="liebiao-con">
                         <div class="moren_list on">
                             <p class="mrlink_lb">下载列表</p>
                             <span></span>
@@ -80,7 +83,7 @@
 
                         </ul>
                     </div>
-                    <div class="favorite-con" >
+                    <div class="favorite-con liebiao-con" >
                         <div class="moren_list on">
                             <p class="mrlink_lb">收藏列表</p>
                             <span></span>
@@ -167,7 +170,7 @@
                 <iframe src="http://101.37.27.68/v21/query" width="454" height="288" frameborder="0"></iframe>
             </div>
             <div class="list_shengxiao" id="tab-tool">
-                直播工具...
+                <p style="text-align: center; line-height: 160px; ">正在开发中...</p>
             </div>
         </div>
     </div>
@@ -196,16 +199,16 @@
                 <div class="jindu_shijian" id="nowTime">00:00</div>
             </div>
         </div>
-        <div class="bofang_4 miniHide mid-hide" id="delete"></div>
+        <div class="bofang_4 miniHide mid-hide" style="margin-left: 20px;" id="delete"></div>
         <div class="favorite mid-hide" id="favorite"></div>
         <div class="circle mid-hide" id="circle" title="单曲播放"></div>
-        <div class="bofang_7 miniHide"></div>
+        <div class="bofang_7 miniHide" style="margin-left:20px "></div>
         <div class="shengyin_jindu miniHide" id="volume">
 		  <p class="volume"></p>
         </div>
-         <div class="ce_duihua miniHide mid-hide">
+         <!-- <div class="ce_duihua miniHide mid-hide">
              <span>2</span>
-         </div>
+         </div> -->
         <div class="to-max"></div>
         <div class="mini-volume">
             <input type="range" id="mVolume" min="0" max="100"  />
@@ -218,6 +221,7 @@
 <div class="pop">
     <a href="javascript:;" id="rename">重命名</a>
     <a href="javascript:;" id="addShortCuts" >添加快捷键</a>
+    <a href="javascript:;" id="moveFile" >移动到列表</a>
     <a href="javascript:;" id="rightDelete" >删除</a>
 </div>
 <!--右键弹窗结束-->
@@ -277,6 +281,7 @@
                 <input type="checkbox" id="realClose" />
                 关闭程序时最小化到系统托盘
             </label>
+            <button class="init-button" id="init">初始化播放器</button>
         </div>
         <div class="btn-box">
             <!-- <a href="javascript:;" class="set-sure">确定</a> -->
@@ -331,6 +336,48 @@
     </div>
 </div>
 <!--重命名弹窗结束-->
+<!--左侧右键弹窗-->
+<div class="left-pop">
+    <a href="javascript:;" id="newGroup">新建分组</a>
+</div>
+<!--左侧右键弹窗结束-->
+<!--新添分组弹窗-->
+<div class="group-pop">
+    <label>
+        分组名：
+        <input type="text" id="groupName" />
+    </label>
+    <p style="text-align: center">（分组名请勿超过6个字）</p>
+    <div class="btn-box">
+        <a href="javascript:;" id="group-sure">确定</a>
+        <a href="javascript:;" id="group-cancel" >取消</a>
+    </div>
+</div>
+<!--新添分组弹窗结束-->
+<!--选择分组弹窗-->
+<div class="choose-pop">
+    <p>请选择需要移动到的分组</p>
+    <div class="choose-con">
+        <label>
+            <input type="checkbox" />
+            我的分组1
+        </label>
+        <label>
+            <input type="checkbox" />
+            我的分组1
+        </label>
+        <label>
+            <input type="checkbox" />
+            我的分组1
+        </label>
+    </div>
+    
+    <div class="btn-box">
+        <a href="javascript:;" id="choose-sure">确定</a>
+        <a href="javascript:;" id="choose-cancel" >取消</a>
+    </div>
+</div>
+<!--选择分组弹窗结束-->
 
 <script type="text/javascript" src="js/jquery-2.1.1.min.js" ></script>
 <script src="js/jquery.pagination.min.js"></script>
@@ -367,8 +414,42 @@
     canvas.height = 32;
     var mVolume = document.getElementById('mVolume');
     var playCircle = false;
+    var groupArr = [];
 
-
+function play(fileList){
+            var arr = []; // 每次播放用于存储更新最近播放列表
+            if(fileList){
+                file = fileList; // 播放时确定当前列表（默认/最近/喜欢）;
+            }
+            $("#audio").attr('src',file[index].fileURL);
+            $("#name").html(file[index].fileName);
+            $("#name").attr('title',file[index].fileName);
+            var type = file[index].fileURL.split('.').pop().toUpperCase();
+            $("#type").text(type);
+            $("#miniType").text(type);
+            audio.play();
+            if(nowType != 'recent'){ // 当最近播放列表点击播放时，不更新自身
+                recentFile.map(function(val,i){
+                    if(val.fileName == file[index].fileName){
+                        recentFile.splice(i,1);
+                    }
+                });
+                recentFile.unshift(file[index]);
+                localStorage.recentFile = JSON.stringify(recentFile);
+                util.renderSideList('recentList',recentFile);
+                if(nowType == 'default'){
+                    util.sideListAddClass('defaultList',allFile,allFile[index].fileURL);
+                }else if(nowType == 'favorite'){
+                    util.sideListAddClass('favoriteList',favoriteFile,favoriteFile[index].fileURL);
+                }else if(nowType == 'download'){
+                    util.sideListAddClass('downloadList',downloadFile,downloadFile[index].fileURL);
+                }else{
+                    util.sideListAddClass(nowType,file,file[index].fileURL);
+                }
+            }
+            
+            
+        }
     $(document).ready(function(){
         util.init(); // 初始化
         util.refreshList(); // 渲染列表
@@ -499,39 +580,7 @@
             }
         }
 
-        function play(fileList){
-            var arr = []; // 每次播放用于存储更新最近播放列表
-            if(fileList){
-                file = fileList; // 播放时确定当前列表（默认/最近/喜欢）;
-            }
-            $("#audio").attr('src',file[index].fileURL);
-            $("#name").html(file[index].fileName);
-            $("#name").attr('title',file[index].fileName);
-            var type = file[index].fileURL.split('.').pop().toUpperCase();
-            $("#type").text(type);
-            $("#miniType").text(type);
-            audio.play();
-            console.log(nowType)
-            if(nowType != 'recent'){ // 当最近播放列表点击播放时，不更新自身
-                recentFile.map(function(val,i){
-                    if(val.fileName == file[index].fileName){
-                        recentFile.splice(i,1);
-                    }
-                });
-                recentFile.unshift(file[index]);
-                localStorage.recentFile = JSON.stringify(recentFile);
-                util.renderSideList('recentList',recentFile);
-                if(nowType == 'default'){
-                    util.sideListAddClass('defaultList',allFile,allFile[index].fileURL);
-                }else if(nowType == 'favorite'){
-                    util.sideListAddClass('favoriteList',favoriteFile,favoriteFile[index].fileURL);
-                }else if(nowType == 'download'){
-                    util.sideListAddClass('downloadList',downloadFile,downloadFile[index].fileURL);
-                }
-            }
-            
-            
-        }
+        
         /**音频事件绑定**/
 
 
@@ -574,8 +623,15 @@
         $("#last").click(function(){ // 上一首
             index -= 1;
             if(index == -1){
-                alert('已经是第一首');
-                index = 0;
+                if(playCircle){
+                    index = file.length - 1;
+                    util.chooseStyle();
+                    play(); 
+                }else{
+                    alert('已经是第一首');
+                    index = 1; 
+                }
+                
             }else{
                 util.chooseStyle();
                 play();  
@@ -584,8 +640,15 @@
         $("#next").click(function(){ // 下一首
             index += 1;
             if(index == file.length){
-                alert('已经是最后一首');
-                index = index - 1;
+                if(playCircle){
+                    index = 0;
+                    util.chooseStyle();
+                    play(); 
+                }else{
+                    alert('已经是最后一首');
+                    index = index - 1;
+                }
+                
             }else{
                 util.chooseStyle();
                 play(); 
@@ -647,7 +710,7 @@
         /** 声音控制器模拟 **/
 
         var changeVolume = false;
-        var maxWidth = 47;
+        var maxWidth = 65;
         $("#volume").mousedown(function(){
             changeVolume = true;
         })
@@ -740,77 +803,34 @@
         });
        
 
-        $(".moren_list").click(function(){
-            $(this).toggleClass('on').siblings('.moren_list').removeClass('on');
+        $("body").delegate('.moren_list','click',function(){
+            if($(this).parent().hasClass('add-group')){
+                $(this).toggleClass('on');
+                $(this).parents('.liebiao-con').find(".my-group").find('.moren_list').removeClass('on');
+            }else if($(this).parent().hasClass('my-group')){
+                $(this).toggleClass('on').siblings('.moren_list').removeClass('on');
+                $(this).parents('.liebiao-con').find('>.moren_list').removeClass('on');
+            }else{
+                $(this).toggleClass('on').siblings('.moren_list').removeClass('on');
+            }
         })
 
-        $("#defaultList").delegate('li','click',function(){ //默认列表点击事件
-            nowType = 'default';
-            $(this).addClass('on').siblings('li').removeClass('on');
-            index = $(this).index();
-            play(allFile);
-        });
-        
         
 
-        $("#recentList").delegate('li','click',function(){ //最近播放列表点击事件
-            nowType = 'recent';
-            $(this).addClass('on').siblings('li').removeClass('on');
-            index = $(this).index();
-            play(recentFile);
-        });
 
-        $("#favoriteList").delegate('li','click',function(){ //最近播放列表点击事件
-            nowType = 'favorite';
-            $(this).addClass('on').siblings('li').removeClass('on');
-            index = $(this).index();
-            play(favoriteFile);
-        });
-        $("#downloadList").delegate('li','click',function(){ //最近播放列表点击事件
-            nowType = 'download';
-            $(this).addClass('on').siblings('li').removeClass('on');
-            index = $(this).index();
-            play(downloadFile);
-        });
+        util.other(); // 列表图标方法绑定
 
-        $('.gai_list_2').delegate('.favorite','click',function(e){ //添加音效到喜欢列表
-            e.stopPropagation();
-            var name = $(this).parent().find('p').text();
-            var url = $(this).parent().attr('data-url');
-            var time = $(this).parent().find('.time').html();
-            util.addToFavorite($(this),url,name,time);
-            util.renderSideList('defaultList',allFile);
-            util.renderSideList('recentList',recentFile);
-        });
-
-        $('.gai_list_2').delegate('.favorited','click',function(e){ //从喜欢列表移除音效
-            e.stopPropagation();
-            var name = $(this).parent().find('p').text();
-            var url = $(this).parent().attr('data-url');
-            util.removeFromFavorite($(this),url,name);
-            util.renderSideList('defaultList',allFile);
-            util.renderSideList('recentList',recentFile);
-        });
-        $(".gai_list_2").delegate('.delete','click',function(e){ //列表删除文件
-            e.stopPropagation();
-            var name = $(this).parent().find('p').text();
-            var url = $(this).parent().attr('data-url');
-            util.deleteFile(url,name);
-        });
+        util.renderGroup(); // 渲染自定义分组
+        //$('.gai_list_2').undelegate();
 
         /**左侧列表**/
 
         $(".tiaoshi_right_jia").click(function(){
             $("#file").trigger('click');
-            // var sure = confirm("重置播放器将删除所有记录，是否继续？");
-            // if(sure){
-            //     localStorage.clear();
-            //     window.location.reload();
-            // } 
+            
         })
         $("#file").on('change',function(){
             var folder = $(this).val();
-            console.log($(this).val());
             var newAddFile = []; 
             var callback = function(){
                 allFile = allFile.concat(newAddFile);
@@ -823,15 +843,17 @@
         /**右键添加快捷键**/
         var win_width = window.innerWidth;
         var win_height = window.innerHeight;
-        var pop_w = $(".pop").width();
-        var pop_h = $(".pop").height();
+        
         var shortCutsObj = {};
         var codeArray = []; // 记录快捷键键值
         $("#musicList").delegate('a','mousedown',function(e) { // 显示右键弹窗
+            var pop_w = $(".pop").width();
+            var pop_h = $(".pop").height();
             if(e.button == '2'){
                 var x = e.clientX;
                 var y = e.clientY;
                 var name = $(this).text();
+                var time = $(this).attr('data-time');
                 var url = $(this).attr('data-url');
                 $(".pop").show().css({'left':x+'px','top':y+'px','right':'auto','bottom':'auto'});
                 if(x > win_width - pop_w){
@@ -842,11 +864,13 @@
                 }
                 shortCutsObj.name = name;
                 shortCutsObj.url = url;
+                shortCutsObj.time = time;
                 e.stopPropagation();
             }
         });
         $(document).click(function(event) {
             $(".pop").hide()
+            $(".left-pop").hide()
         });
 
         $("#addShortCuts").click(function(){ // 显示添加快捷键弹窗
@@ -1028,6 +1052,14 @@
             var isClose = $(this).prop('checked');
             localStorage.isClose = isClose;
         });
+        // 重置播放器内容
+        $("#init").click(function(){
+            var sure = confirm("重置播放器将删除所有记录，是否继续？");
+            if(sure){
+                localStorage.clear();
+                util.reload();
+            } 
+        })
         // 音效库以及相关内容切换
         $("#tab").find('li').on('click',function(e){
             var name = $(this).attr('data-name');
@@ -1077,6 +1109,149 @@
             });
 
         })
+        // 添加新分组
+        $(".add-group").on('mousedown',function(e){
+            var pop_w = $(".left-pop").width();
+            var pop_h = $(".left-pop").height();
+            if(e.button == '2'){
+                var x = e.clientX;
+                var y = e.clientY;
+                $(".left-pop").show().css({'left':x+'px','top':y+'px','right':'auto','bottom':'auto'});
+                if(x > win_width - pop_w){
+                    $(".left-pop").show().css({'right':'0px','left':'auto'});
+                }
+                if(y > win_height - pop_h){
+                    $(".left-pop").show().css({'bottom':'0px','top':'auto'});
+                }
+                e.stopPropagation();
+            }
+        });
+        $(".gai_list_2,.moren_list").on('mousedown',function(e){
+            //e.stopPropagation();
+        });
+        $("#newGroup").click(function(){
+            $(".group-pop").show();
+            $("#groupName").val("");
+            $("#groupName").trigger('focus');
+        });
+        $("#group-cancel").click(function(){
+            $(".group-pop").hide();
+        })
+        $("#group-sure").click(function(){
+            var name = $("#groupName").val();
+            if(name.length == 0){
+                alert('分组名不能为空！');
+            }else if(name.length > 6){
+                alert("分组名不能超过6个字！")
+            }else{
+                var obj = {};
+                obj.name = name;
+                var len = groupArr.length;
+                var isNamed = false;
+                obj.val = 'default'+len;
+                var n = 0;
+                groupArr.map(function(val,i){
+                    if(typeof(val) == 'object'){
+                        n++;
+                    }
+                });
+                if(n < 5){
+                    for(var i=0;i<len;i++){
+                        if(groupArr[i].name == name){
+                            isNamed = true;
+                            break;
+                        }
+                    }
+                    if(!isNamed){
+                        groupArr.push(obj);
+                        localStorage.groupArr = JSON.stringify(groupArr);
+                        util.renderGroup();
+                        $(".group-pop").hide();
+                    }else{
+                        alert('该分组名称已存在！');
+                    }
+                    
+                }else{
+                    alert('自定义分组不可超过5个！');
+                    $(".group-pop").hide();
+                }    
+            }   
+        });
+        $("#moveFile").click(function(){ // 将音频文件移动到自定义分组
+            $(".choose-pop").show();
+            var html = '';
+            var len = groupArr.length;
+            if(len == 0){
+                html = '暂无自定义分组，可在左侧本地列表空白位置点击右键创建'
+            }else{
+                groupArr.map(function(val,i){
+                    if(typeof(val) == 'object'){
+                        html += '<label>'+
+                                '<input type="checkbox" class="choose-input" data-value="'+val.val+'" />'+
+                                val.name+
+                            '</label>'
+                    }
+                    
+                });
+            }
+            $(".choose-con").html(html);
+        });
+        $("#choose-cancel").click(function(event) {
+            /* Act on the event */
+            $(".choose-pop").hide();
+        });
+
+        $("#choose-sure").click(function(event) {
+            /* Act on the event */
+            var input = $(".choose-con").find('input:checked');
+            if(input.length == 0){
+                alert('请选择需要移动到的分组！');
+            }else{
+                input.each(function(i,dom){
+                    var arr = [];
+                    var obj = {
+                        fileName: shortCutsObj.name,
+                        fileURL: shortCutsObj.url,
+                        Time: shortCutsObj.time
+                    };
+                    var list = $(dom).attr("data-value");
+                    if(localStorage[list]){
+                        arr = JSON.parse(localStorage[list]);
+                    }
+                    arr.push(obj);
+                    localStorage[list] = JSON.stringify(arr);
+                    //console.log(shortCutsObj)
+                    groupArr.map(function(val,i){
+                        util.renderGroupList(val.val);
+                    });
+                    $(".choose-pop").hide();
+                })
+            }
+            //console.log(input)
+            //$(".choose-pop").hide();
+        });
+
+        $("body").delegate('.remove','click',function(e){
+            e.stopPropagation();
+            var sure = confirm('是否确定删除此自定义分组？');
+            if(sure){
+                var id = $(this).attr('data-id');
+                localStorage.removeItem(id);
+                groupArr.map(function(val,i){
+                    if(val.val == id){
+                        groupArr[i] = 'hasDeleted';
+                    }
+                });
+                localStorage.groupArr = JSON.stringify(groupArr);
+                $(this).parent().remove();
+                $("#"+id).remove();
+                var height = parseInt($(".add-group").find(".gai_list_2").css('height'));
+                console.log(height)
+                $(".add-group").find(".gai_list_2").css('height',(height + 30)+'px');
+            }
+            
+            
+        });
         
     })
 

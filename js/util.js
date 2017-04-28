@@ -102,7 +102,7 @@ util = {
 
         //test
         util.renderLibHtmlSide();
-
+        
 	},
     readDefaultFolder: function(){// 遍历默认文件夹
         allFile = [];
@@ -190,7 +190,7 @@ util = {
 		var mainHtml = '';
         var sideListHtml = '';
 		allFile.map(function(val,index){ // 遍历file数组生成html模板
-            mainHtml += '<li><a href="javascript:;" data-url='+val.fileURL+' data-time="'+val.Time+'" title="'+val.fileName+'" >'+val.fileName+'<span></span></a></li>'; // 主列表
+            mainHtml += '<li><a href="javascript:;" data-url="'+val.fileURL+'" data-time="'+val.Time+'" title="'+val.fileName+'" >'+util.clipString(6,val.fileName)+'<span></span></a></li>'; // 主列表
         })
         $("#musicList").html(mainHtml); // 渲染音效列表
         this.renderSideList('defaultList',allFile);
@@ -200,7 +200,7 @@ util = {
         var self = this;
         fileArr.map(function(val,index){
             var favoriteClass = self.isFavorited(val.fileURL)? 'favorited' : 'favorite'; // 判断该音效是否存在favorite列表，修改样式
-            html  +=   '<li data-url='+val.fileURL+'>'+
+            html  +=   '<li data-url="'+val.fileURL+'">'+
                             '<p title="'+val.fileName+'">'+val.fileName+'</p>'+
                             '<a href="javascript:;" class="more"></a>'+
                             '<a href="javascript:;" class="'+favoriteClass+'"></a>'+
@@ -250,6 +250,16 @@ util = {
 
             this.deleteFileFromList(downloadFile,fileURL);
 
+            groupArr = JSON.parse(localStorage.groupArr); // 删除列表里的已删除文件
+            if(groupArr.length > 0){
+                groupArr.map(function(val,i){
+                    var arr = JSON.parse(localStorage[val.val]);
+                    self.deleteFileFromList(arr,fileURL);
+                    localStorage[val.val] = JSON.stringify(arr);
+                })
+            }
+
+
             fs.unlink(fileURL,function(err){
                 if(err){
                     alert(err)
@@ -260,6 +270,7 @@ util = {
                 self.renderSideList('recentList',recentFile);
                 self.renderSideList('favoriteList',favoriteFile);
                 self.renderSideList('downloadList',downloadFile);
+                self.renderGroup();
             })
             
         }
@@ -383,9 +394,9 @@ util = {
         var nowIndex = this.getListIndex(list,url);
         var $ul =  $('#'+id);
         if(typeof(nowIndex) == 'number'){
-            var top = $ul.find('li').eq(nowIndex).offset().top - $ul.offset().top + $ul.scrollTop();
+            //var top = $ul.find('li').eq(nowIndex).offset().top - $ul.offset().top + $ul.scrollTop();
             $('#'+id).find('li').eq(nowIndex).addClass('on').siblings('li').removeClass('on'); 
-            $('#'+id).scrollTop(top);
+            //$('#'+id).scrollTop(top);
         } 
     },
     login: function(username,password){
@@ -660,5 +671,146 @@ util = {
         util.refreshList();
         
     },
-    
+    renderGroup: function(){ // 渲染自定义分组
+        if(localStorage.groupArr){
+            var n = 0;
+            groupArr = JSON.parse(localStorage.groupArr);
+            var html = '';
+            console.log(groupArr)
+            groupArr.map(function(val,i){
+                if(typeof(val) == 'object'){
+                    html += '<div class="moren_list">'+
+                        '    <p class="mrlink_lb">'+val.name+'</p>'+
+                        '    <span></span>'+
+                        '    <ins class="remove" data-id="'+val.val+'" >x</ins>'+
+                        '</div>'+
+                        '<ul id="'+val.val+'" class="gai_list_2">'+
+                        '</ul>';
+                    n++;
+                }
+                
+            });
+            $(".my-group").html(html);
+            groupArr.map(function(val,i){
+                util.renderGroupList(val.val);
+            });
+
+            util.other();
+            groupArr.map(function(val,i){
+                $("#"+val.val).delegate('li','click',function(){ //最近播放列表点击事件
+                    nowType = val.val;
+                    $(this).addClass('on').siblings('li').removeClass('on');
+                    $()
+                    index = $(this).index();
+                    var arr = JSON.parse(localStorage[val.val]);
+                    play(arr);
+                });
+            });
+
+            
+
+            var height = 236 - 30*n;
+
+            $(".add-group").find(".gai_list_2").css('height',height+'px');
+        }
+    },
+    renderGroupList: function(id){
+        var self = this;
+        var html = '';
+        if(localStorage[id]){
+            var arr = JSON.parse(localStorage[id]);
+            arr.map(function(val,i){
+                var favoriteClass = self.isFavorited(val.fileURL)? 'favorited' : 'favorite'; // 判断该音效是否存在favorite列表，修改样式
+                html += '<li data-url="'+val.fileURL+'"">'+
+                            '<p title="'+val.fileName+'">'+val.fileName+'</p>'+
+                            '<a href="javascript:;" class="more"></a>'+
+                            '<a href="javascript:;" class="'+favoriteClass+'"></a>'+
+                            '<a href="javascript:;" class="delete"></a>'+
+                            '<span class="time">'+val.Time+'</span>'+
+                            '<span class="type">'+val.fileURL.split('.').pop().toUpperCase()+'</span>'+
+                        '</li>';
+            });
+            $("#"+id).html(html);
+        }
+        
+    },
+    clipString: function(stalen,str){
+        var len = str.length;
+        if(len > stalen){
+            str = str.substring(0,stalen) + '...';
+        }
+        return str;
+    },
+    other: function(){
+        $('.gai_list_2').undelegate();
+
+        $("#defaultList").delegate('li','click',function(){ //默认列表点击事件
+            nowType = 'default';
+            $(this).addClass('on').siblings('li').removeClass('on');
+            index = $(this).index();
+            play(allFile);
+        });
+        
+        
+
+        $("#recentList").delegate('li','click',function(){ //最近播放列表点击事件
+            nowType = 'recent';
+            $(this).addClass('on').siblings('li').removeClass('on');
+            index = $(this).index();
+            play(recentFile);
+        });
+
+        $("#favoriteList").delegate('li','click',function(){ //最近播放列表点击事件
+            nowType = 'favorite';
+            $(this).addClass('on').siblings('li').removeClass('on');
+            index = $(this).index();
+            play(favoriteFile);
+        });
+        $("#downloadList").delegate('li','click',function(){ //最近播放列表点击事件
+            nowType = 'download';
+            $(this).addClass('on').siblings('li').removeClass('on');
+            index = $(this).index();
+            play(downloadFile);
+        });
+        
+        $('.gai_list_2').delegate('.favorite','click',function(e){ //添加音效到喜欢列表
+            e.stopPropagation();
+            var name = $(this).parent().find('p').text();
+            var url = $(this).parent().attr('data-url');
+            var time = $(this).parent().find('.time').html();
+            util.addToFavorite($(this),url,name,time);
+            util.renderSideList('defaultList',allFile);
+            util.renderSideList('recentList',recentFile);
+            if(localStorage.groupArr){
+                groupArr = JSON.parse(localStorage.groupArr);
+                groupArr.map(function(val,i){
+                    var arr = JSON.parse(localStorage[val.val]);
+                    util.renderSideList(val.val,arr);
+                });
+            }
+
+        });
+
+        $('.gai_list_2').delegate('.favorited','click',function(e){ //从喜欢列表移除音效
+            e.stopPropagation();
+            var name = $(this).parent().find('p').text();
+            var url = $(this).parent().attr('data-url');
+            util.removeFromFavorite($(this),url,name);
+            util.renderSideList('defaultList',allFile);
+            util.renderSideList('recentList',recentFile);
+            if(localStorage.groupArr){
+                groupArr = JSON.parse(localStorage.groupArr);
+                groupArr.map(function(val,i){
+                    var arr = JSON.parse(localStorage[val.val]);
+                    util.renderSideList(val.val,arr);
+                });
+            }
+        });
+        $(".gai_list_2").delegate('.delete','click',function(e){ //列表删除文件
+            e.stopPropagation();
+            var name = $(this).parent().find('p').text();
+            var url = $(this).parent().attr('data-url');
+            util.deleteFile(url,name);
+        });
+    } 
 }
