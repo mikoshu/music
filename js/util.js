@@ -152,7 +152,7 @@ util = {
 	},
     isUpdate: function(){
         $.ajax({
-            url: 'http://player.antblue.com/api/checkupdate?currentversion=2.0',
+            url: 'http://player.antblue.com/api/checkupdate?currentversion=3.0',
             success: function(data){
                 if(data != ''){
                     alert('检测到新版本，请下载更新！')
