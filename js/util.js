@@ -8,9 +8,55 @@ util = {
             this.renderSideList('favoriteList',favoriteFile);
         }
         if(localStorage.file){
+
             allFile = JSON.parse(localStorage.file);
         }else{
-            this.readDefaultFolder(); // 读取本地默认文件
+            //this.readDefaultFolder(); // 读取本地默认文件  由于需要排序，不再读取本地文件，默认写死 - 该方法不可取！
+            var dirname = path.join(process.cwd(),'player/musics/');
+            var tempArray = [
+                {"fileName":"贼拉爱你","fileURL":path.join(dirname,"贼拉爱你.mp3"),"Time":"00:13"},
+                {"fileName":"坑礼神曲","fileURL":path.join(dirname,"坑礼神曲.mp3"),"Time":"00:12"},
+                {"fileName":"群众笑声","fileURL":path.join(dirname,"群众笑声.mp3"),"Time":"00:04"},
+                {"fileName":"欢呼掌声","fileURL":path.join(dirname,"欢呼掌声.mp3"),"Time":"00:04"},
+                {"fileName":"多人笑声","fileURL":path.join(dirname,"多人笑声.mp3"),"Time":"00:02"},
+                {"fileName":"机枪扫射","fileURL":path.join(dirname,"机枪扫射.mp3"),"Time":"00:01"},
+                {"fileName":"AK47火线","fileURL":path.join(dirname,"AK47火线.mp3"),"Time":"00:11"},
+                {"fileName":"鄙视声","fileURL":path.join(dirname,"鄙视声.mp3"),"Time":"00:03"},
+                {"fileName":"女人亲嘴","fileURL":path.join(dirname,"女人亲嘴.mp3"),"Time":"00:01"},
+                {"fileName":"乌鸦飞过","fileURL":path.join(dirname,"乌鸦飞过.mp3"),"Time":"00:02"},
+                {"fileName":"尖叫声","fileURL":path.join(dirname,"尖叫声.mp3"),"Time":"00:09"},
+                {"fileName":"枪声激战","fileURL":path.join(dirname,"枪声激战.mp3"),"Time":"00:09"},
+                {"fileName":"邪恶的笑","fileURL":path.join(dirname,"邪恶的笑.mp3"),"Time":"00:01"},
+                {"fileName":"给枪上膛","fileURL":path.join(dirname,"给枪上膛.mp3"),"Time":"00:00"},
+                {"fileName":"贱笑","fileURL":path.join(dirname,"贱笑.mp3"),"Time":"00:04"},
+                {"fileName":"轻微掌声","fileURL":path.join(dirname,"轻微掌声.mp3"),"Time":"00:03"},
+                {"fileName":"放屁声","fileURL":path.join(dirname,"放屁声.mp3"),"Time":"00:00"},
+                {"fileName":"电话占线","fileURL":path.join(dirname,"电话占线.mp3"),"Time":"00:00"},
+                {"fileName":"保镖出来","fileURL":path.join(dirname,"保镖出来.mp3"),"Time":"00:18"},
+                {"fileName":"女孩哭声","fileURL":path.join(dirname,"女孩哭声.mp3"),"Time":"00:06"},
+                {"fileName":"刀剑出鞘","fileURL":path.join(dirname,"刀剑出鞘.mp3"),"Time":"00:11"},
+                {"fileName":"手枪声音","fileURL":path.join(dirname,"手枪声音.mp3"),"Time":"00:02"},
+                {"fileName":"警车","fileURL":path.join(dirname,"警车.mp3"),"Time":"00:05"},
+                {"fileName":"警笛声","fileURL":path.join(dirname,"警笛声.mp3"),"Time":"00:03"},
+                {"fileName":"救护车","fileURL":path.join(dirname,"救护车.mp3"),"Time":"00:01"},
+                {"fileName":"狙击枪声","fileURL":path.join(dirname,"狙击枪声.mp3"),"Time":"00:02"},
+                {"fileName":"砸玻璃27","fileURL":path.join(dirname,"砸玻璃27.mp3"),"Time":"00:06"},
+                {"fileName":"非诚勿扰","fileURL":path.join(dirname,"非诚勿扰.mp3"),"Time":"00:05"},
+                {"fileName":"精神病热线","fileURL":path.join(dirname,"精神病热线.mp3"),"Time":"00:15"},
+                {"fileName":"小孩笑声","fileURL":path.join(dirname,"小孩笑声.mp3"),"Time":"00:05"},
+                {"fileName":"婴儿哭声","fileURL":path.join(dirname,"婴儿哭声.mp3"),"Time":"00:09"},
+                {"fileName":"男人笑声","fileURL":path.join(dirname,"男人笑声.mp3"),"Time":"00:03"},
+                {"fileName":"男人咳嗽","fileURL":path.join(dirname,"男人咳嗽.mp3"),"Time":"00:00"},
+                {"fileName":"DJ搓碟","fileURL":path.join(dirname,"DJ搓碟.mp3"),"Time":"00:04"},
+                {"fileName":"火车鸣笛","fileURL":path.join(dirname,"火车鸣笛.mp3"),"Time":"00:01"}
+            ];
+            localStorage.file = JSON.stringify(tempArray);
+            allFile = tempArray;
+            self.renderSideList('defaultList',allFile);
+            localStorage.file = JSON.stringify(allFile);
+            self.refreshList();
+
+
         }
         if(localStorage.recentFile){
             recentFile = JSON.parse(localStorage.recentFile);
@@ -102,8 +148,19 @@ util = {
 
         //test
         util.renderLibHtmlSide();
-        
+        this.isUpdate();
 	},
+    isUpdate: function(){
+        $.ajax({
+            url: 'http://player.antblue.com/api/checkupdate?currentversion=2.0',
+            success: function(data){
+                if(data != ''){
+                    alert('检测到新版本，请下载更新！')
+                    nw.Shell.openExternal(data);
+                }
+            }
+        })
+    },
     readDefaultFolder: function(){// 遍历默认文件夹
         allFile = [];
         var self = this;
@@ -162,7 +219,7 @@ util = {
                     }else{
                         // https://github.com/leetreveil/musicmetadata
                         var ext = path.extname(val); // 判断文件是否为音频
-                        if(ext == ".mp3" || ext == ".wav" || ext == ".wma" || ext == ".ogg" || ext == ".ape" || ext == ".acc" || ext == ".m4a"){
+                        if(ext == ".mp3" || ext == ".wma" || ext == ".m4a" || ext == ".ogg" || ext == ".flac"){
                             var stream = fs.createReadStream(val)
                             var parser = mm(stream,{ duration: true }, function (err, data) {
                               if (err) throw err;
@@ -250,15 +307,17 @@ util = {
 
             this.deleteFileFromList(downloadFile,fileURL);
 
-            groupArr = JSON.parse(localStorage.groupArr); // 删除列表里的已删除文件
-            if(groupArr.length > 0){
-                groupArr.map(function(val,i){
-                    var arr = JSON.parse(localStorage[val.val]);
-                    self.deleteFileFromList(arr,fileURL);
-                    localStorage[val.val] = JSON.stringify(arr);
-                })
-            }
+            if(localStorage.groupArr){
+                groupArr = JSON.parse(localStorage.groupArr); // 删除列表里的已删除文件
 
+                if(groupArr.length > 0){
+                    groupArr.map(function(val,i){
+                        var arr = JSON.parse(localStorage[val.val]);
+                        self.deleteFileFromList(arr,fileURL);
+                        localStorage[val.val] = JSON.stringify(arr);
+                    })
+                }
+            }
 
             fs.unlink(fileURL,function(err){
                 if(err){
@@ -401,7 +460,7 @@ util = {
     },
     login: function(username,password){
         $.ajax({
-            url: 'http://101.37.27.68/newuc/signin',
+            url: 'http://player.antblue.com/newuc/signin',
             type: 'post',
             data: {
                 adt: username,
@@ -417,6 +476,7 @@ util = {
                     // 登录成功自动记录密码
                     localStorage.username = username;
                     localStorage.password = password;
+                    util.isLogined = true;
                 }else{
                     alert('登录失败')
                 }
@@ -426,11 +486,12 @@ util = {
             }
         })
     },
+    isLogined: false,
     getAd: function(n){
         var dom = $("#ad"+n);
         var imgIndex = 0;
         $.ajax({
-            url: 'http://101.37.27.68/banner/banners',
+            url: 'http://player.antblue.com/banner/banners',
             type: 'get',
             data: {
                 position: n
@@ -495,7 +556,7 @@ util = {
         var sure = confirm('是否确定退出登录？');
         if(sure){
             $.ajax({
-                url: 'http://101.37.27.68/newuc/logout',
+                url: 'http://player.antblue.com/newuc/logout',
                 type: 'post',
                 success: function(data){
                   if(data == 'true'){
@@ -538,7 +599,7 @@ util = {
     },
     renderLibHtmlSide: function(){
         $.ajax({
-            url: 'http://101.37.27.68/api/listcatagory',
+            url: 'http://player.antblue.com/api/listcatagory',
             success: function(data){
                 var data = JSON.parse(data);
                 var defaultId = data[0].children[0].id;
@@ -567,7 +628,7 @@ util = {
     },
     renderLibHtmlCon: function(id,page){
         $.ajax({
-            url: 'http://101.37.27.68/api/catagory/'+id,
+            url: 'http://player.antblue.com/api/catagory/'+id,
             data:{
                 page:page,
                 pageSize: 10
@@ -589,7 +650,7 @@ util = {
                     data.content.map(function(val,i){
                         var obj = {}
                         obj.fileName = val.name;
-                        obj.fileURL = 'http://101.37.27.68/api/sound/'+val.id+'.'+val.ext;
+                        obj.fileURL = 'http://player.antblue.com/api/sound/'+val.id+'.'+val.ext;
                         var duration = parseInt(val.duration);
                         var m = parseInt(duration/60) >9 ? parseInt(duration/60) : '0'+ parseInt(duration/60) ;
                         var s = duration%60 > 9 ? duration%60 : '0'+duration%60 ;
@@ -676,7 +737,7 @@ util = {
             var n = 0;
             groupArr = JSON.parse(localStorage.groupArr);
             var html = '';
-            console.log(groupArr)
+            //console.log(groupArr)
             groupArr.map(function(val,i){
                 if(typeof(val) == 'object'){
                     html += '<div class="moren_list">'+

@@ -42,7 +42,7 @@ body{
 }
 .top_jiantou { float:left; width:74px; margin:16px 0 0 0px; }
 .top_jiantou a { float:left; margin-right:5px;}
-.top_sousuo { width:194px; height:24px; margin:11px 0 0 42px; float:left; background:url(../images/bg_search.png);-webkit-app-region: no-drag;}
+.top_sousuo { visibility: hidden;  width:194px; height:24px; margin:11px 0 0 42px; float:left; background:url(../images/bg_search.png);-webkit-app-region: no-drag;}
 .sousuo_input_bk { width:155px; height:24px; float:left; margin-left:13px;  overflow:hidden; background: none;}
 .ss_input {width:150px; font-size:8px; color:#fff; font-family:"Microsoft YaHei", "微软雅黑", "SimSun", "宋体"; margin: 0px; padding: 0px; border-style: none; line-height:24px; height:24px; background: none; }
 .ss_input::-webkit-input-placeholder{color:#fff;}
@@ -673,6 +673,7 @@ body{
     width:120px;
     height:24px;
     border:1px solid #bababa;
+    ime-mode:disabled;
 }
 .shortCutsPop p{
     color:red;

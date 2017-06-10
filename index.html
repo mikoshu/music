@@ -112,8 +112,8 @@
         	<div class="nr_banner mid-hide">
             	<ul id="tab">
                 	<li data-name="tab-my" class="nr_banner_jg">我的音效</li>
-                    <li data-name="tab-lib" >音效库</li>
-                    <li data-name="tab-search">电音库</li>
+                    <li data-name="tab-lib" class="checkLogin" >音效库</li>
+                    <li data-name="tab-search" class="checkLogin">电音库</li>
                     <li data-name="tab-tool">直播工具</li>
                 </ul>
             </div>
@@ -167,7 +167,7 @@
                 </div>
             </div>
             <div class="list_shengxiao" id="tab-search">
-                <iframe src="http://101.37.27.68/v21/query" width="454" height="288" frameborder="0"></iframe>
+                <iframe src="http://player.antblue.com/v21/query" width="454" height="288" frameborder="0"></iframe>
             </div>
             <div class="list_shengxiao" id="tab-tool">
                 <p style="text-align: center; line-height: 160px; ">正在开发中...</p>
@@ -235,7 +235,7 @@
         快捷键：
         <input type="text" id="shortCutsInput" />
     </label>
-    <p>提示：快捷键支持 ctrl+字母、alt+字母、shift+字母或者单个字母数字，其他快捷键组合暂不支持！</p>
+    <p>提示：支持 ctrl、alt、shift+字母数字，单个字母数字，F1-F12，其他快捷键组合暂不支持！</p>
     <p style="text-align: center">（输入快捷键时请确保键盘处于英文输入状态）</p>
     <div class="btn-box">
         <a href="javascript:;" id="shortCutsSure">确定</a>
@@ -299,12 +299,12 @@
             <li class="clearfix">
                 <span>账号：</span>
                 <input type="text" id="username" placeholder='请输入账号' />
-                <a href="javascript:;" class="hrefTo" data-url="http://101.37.27.68/register.html" >注册账号</a>
+                <a href="javascript:;" class="hrefTo" data-url="http://player.antblue.com/register.html" >注册账号</a>
             </li>
             <li class="clearfix">
                 <span>密码：</span>
                 <input type="password" id="password" placeholder='请输入密码' />
-                <a href="javascript:;" class="hrefTo" data-url="http://101.37.27.68/password_find.html" >忘记密码</a>
+                <a href="javascript:;" class="hrefTo" data-url="http://player.antblue.com/password_find.html" >忘记密码</a>
             </li>
         </ul>
         <label>
@@ -338,7 +338,7 @@
 <!--重命名弹窗结束-->
 <!--左侧右键弹窗-->
 <div class="left-pop">
-    <a href="javascript:;" id="newGroup">新建分组</a>
+    <a href="javascript:;" id="newGroup">新建列表</a>
 </div>
 <!--左侧右键弹窗结束-->
 <!--新添分组弹窗-->
@@ -885,7 +885,12 @@ function play(fileList){
         })
         var keyname = '';
         var l = new lastKey(function(code) {
-            if( (code>64&&code<91)|| (code>47&&code<58) || code == 8 ||code == 16 || code == 17 || code == 18 ){
+            console.log(code)
+            if(code == 229){
+                alert('请切换为英文输入法');
+                return
+            }
+            if( (code>64&&code<91)|| (code>47&&code<58) || code == 8 ||code == 16 || code == 17 || code == 18 || (code>95&&code<106) || (code>111&&code<124) ){
                if(code == 17){
                     keyname += '+Ctrl';
                 }else if(code == 18){
@@ -895,6 +900,10 @@ function play(fileList){
                 }else if(code == 8){
                     keyname = '';
                     $("#shortCutsInput").val('');
+                }else if( code > 95 && code < 106 ){
+                    keyname += '+Numpad'+(code-96);
+                }else if (code>111&&code<124){
+                    keyname += '+F'+(code-111);
                 }else{
                     keyname += '+'+String.fromCharCode(code);
                 } 
@@ -1252,18 +1261,48 @@ function play(fileList){
             
             
         });
+
+
+        // $(".checkLogin").on('click',function(e){
+            
+        //         if(!util.isLogined){
+        //             alert();
+        //             e.preventDefault();
+        //             return false;
+        //         } 
+
+        // });
+
         
     })
+
+    
 
     $(window).bind('hashchange', function(e, triggered) { // 绑定hash值
             var hash = location.hash.replace(/^#/, '');
             if(hash != ''){
-                $("#tab").find('li').each(function(i,val){
-                    if($(val).attr("data-name") == hash ){
-                        $(val).addClass('nr_banner_jg').siblings('li').removeClass('nr_banner_jg');
+                if(hash == 'tab-lib' || hash == 'tab-search'){
+                    if(util.isLogined){
+                        $("#tab").find('li').each(function(i,val){
+                            if($(val).attr("data-name") == hash ){
+                                $(val).addClass('nr_banner_jg').siblings('li').removeClass('nr_banner_jg');
+                            }
+                        })
+                        $("#"+hash).css('display','block').siblings('.list_shengxiao').css('display','none');
+                    }else{
+                        alert('请先登录！');
+                        $("#nickname").trigger('click');
+                        window.location.href = '#';
                     }
-                })
-                $("#"+hash).css('display','block').siblings('.list_shengxiao').css('display','none');
+                }else{
+                    $("#tab").find('li').each(function(i,val){
+                        if($(val).attr("data-name") == hash ){
+                            $(val).addClass('nr_banner_jg').siblings('li').removeClass('nr_banner_jg');
+                        }
+                    })
+                    $("#"+hash).css('display','block').siblings('.list_shengxiao').css('display','none');
+                }
+                
             }
     });
 
